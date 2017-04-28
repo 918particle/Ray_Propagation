@@ -1,0 +1,293 @@
+\title{A Simple Model for Antarctic Near-Surface Index of Refraction and Radio Pulse Trajectories}
+\author{Jordan C. Hanson, CCAPP, The Ohio State University}
+\date{\today}
+\documentclass[12pt]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,mathtools}
+\usepackage{graphicx}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The standard model for the index of refraction in Antarctic firn is presented as a function of ice depth.  The model provides a good fit to the data, but does not account for small-scale fluctuations in snow density in the upper regions of the firn.  The standard model implies curved paths for radio pulses.  In specific situations, Fermat's principle implies that the \textit{shadowing effect} should occur.  However, data collected in the 2011-12 season in Moore's Bay directly contradicts basic shadowing. A more complete model should include surface propagation due to ray-trapping between local snow layers.
+\end{abstract}
+
+\section{A Derivation of the Density Profile}
+
+The \textit{compressibility} $\chi$ of a simple block of material with volume $l^3 = v$ and uniform pressure $p$ is defined as
+
+\begin{equation}
+\chi = -\frac{1}{v} \frac{\Delta v}{\Delta p}
+\label{eq:comp1}
+\end{equation}
+
+Rearranging,
+
+\begin{equation}
+-\frac{\Delta v}{v} = \chi \Delta p
+\label{eq:comp2}
+\end{equation}
+
+Suppose that a block comprised of snow, ice and air, known as \textit{firn}, with volume $l^3 = v$ is compressed by a pressure $p$ originating from a force in one direction.  The density of the block is $m/l^3$, where $m$ is the mass.  The length of the block on the compressed side becomes $l-\epsilon = \Delta l$, the volume decreases by $\Delta v = v_{ f} - v_{ i} = -\epsilon l^2$, and the change in density is
+
+\begin{equation}
+\Delta \rho = \rho_{f} - \rho_{i} = m \left( \frac{1}{v_{f}} - \frac{1}{v_{i}} \right) = -\frac{m\Delta v}{v_{f} v_{ i}} = -\rho_{f} \frac{\Delta v}{v}
+\label{eq:deltarho}
+\end{equation}
+
+The initial volume $v_i = v = l^3$.  Substituting Eq. \ref{eq:comp2} into Eq. \ref{eq:deltarho}, 
+
+\begin{align}
+\Delta \rho =& \rho_{f} \chi \Delta p \\
+\Delta p =& \left(\chi \rho_{f}\right)^{-1} \Delta \rho
+\end{align}
+
+Dividing both sides by $\Delta l$, and taking the limit that $\Delta l \to 0$ and that $\chi$ does not depend on $l$, 
+
+\begin{align}
+\frac{\Delta \rho}{\Delta l} =& \left(\rho_{f} \chi \right)^{-1} \frac{\Delta p}{\Delta l} \\
+\Aboxed{p' =& \left(\chi \rho_{f}\right)^{-1} \rho'} \label{eq:note}
+\end{align}
+
+This compressibility result relates changes in pressure to changes in density, and will become useful for simplification in the following derivation.  Let the region of firn be described by $N$ firn blocks labelled by $j$, with varying density $\rho_j$.  Let the snow surface correspond to $j=N$, $z=0$, and the beginning of solid ice (the bottom of the firn) correspond to $j=0$, $z=-h$.  Each block has a height $\Delta z$, and a volume $v = A\Delta z$.  The normal force $f = p_{n} A$ on block $j$ must oppose the weight of block $j$, and the weight of the firn mass above block $j$, summed up to the surface:
+
+\begin{align}
+A p_{nj} &= g\left(m_{j} + M\right) \label{eq:force1} \\
+M &= \sum_{i = j+1}^{N} m_{i} = \sum_{i = j+1}^{N} \rho_{i} A dz g \label{eq:force2} \\
+m_{j} &= \rho_{i} A dz g \label{eq:force3}
+\end{align}
+
+Combining the Eqs. \ref{eq:force1}-\ref{eq:force3}, and cancelling the common $A$ factor,
+
+\begin{equation}
+p_{nj} = g \sum_{i = j}^{N} \rho_{i} dz
+\end{equation}
+
+Taking the limit $dz \to 0$, $A \to \infty$ in a way that leaves $v = A dz$ constant, 
+
+\begin{equation}
+p(z) = g \int_{z}^{0} \rho(z') dz'
+\label{eq:rho1}
+\end{equation}
+
+Taking the derivative of both sides, applying the fundamental theorem of calculus, and rearranging
+
+\begin{equation}
+-g^{-1} p'(z) = \rho(z) - \rho(0)
+\label{eq:rho2}
+\end{equation}
+
+Substituting Eq. \ref{eq:note} into Eq. \ref{eq:rho2} (relabelling the final density $\rho_0$), and rearranging
+
+\begin{equation}
+\rho' = -\left(g \chi \rho_{0}\right)\rho(z) + \left(g \chi \rho_{0}\right)\rho(0)
+\label{eq:rho3}
+\end{equation}
+
+Defining two constants $k_1$ and $k_2$, Eq. \ref{eq:rho3} may be put into the following form:
+
+\begin{equation}
+\rho' = k_1 \rho(z) + k_2
+\label{eq:rho4}
+\end{equation}
+
+Try the following solution, with boundary conditions $\rho(0) = \rho_s$ and $\rho(z\to-\infty) \to \rho_i$:
+
+\begin{equation}
+\rho(z) = A - B \exp(z/z_0)
+\label{eq:rho5}
+\end{equation}
+
+For now, assume $z_0$ is a free parameter.  Equation \ref{eq:rho5} solves Eq. \ref{eq:rho4} if $A = \rho_i$ and $B = \Delta \rho = \rho_i - \rho_s$, giving the final solution
+
+\begin{equation}
+\boxed{\rho(z) = \rho_i - \Delta \rho \exp(z/z_0)}
+\label{eq:rho6}
+\end{equation}
+
+Physical insight on the remaining parameter $z_0$ may be gained by using Eq. \ref{eq:rho4} with Eq. \ref{eq:rho6} to find
+
+\begin{equation}
+k_1 = z_0^{-1} \label{eq:insight1}
+\end{equation}
+
+From Eq. \ref{eq:rho3}
+
+\begin{equation}
+\boxed{z_0^{-1} =  g\chi\rho_0} \label{eq:insight2}
+\end{equation}
+
+In conclusion, the steepness of the density profile with depth (controlled by $z_0$) depends directly on the compressibility of the firn.
+
+\section{Remark about the Index of Refraction Profile}
+
+For dielectric materials like snow and ice, the index of refraction is usually approximated as a linear equation of density: $n(z) \approx 1+b\rho(z)$, and this is usually justified through expanding the Landau-Lifshitz-Looyenga equation (see below).  Thus, the index versus depth of the metamorphosis from snow to ice follows a function like
+
+\begin{equation}
+n(z) = n_{0} - n_1 e^{z/z_0}
+\end{equation}
+
+At $z=0$, $n(0) = n_s$ (snow), and as $|z| \gg z_0$, for $z<0$, $n = n_{ice}$.  Letting $\Delta n = n_{ice} - n_{s}$, the index equation becomes
+
+\begin{equation}
+\boxed{
+n(z) = n_{ice} - \Delta n e^{z/z_0}
+}
+\end{equation}
+
+Notice that the compressibility of the firn (proportional to $z_0^{-1}$) influences also the steepness of the index of refraction profile.  This is true if the index is a linear function of the density.
+
+\section{The Landau-Lifshitz-Looyenga Equation}
+
+Let the complex dielectric constants of snow and ice be $\epsilon_i$ and $\epsilon_s$, and the dielectric constant of their mixture be $\epsilon(z)$. Further, let the two separate dielectrics each have volume fractions $v_i$ and $v_s$, with volume fractions $v_i + v_s = 1$, $\rho(z) = v_i \rho_i + v_s \rho_s$.  The Landau-Lifshitz-Looyenga equation gives
+
+\begin{equation}
+\epsilon(z) = \left( v_i \epsilon_i^{1/3} + v_s \epsilon_s^{1/3} \right)^3
+\end{equation}
+
+Let the real and imaginary parts of dielectric constants follow the notation $\epsilon = \epsilon' + i \epsilon''$, and defined the \textit{loss tangent} as $\tan\delta = \epsilon''/\epsilon'$.  Ice has a loss tangent of order $10^{-3}$ at RF frequencies, and the loss tangent of snow is smaller.  To first order in $\tan\delta_i$ and $u = v_2/v_1 < 1$, with $\alpha = (\epsilon_2'/\epsilon_1')^{1/3}$, it may be shown that
+
+\begin{equation}
+\sqrt{\Re{\epsilon(z)}} = n(z) \approx v_i^{3/2}\epsilon_i'^{1/2}(1+u\alpha)
+\end{equation}
+
+Setting $v_2 = 0$, $v_1 = 1$ (or $u=0$) reproduces the expected $n = \sqrt{\epsilon_i'}$ for pure ice.  With $\beta = 3/2 (\rho_s/\rho_i)$, $v_i^{3/2}$ is approximately
+
+\begin{equation}
+v_i^{3/2} \approx \left(\frac{\rho(z)}{\rho_i}\right)^{3/2}(1+u\beta)^{-1}
+\end{equation}
+
+Combining equations, and recalling that $\epsilon_i'^{1/2} = n_{ice}$, the result is
+
+\begin{equation}
+\frac{n(z)}{n_{ice}} \approx \left( \frac{1+u\alpha}{1+u\beta} \right) \left( \frac{\rho(z)}{\rho_i} \right)^{3/2}
+\end{equation}
+
+Expanding to first order about $\rho(z)/\rho_i = 1$:
+
+\begin{equation}
+\frac{n(z)}{n_{ice}} \approx -\frac{1}{2}\left( \frac{1+u\alpha}{1+u\beta} \right) + \frac{3}{2}\left( \frac{1+u\alpha}{1+u\beta} \right) \frac{\rho(z)}{\rho_i}
+\end{equation}
+
+Using $n_s = \epsilon_s'^2 = 1.3$, $n_i = \epsilon_i'^2 = 1.78$, $\rho_s = 0.4$ g/cc, $\rho_i = 0.917$ g/cc, and $u=0.1$ as an example, a linear equation for the index versus density near the firn/ice boundary layer is
+
+\begin{equation}
+\frac{n(z)}{n_{ice}} \approx -0.51 + 1.66 \rho(z) [g/cc]
+\end{equation}
+
+\section{Fitting the Firn Model to the Data}
+
+Many analyses and derivations have been done to produce the index of refraction versus depth curve in different locations throughout Antarctica.  Figure \ref{fig:fig1} contains a summary of such measurements.  In the figure, the function $n(z) = A-B\exp(Cz)$ is fit to the data points.  Where density data was available, the empirical conversion of $n(z) = 1.0 + 0.86\rho(z)$ has been used.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth]{figures/April21_plot1.pdf}
+\caption{\label{fig:fig1} A summary of all the $n(z)$ data discovered for various locations in Antarctica, including Moore's Bay (MB) and the South Pole.  All data points and fit lines that are black correspond to the South Pole, and the gray points and fit lines correspond to Moore's Bay, Byrd station, and Mizuho station.}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth]{figures/April21_plot2.pdf}
+\caption{\label{fig:fig1a} Figure \ref{fig:fig1}, focusing on the upper few meters.}
+\end{figure}
+
+The value for $A$ in all the fits was restricted to $n_{ice} = 1.78$, from the differential equation solution to the gravity-density problem.  No restriction was placed on the value for $B=\Delta n$, but note that the results are close to $1.78-1.29 = 0.49$, where $1.29$ is the expected value for $n_s$ (Hanson 2013).  Thus, the fits are all measuring $n_s$ accurately.  The slopes $C = z_0^{-1}$ differ across the Antarctic continent, and are statistically lower at the South Pole compared to other locations.
+
+Table 1 summarizes the results for the fits to the points in the figure.  The snow surface index of refraction is derived from the $B$ parameter, assuming $A = n_{ice}$, and $B = \Delta n = n_{ice} - n_s$.  These results may be compared to resuts from the upper 2 m ($n_s = 1.29\pm0.02$), obtained at the Ross Ice Shelf via multiple tecniques (Hanson 2013).  The curves MB\#1 and MB\#2 refer to two cores drilled in Moore's Bay (Ross Ice Shelf) in 2016, and the references for the rest of the data may be found in the Table.
+
+Note that the Schytt model quoted by (Hanson 2015) found that $q = z_0 = 35.4$ m, which is in agreement with the MB data.  The Schytt model in (Hanson 2015) was fit to firn density data collected near Williams Field on the Ross Ice Shelf.  For index data derived from density data, the snow/ice conversion $n(z) = 1.0 + 0.86\rho(z)$ was used (ref).  The data from Ebimuna (1983) was originally quoted as pressure in kPa vs. depth, which has been converted to density via the simple formula in Shumskiy (1960):
+
+\begin{multline}
+z = \left( \frac{p-p_0}{\rho_i g}\right) \left \lbrace 1-\chi\left(\frac{p+p_0}{2} - p_n \right) \right \rbrace (1+\alpha_i\theta) \\ + \left \lbrace \frac{1}{\rho_0 g}-\frac{1-\chi(p_0-p_n)}{\rho_i g} \right \rbrace p_0 \ln (p/p_0) (1+\beta_a\theta)
+\end{multline}
+
+The parameters in the equation of depth, $z$, versus pressure, $p$, are as follows: $p_0$ is the pressure at the surface, $\rho_i$ is the density of ice (0.91670 g/cc) at a pressure $p_n=1$ atmosphere and a temperature $\theta = 0^{\circ}$ C, with a  volumetric compressibility of $\chi = 1.2 \times 10^{-5}$ bar$^{-1}$, a coefficient of linear expansion of $\alpha_i = 5.1 \times 10^{-5}$ C$^{\circ -1}$, and surface density of $\rho_0$.  A value of $94.306$ kPa is chosen for the surface pressure, corresponding to an altitude of $\approx 0.5$ km.  The temperature $\theta$ is the average temperature through the firn, taken to be $-10$ C$^{\circ}$ in Fig. 1 (Hanson dissertation).
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{| c | c | c | c | c | c |}\hline
+Ref./Location & $A=n_{ice}$ & B  & $n_s$ & C (m$^{-1}$) & $z_0$ (m)\\ \hline
+MB\#1/Moore's Bay & 1.78 & $0.46\pm0.01$ & $1.32\pm0.01$ & $0.029\pm0.002$ & $34.5\pm2$ \\ \hline
+MB\#2/Moore's Bay & 1.78 & $0.481\pm0.007$ & $1.299\pm0.007$ & $0.027\pm0.001$ & $37\pm1$ \\ \hline
+Ebimuna (1983)/Byrd & 1.78 & $0.464\pm0.006$ & $1.316\pm0.006$ & $0.0244\pm0.0004$ & $41\pm1$ \\ \hline
+Ebimuna (1983)/Mizuho & 1.78 & $0.423\pm0.008$ & $1.357\pm0.006$ & $0.027\pm0.001$ & $37\pm1$ \\ \hline\hline
+RICE (2004)/South Pole & 1.78 & $0.43\pm0.02$ & $1.35\pm0.02$ & $0.014\pm0.001$ & $71\pm5$ \\ \hline
+Eisen (2003)/South Pole & 1.78 & $0.48\pm0.01$ & $1.3\pm0.01$ & $0.020\pm0.001$ & $50\pm2.5$ \\ \hline
+Gow (xxxx)/South Pole & 1.78 & $0.435\pm0.01$ & $1.345\pm0.01$ & $0.016\pm0.001$ & $62.5\pm4$ \\ \hline
+SPICE (2015)/South Pole & 1.78 & $0.427\pm0.004$ & $1.353\pm0.004$ & $0.014\pm0.0002$ & $71\pm2$ \\ \hline
+\end{tabular}
+\caption{\label{tab:tab0} The fit parameters for the curves shown in Fig. 1.  The function fit to the data is $n(z) = n_{ice} -\Delta n \exp(Cz)$.  The differential equation derived in the first section requires $n_{ice} = 1.78$ and $B = \Delta n = n_{ice} - n(0)$ as boundary conditions.}
+\end{table}
+
+\section{Fermat's Principle, and Ray-Tracing}
+
+A key question for ARA/ARIANNA future designs is the expected path of a radio pulse from an Askaryan event in firn.  Beginn with Fermat's principle, which states that a ray must traverse the path that minimizes the travel time.  Fermat's principle is similar to the principle of least-action, in which a massive particle takes the path of least-resistance (cite Wiki Fermat's).
+
+\begin{align}
+\delta S &= 0 \\
+\delta &\int_A^B n(z)(1+\dot{y}^2)^{1/2} dx dy dz = \int_A^B L(z,\dot{y}) dx dy dz = 0
+\end{align}
+
+Derivatives indicated by the dot notation are with respect to $z$, not time.  The assumption that $x = \dot{x} = 0$ has been taken without loss of generality.  Note that $\dot{y} = dy/dz$ is unit-less, and $\ddot{y}$ has units of inverse meters.  Using the Euler-Lagrange equations to minimize the variation in the path, and letting $u = \dot{y}$:
+
+\begin{align}
+\frac{d}{dz} \left( \frac{\partial L}{\partial \dot{y}} \right) - \left( \frac{\partial L}{\partial y} \right) &= 0 \\
+\frac{d}{dz} \left( \frac{\partial L}{\partial \dot{y}} \right) &= 0 \\
+\dot{u} &= - \left( \frac{\dot{n}}{n} \right) (u^3+u)
+\end{align}
+
+Note that the units are inverse meters on each side of the equation: all factors of $u$ are unit-less, and $\dot{n}$ has units of inverse meters.  Putting in the model for $n(z)$, the final equation of motion is
+
+\begin{equation}
+\boxed{
+\dot{u} = z_0^{-1} \left( \frac{\Delta n e^{z/z_0}}{n_{ice} - \Delta n e^{z/z_0}} \right) (u^3+u)
+}
+\end{equation}
+
+As a check, note the deep ice limit: $|z| \gg z_0$, $z<0$:
+
+\begin{equation}
+\dot{u} = 0
+\end{equation}
+
+The solution to this equation of motion, after solving for $z$ is 
+
+\begin{equation}
+z(y) = a+by
+\end{equation}
+
+In other words, if the rays are far from the firn, the rays must propagate in straight lines.  For the case of a shallow ray $z \rightarrow 0$, propagating initially with a horizontal velocity component satisfying $u^3 \gg u$, the main equation of motion reduces to 
+
+\begin{equation}
+\frac{du}{dz} = \left( \frac{n_{ice} - n_s}{z_0 n_s}\right) u^3
+\end{equation}
+
+This is a variables-separable differential equation.  Using an initial point of $(y_1,z_1)$, a particular solution is
+
+\begin{equation}
+z(y) = -\frac{1}{2z_0} \left( \frac{n_{ice} - n_s}{n_s}\right) (y-y_1)^2 + z_1
+\end{equation}
+
+Thus, for a very shallow ray, with initial horizontal velocity, the solution dictates that the shortest travel time between two near-surface points is given by a quadratic path.  As an example, use $z_0 = 37$ m and $n_s = 1.30$ to describe Moore's Bay refraction, and $z_0 = 61$ m, $n_s = 1.33$ to describe the South Pole refraction.  Figure 2 compares the hypothetical ray-paths.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth,angle=270]{figures/Jan24_plot1.eps}
+\end{figure}
+
+The next least-restrictive approximation for the shallow depth of the ray is $\exp{z/z_0} \approx 1+z/z_0$, rather than $z \rightarrow 0$.  Let $q = \Delta n/z_0$.  The final solution with this limit is
+
+\begin{align}
+z(y) &= -\frac{1}{2}\frac{Q_1}{z_0}(y-y_1)^2 - \frac{Q_0}{Q_1}z_0 \\
+Q_1 &= 1+\frac{n_{ice}}{n_s} \\
+Q_0 &= \frac{z_1}{z_0} + 1 + \frac{n_{ice}}{\Delta n}\left(\ln\left(\frac{n_s}{\Delta n}\right)-2\right)
+\end{align}
+
+Note that, in either the limit of $z \rightarrow 0$, or $\exp{z/z_0} \approx 1+z/z_0$, the solutions are quadratic, with curvature controlled by $z_0^{-1}$.  That is, if $z_0$ increases, the concavity of the ray path, and thus, the level of shadowing, decreases.  It is fascinating that the same snow metamorphosis that controls the compaction from snow to ice through gravity also controls the amount of ray bending, and that this number is measurable from the density variation versus depth.
+
+Note: I will fill in tomorrow all the constants like $Q_1$ and $Q_0$.  I have triple checked the units of everything.  If the units don't seem to work, it's because the units are held in the constants.
+
+\section{Surface Propagation}
+
+\end{document}
