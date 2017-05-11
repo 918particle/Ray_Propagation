@@ -1,0 +1,8 @@
+program: main.o dbAdapter.o
+   gcc -o program main.o dbAdapter.o
+
+main.o: main.c dbAdapter.h
+   gcc -c main.c
+
+dbAdapter.o dbAdapter.c dbAdapter.h
+   gcc -c dbAdapter.c

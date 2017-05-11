@@ -5,23 +5,15 @@ c0 = 299792458; %Speed of light, m/s
 %~ f = @nfirnmeas1; %Function handle for firn measurement #1
 %~ f = @nfirn;
 f = @nfirn_sp;
-zmax=0; %Maximum depth of the medium
-zmin=-1500; %Minimum depth of the medium
-z0 = -1400; %Position of the emitter in z coordinate
+%~ f = @nfirnmeas_MooresBay2;
+zmax=0.0; %Maximum depth of the medium
+zmin=-2700.0; %Minimum depth of the medium
+z0 = -300.0; %Position of the emitter in z coordinate
 x0 = 0.0; %Position of the emitter in x coordinate
-reflection = 1; %Account for reflections?
+reflection = 0; %Account for reflections?
 dt = 1/c0; %time steps, 1 meter divided by speed of light in m/s
-tend = 20000.0/c0; %end time, n time steps
-%~ dangle=0.4; %angular step, in degrees
-%~ angrange = 10:dangle:25; %angular range
-rx_extent = 0.5; %sqrt(area) of receiver
+tend = 1000.0/c0; %end time, n time steps
 the_angle = 30.0;
-
-% Position of receivers:
-% x, zupper, zlower
-rx = [4000.0 -199.0 -200.0];
-% find receiver that is furthest away
-xmaxrx = max(rx(:,1));
 
 figure(1,'Position',[0,0,1200,240]);
 linew = 3.0;
@@ -53,9 +45,14 @@ while goon
 	xold =x;
 	z = z + sin(alpha)*dt*c0/(n);
 	x = x + cos(alpha)*dt*c0/(n);
-	if(z>=0 && reflection)
+	if(or(z>=0,z<=zmin) && reflection)
 		alpha = -alpha;
-		z = 0;
+		if(z>=0)
+			z = 0;
+		end
+		if(z<=zmin)
+			z=zmin;
+		end
 	end
 	if(abs(z-zold)>1e-4)
 		dndz = (f(z)-f(zold))/(z-zold);
@@ -69,7 +66,6 @@ while goon
 	narray = [narray; n];
 	t = t + dt;
 	if (t>tend), goon = 0; end
-	if (x>xmaxrx), goon = 0; end
 end
 xarray = [xarray; x];
 zarray = [zarray; z];
@@ -98,7 +94,45 @@ if z<=0,
 	else
 		idepth = itemp(end);
 		rho = vrho(idepth) + (vrho(idepth+1) - vrho(idepth))/(vdepth(idepth+1) - vdepth(idepth))*(z - vdepth(idepth));
-		rho=rho/1000; %scale to density of water
+		rho=rho/1000.0; %scale to density of water
+		y = 1 + 0.86*rho;
+	end
+else
+    y = 1;
+end
+end
+
+function y = nfirnmeas_MooresBay1(z)
+data = load('/home/jordan/ANewHope/ARIANNA_BoreHole_1.dat');
+vdepth = -data(:,1);
+vrho = data(:,2);
+if z<=0,
+    itemp = find(z<=vdepth);
+    if(length(itemp)>=length(vdepth))
+		y = nfirn_sp(z);
+	else
+		idepth = itemp(end);
+		rho = vrho(idepth) + (vrho(idepth+1) - vrho(idepth))/(vdepth(idepth+1) - vdepth(idepth))*(z - vdepth(idepth));
+		rho=rho/1000.0; %scale to density of water
+		y = 1 + 0.86*rho;
+	end
+else
+    y = 1;
+end
+end
+
+function y = nfirnmeas_MooresBay2(z)
+data = load('/home/jordan/ANewHope/ARIANNA_BoreHole_2.dat');
+vdepth = -data(:,1);
+vrho = data(:,2);
+if z<=0,
+    itemp = find(z<=vdepth);
+    if(length(itemp)>=length(vdepth))
+		y = nfirn_sp(z);
+	else
+		idepth = itemp(end);
+		rho = vrho(idepth) + (vrho(idepth+1) - vrho(idepth))/(vdepth(idepth+1) - vdepth(idepth))*(z - vdepth(idepth));
+		rho=rho/1000.0; %scale to density of water
 		y = 1 + 0.86*rho;
 	end
 else
