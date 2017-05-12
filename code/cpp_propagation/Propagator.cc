@@ -50,7 +50,7 @@ void Propagator::Propagate()
 	float theTime = 0.0;
 	_path.push_back(_emitterPosition);
 	bool flag = true;
-	while(theTime<_globalTime)
+	while(theTime<_globalTime && _emitterPosition.second<=0.0)
 	{
 		float n = GetIndex(_emitterPosition.second);
 		theTime+=_timeStep;
