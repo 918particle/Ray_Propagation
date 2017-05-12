@@ -1,5 +1,7 @@
 #include "Ice.h"
 #include <cmath>
+#include <fstream>
+#include <iostream>
 
 void Ice::CreateIce(float r,float z,bool fitn,bool fitl,std::string modelName)
 {
@@ -7,31 +9,70 @@ void Ice::CreateIce(float r,float z,bool fitn,bool fitl,std::string modelName)
 	_z = z;
 	_useIndexFit = fitn;
 	_useAttenuationLengthFit = fitl;
-	if(_useIndexFit)
+	if(modelName=="SPICE")
 	{
-		if(modelName=="SPICE")
+		_A = 1.78;
+		_B = 0.427;
+		_C = 0.014;
+		std::ifstream in("/home/jordan/ANewHope/SPICE_data.dat");
+		float depth,density;
+		while(in.good() && ~in.eof())
 		{
-			_A = 1.78;
-			_B = 0.427;
-			_C = 0.014;
+			in>>depth;
+			in>>density;
+			_indexVsDepth.push_back(std::pair<float,float>(-depth,1.0+0.86*density/1000.0));
 		}
-		else if(modelName=="Byrd")
+		in.close();
+	}
+	else if(modelName=="Byrd")
+	{
+		_A = 1.78;
+		_B = 0.464;
+		_C = 0.0244;
+		std::ifstream in("/home/jordan/ANewHope/Byrd_data.csv");
+		float depth,index;
+		while(in.good() && ~in.eof())
 		{
-			_A = 1.78;
-			_B = 0.464;
-			_C = 0.0244;
+			in>>depth;
+			in>>index;
+			_indexVsDepth.push_back(std::pair<float,float>(depth,index));
 		}
+		in.close();
 	}
 }
 
 float Ice::GetIndex(float z)
 {
-	if(z>0)
+	if(_useIndexFit)
 	{
-		return 1.0;
+		if(z>0)
+		{
+			return 1.0;
+		}
+		else
+		{
+			return _A-_B*exp(_C*z);
+		}
 	}
 	else
 	{
-		return _A-_B*exp(_C*z);
+		if(z>0.0)
+		{
+			return 1.0;
+		}
+		else
+		{
+			std::vector<std::pair<float,float> >::iterator i = _indexVsDepth.begin();
+			while(i!=_indexVsDepth.end())
+			{
+				if(z<=(*i).first) ++i;
+				else break;
+			}
+			if(i==_indexVsDepth.end()) return _A-_B*exp(_C*z);
+			else
+			{
+				return (*i).second + ((*(i-1)).second-(*i).second)/((*(i-1)).first-(*i).first)*(z-(*i).first);
+			}
+		}
 	}
 }

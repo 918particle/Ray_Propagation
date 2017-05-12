@@ -50,7 +50,7 @@ void Propagator::Propagate()
 	float theTime = 0.0;
 	_path.push_back(_emitterPosition);
 	bool flag = true;
-	while(theTime<_globalTime && _emitterPosition.second<=0.0)
+	while(theTime<_globalTime)
 	{
 		float n = GetIndex(_emitterPosition.second);
 		theTime+=_timeStep;
@@ -58,6 +58,7 @@ void Propagator::Propagate()
 		_emitterPosition.first+=cos(_initialAngle)*_timeStep*c0/n;
 		_emitterPosition.second+=sin(_initialAngle)*_timeStep*c0/n;
 		_path.push_back(_emitterPosition);
+		CheckForAReflection(_initialAngle,_emitterPosition.second);
 		if(std::abs(old_pos.second-_emitterPosition.second)>dz)
 		{
 			dndz = (GetIndex(_emitterPosition.second)-GetIndex(old_pos.second))/(_emitterPosition.second-old_pos.second);

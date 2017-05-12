@@ -26,11 +26,11 @@ plot "propagation_path_35.dat" w l lw 2 lc rgb "#000000", \
 "propagation_path_40.dat" w l lw 2 lc rgb "#AAAAAA", \
 "propagation_path_40.5.dat" w l lw 2 lc rgb "#BBBBBB", \
 "propagation_path_41.dat" w l lw 2 lc rgb "#CCCCCC", \
-"propagation_path_41.5.dat" w l lw 2 lc rgb "#DDDDDD", \
-"propagation_path_42.dat" w l lw 2 lc rgb "#DDEEEE", \
-"propagation_path_42.5.dat" w l lw 2 lc rgb "#CCEEEE", \
-"propagation_path_43.dat" w l lw 2 lc rgb "#BBEEEE", \
-"propagation_path_43.5.dat" w l lw 2 lc rgb "#AAEEEE", \
-"propagation_path_44.dat" w l lw 2 lc rgb "#99EEEE", \
-"propagation_path_44.5.dat" w l lw 2 lc rgb "#88EEEE", \
-"propagation_path_45.dat" w l lw 2 lc rgb "#77EEEE"
+"propagation_path_41.5.dat" w l lw 2 lc rgb "#BBCCCC", \
+"propagation_path_42.dat" w l lw 2 lc rgb "#AACCCC", \
+"propagation_path_42.5.dat" w l lw 2 lc rgb "#99CCCC", \
+"propagation_path_43.dat" w l lw 2 lc rgb "#88CCCC", \
+"propagation_path_43.5.dat" w l lw 2 lc rgb "#77CCCC", \
+"propagation_path_44.dat" w l lw 2 lc rgb "#66CCCC", \
+"propagation_path_44.5.dat" w l lw 2 lc rgb "#55CCCC", \
+"propagation_path_45.dat" w l lw 2 lc rgb "#44CCCC"
