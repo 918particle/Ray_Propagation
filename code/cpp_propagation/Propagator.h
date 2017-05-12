@@ -16,7 +16,7 @@ class Propagator : public Ice, public Reflector, public Emitter
 		std::vector<std::pair<float,float> > _path;
 		bool _isInitialized; //1 if InitializePropagator has been executed.
 		//Constructor
-		Propagator() : _globalTime(0.0), _timeStep(0.1), _isInitialized(false)
+		Propagator() : _globalTime(0.0), _timeStep(1.0), _isInitialized(false)
 		{
 			_currentPosition.first = 0.0;
 			_currentPosition.second = 0.0;

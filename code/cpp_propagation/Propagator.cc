@@ -45,7 +45,7 @@ void Propagator::ReadoutPath(std::string title)
 void Propagator::Propagate()
 {
 	float c0 = 0.299792458; //speed of light in vacuum, meters per nanosecond
-	float dz = 1.0e-2; //units: meters
+	float dz = 1.0e-4; //units: meters
 	float dndz = 0.0; //units: meters^(-1)
 	float theTime = 0.0;
 	_path.push_back(_emitterPosition);
