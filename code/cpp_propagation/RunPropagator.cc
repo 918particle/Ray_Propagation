@@ -12,12 +12,12 @@ int main()
 	int count = 0;
 	
 	Propagator p;
-	p.AddReflector(-100,0.1);
-	p.AddReflector(-90,0.1);
-	p.AddReflector(-75,0.2);
-	p.AddReflector(-70,0.2);
-	p.AddReflector(-65,0.2);
-	p.AddReflector(-60,0.2);
+	p.AddReflector(-100.0,0.1);
+	p.AddReflector(-90.0,0.1);
+	p.AddReflector(-75.0,0.2);
+	p.AddReflector(-70.0,0.2);
+	p.AddReflector(-65.0,0.2);
+	p.AddReflector(-60.0,0.2);
 	p.AddReflector(0.0,1.0);
 	p.AddReflector(-2700.0,1.0);
 	for(float t=25.0;t<=35.0;t+=0.5)
@@ -29,7 +29,7 @@ int main()
 			p.Propagate();
 			std::stringstream ss;
 			ss<<count;
-			std::string title = "propagation_path_"+ss.str()+".dat";
+			std::string title = "data/propagation_path_"+ss.str()+".dat";
 			p.ReadoutPath(title);
 			++count;
 		}

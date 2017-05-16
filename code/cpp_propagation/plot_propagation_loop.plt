@@ -20,4 +20,4 @@ set arrow 6 from 0,-60 to 4000,-60 nohead ls 1
 set terminal postscript color enhanced
 set output "May11_plot3.eps"
 
-plot for [i=0:2099] 'propagation_path_'.i.'.dat' w l lw 0.2 lc rgb "#999999"
+plot for [i=0:2099] 'data/propagation_path_'.i.'.dat' w l lw 0.2 lc rgb "#999999"
