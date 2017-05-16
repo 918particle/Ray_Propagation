@@ -20,12 +20,12 @@ int main()
 	p.AddReflector(-60,0.2);
 	p.AddReflector(0.0,1.0);
 	p.AddReflector(-2700.0,1.0);
-	for(float t=25.0;t<=35.0;t+=0.5)
+	for(float t=34.0;t<=35.0;t+=0.1)
 	{
 		std::cout<<"Angle: "<<t<<std::endl;
 		for(int i=0;i<100;++i)
 		{
-			p.InitializePropagator(20000.0,1000.0,-2700.0,false,true,"SPICE",250.0,-600.0,t);
+			p.InitializePropagator(20000.0,1000.0,-2700.0,true,true,"SPICE",250.0,-600.0,t);
 			p.Propagate();
 			std::stringstream ss;
 			ss<<count;
