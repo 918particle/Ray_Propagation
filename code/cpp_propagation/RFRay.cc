@@ -13,5 +13,5 @@ void RFRay::Update(std::pair<float,float> q)
 	float change = sqrt((_currentPosition.first-_priorPosition.first)*(_currentPosition.first-_priorPosition.first)
 		+(_currentPosition.second-_priorPosition.second)*(_currentPosition.second-_priorPosition.second));
 	_distanceTravelled += change;
-	_rfLoss *= exp(-change/GetAttenuationLength(_currentPosition.second));
+	_rfLoss *= exp(-change/this->GetAttenuationLength(_currentPosition.second));
 }

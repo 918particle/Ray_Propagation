@@ -12,20 +12,18 @@ int main()
 	int count = 0;
 	
 	Propagator p;
-	p.AddReflector(-100,0.1);
-	p.AddReflector(-90,0.1);
-	p.AddReflector(-75,0.2);
-	p.AddReflector(-70,0.2);
-	p.AddReflector(-65,0.2);
-	p.AddReflector(-60,0.2);
-	p.AddReflector(0.0,1.0);
-	p.AddReflector(-2700.0,1.0);
-	for(float t=34.0;t<=35.0;t+=0.1)
+	for(float z=-75.0;z<0.0;z+=5.0)
+	{
+		float r = float(rand())/float(RAND_MAX)/10.0;
+		p.AddReflector(z,r);
+		std::cout<<"Added reflecting layer at "<<z<<" meters with R= "<<r<<std::endl;
+	}
+	for(float t=20.0;t<=30.0;t+=0.5)
 	{
 		std::cout<<"Angle: "<<t<<std::endl;
 		for(int i=0;i<100;++i)
 		{
-			p.InitializePropagator(20000.0,1000.0,-2700.0,true,true,"SPICE",250.0,-600.0,t);
+			p.InitializePropagator(20000.0,1000.0,-2700.0,true,true,"SPICE",250.0,-1200.0,t);
 			p.Propagate();
 			std::stringstream ss;
 			ss<<count;

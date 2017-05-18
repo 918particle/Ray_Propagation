@@ -1,5 +1,6 @@
 #include <utility>
 #include <vector>
+#include "Ice.h"
 
 #ifndef REFLECTOR_H_
 #define REFLECTOR_H_
