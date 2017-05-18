@@ -134,6 +134,7 @@ At $z=0$, $n(0) = n_s$ (snow), and as $|z| \gg z_0$, for $z<0$, $n = n_{ice}$.  
 \boxed{
 n(z) = n_{ice} - \Delta n e^{z/z_0}
 }
+\label{eq:n}
 \end{equation}
 
 Notice that the compressibility of the firn (proportional to $z_0^{-1}$) influences also the steepness of the index of refraction profile.  This is true if the index is a linear function of the density.
@@ -234,7 +235,7 @@ Derivatives indicated by the dot notation are with respect to $z$, not time.  Th
 \begin{align}
 \frac{d}{dz} \left( \frac{\partial L}{\partial \dot{y}} \right) - \left( \frac{\partial L}{\partial y} \right) &= 0 \\
 \frac{d}{dz} \left( \frac{\partial L}{\partial \dot{y}} \right) &= 0 \\
-\dot{u} &= - \left( \frac{\dot{n}}{n} \right) (u^3+u)
+\dot{u} &= - \left( \frac{\dot{n}}{n} \right) (u^3+u) \label{eq:main}
 \end{align}
 
 Note that the units are inverse meters on each side of the equation: all factors of $u$ are unit-less, and $\dot{n}$ has units of inverse meters.  Putting in the model for $n(z)$, the final equation of motion is
@@ -269,11 +270,12 @@ This is a variables-separable differential equation.  Using an initial point of 
 z(y) = -\frac{1}{2z_0} \left( \frac{n_{ice} - n_s}{n_s}\right) (y-y_1)^2 + z_1
 \end{equation}
 
-Thus, for a very shallow ray, with initial horizontal velocity, the solution dictates that the shortest travel time between two near-surface points is given by a quadratic path.  As an example, use $z_0 = 37$ m and $n_s = 1.30$ to describe Moore's Bay refraction, and $z_0 = 61$ m, $n_s = 1.33$ to describe the South Pole refraction.  Figure 2 compares the hypothetical ray-paths.
+Thus, for a very shallow ray, with initial horizontal velocity, the solution dictates that the shortest travel time between two near-surface points is given by a quadratic path.  As an example, use $z_0 = 37$ m and $n_s = 1.30$ to describe Moore's Bay refraction, and $z_0 = 71$ m, $n_s = 1.33$ to describe the South Pole refraction.  Figure 2 compares the hypothetical ray-paths for these two cases.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.5\textwidth,angle=270]{figures/Jan24_plot1.eps}
+\includegraphics[width=0.6\textwidth,angle=270]{figures/Jan24_plot1.eps}
+\caption{\label{fig:quad} Examples of quadratic ray-paths in media with index of refraction profiles with the form of Eq. \ref{eq:n}.  The gray line corresponds to Eq: \ref{eq:n} with $z_{\rm 0} = 71$ m, and the black line corresponds to Eq: \ref{eq:n} with $z_{\rm 0} = 37$ m.}
 \end{figure}
 
 The next least-restrictive approximation for the shallow depth of the ray is $\exp{z/z_0} \approx 1+z/z_0$, rather than $z \rightarrow 0$.  Let $q = \Delta n/z_0$.  The final solution with this limit is
@@ -286,8 +288,42 @@ Q_0 &= \frac{z_1}{z_0} + 1 + \frac{n_{ice}}{\Delta n}\left(\ln\left(\frac{n_s}{\
 
 Note that, in either the limit of $z \rightarrow 0$, or $\exp{z/z_0} \approx 1+z/z_0$, the solutions are quadratic, with curvature controlled by $z_0^{-1}$.  That is, if $z_0$ increases, the concavity of the ray path, and thus, the level of shadowing, decreases.  It is fascinating that the same snow metamorphosis that controls the compaction from snow to ice through gravity also controls the amount of ray bending, and that this number is measurable from the density variation versus depth.
 
-Note: I will fill in tomorrow all the constants like $Q_1$ and $Q_0$.  I have triple checked the units of everything.  If the units don't seem to work, it's because the units are held in the constants.
+\section{Horizontal and Near-Surface Propagation}
 
-\section{Surface Propagation}
+Thus far, the index of refraction versus depth has been treated as a smooth function.  However, perturbations from the smooth profile are introduced by variable yearly weather patterns (cite).  Over-densities and under-densities can lead to local minima and maxima in the index of refraction profile.  Let one such local under-density be described by a quadratic perturbation from what is otherwise an approximately constant $n_{\rm 0}$ value:
+
+\begin{align}
+n(z) &= n_0 - a(z-z_0)^2 \label{eq:perturb} \\
+\dot{n} &= -2a(z-z_0) \\
+q &= z-z_0
+\end{align}
+
+Solve Eq. \ref{eq:main} with Eq. \ref{eq:perturb}, near $q=0$ and neglecting terms up to order $q^2$, the variables-separable differential equation may be solved:
+
+\begin{align}
+\frac{du}{dq} &\approx \left(\frac{2aq}{n_0}\right) u^3 \\
+\frac{dq}{dy} &\approx \pm \sqrt{-2\left(\frac{a}{n_0}\right) q^2 + C_0}
+\end{align}
+
+Choosing $C_0$ merely restricts the phase of what will become the phase of the signal.  The phase of the signal is not important under the assumption that the index profile does not depend on the horizontal coordinate.  In Monte Carlo codes this assumption may be relaxed.  Thus,
+
+\begin{align}
+\frac{dq}{dy} = &\approx \pm i \sqrt{2\left(\frac{a}{n_0}\right)}q \\
+\omega^2 &= 2 \left(\frac{a}{n_0}\right) \\
+\frac{dq}{dy} &= \pm i\omega q \label{eq:SHO}
+\end{align}
+
+Equation \ref{eq:SHO} admits harmonic solutions, and the spatial frequency $\omega$ is controlled by the size of the perturbation $a$ relative to the local $n_0$ value:
+
+\begin{equation}
+q(y) = A\exp(i\omega y) + B\exp(-i\omega y)
+\end{equation}
+
+The problem may also be worked with an over-density in the index of refraction profile, and the problem is the same up to an overall minus sign.  In Eqs. \ref{eq:SHO1}-\ref{eq:SHO2}, $\omega_{-}$ corresponds to an under-density $n(z) = n_0 - aq^2$, and $\omega_{+}$ corresponds to an over-density $n(z) = n_0 + aq^2$:
+
+\begin{align}
+\frac{dq}{dy} &= \pm i\omega_{-} q \label{eq:SHO1} \\
+\frac{dq}{dy} &= \mp i\omega_{+} q \label{eq:SHO2}
+\end{align}
 
 \end{document}

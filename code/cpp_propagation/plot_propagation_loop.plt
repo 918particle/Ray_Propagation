@@ -5,7 +5,7 @@ unset key
 set tics font "Courier,22"
 set xlabel "Horizontal Distance (m)" offset 0,-2 font "Courier,26"
 set ylabel "Vertical Distance (m)" offset -4,0 font "Courier,26"
-set title "Index: SPICE core data.  Angles: [25,35] in 0.5 deg steps." font "Courier,18"
+set title "Index: Fit to Moore's Bay.  Angles: [-10,10] in 0.5 deg steps." font "Courier,18"
 set lmargin 14.0
 set rmargin 9.0
 set bmargin 7.0
@@ -18,6 +18,6 @@ set arrow 4 from 0,-70 to 4000,-70 nohead ls 1
 set arrow 5 from 0,-65 to 4000,-65 nohead ls 1
 set arrow 6 from 0,-60 to 4000,-60 nohead ls 1
 set terminal postscript color enhanced
-set output "May11_plot3.eps"
+set output "MooresBay_Model.eps"
 
 plot for [i=0:2099] 'data/propagation_path_'.i.'.dat' w l lw 0.2 lc rgb "#999999"

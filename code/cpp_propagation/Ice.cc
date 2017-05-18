@@ -9,7 +9,7 @@ void Ice::CreateIce(float r,float z,bool fitn,bool fitl,std::string modelName)
 	_z = z;
 	_useIndexFit = fitn;
 	_useAttenuationLengthFit = fitl;
-	if(modelName=="SPICE")
+	if(modelName=="SPICE" || modelName=="RICE")
 	{
 		_A = 1.78;
 		_B = 0.427;
@@ -30,6 +30,81 @@ void Ice::CreateIce(float r,float z,bool fitn,bool fitl,std::string modelName)
 		_B = 0.464;
 		_C = 0.0244;
 		std::ifstream in("/home/jordan/ANewHope/Byrd_data.csv");
+		float depth,index;
+		while(in.good() && ~in.eof())
+		{
+			in>>depth;
+			in>>index;
+			_indexVsDepth.push_back(std::pair<float,float>(depth,index));
+		}
+		in.close();
+	}
+	else if(modelName=="MB1")
+	{
+		_A = 1.78;
+		_B = 0.46;
+		_C = 0.029;
+		std::ifstream in("/home/jordan/ANewHope/ARIANNA_Borehole_1.dat");
+		float depth,density;
+		while(in.good() && ~in.eof())
+		{
+			in>>depth;
+			in>>density;
+			_indexVsDepth.push_back(std::pair<float,float>(-depth,1.0+0.86*density/1000.0));
+		}
+		in.close();
+	}
+	else if(modelName=="MB2")
+	{
+		_A = 1.78;
+		_B = 0.46;
+		_C = 0.027;
+		std::ifstream in("/home/jordan/ANewHope/ARIANNA_Borehole_2.dat");
+		float depth,density;
+		while(in.good() && ~in.eof())
+		{
+			in>>depth;
+			in>>density;
+			_indexVsDepth.push_back(std::pair<float,float>(-depth,1.0+0.86*density/1000.0));
+		}
+		in.close();
+	}
+	else if(modelName=="Mizuho")
+	{
+		_A = 1.78;
+		_B = 0.423;
+		_C = 0.027;
+		std::ifstream in("/home/jordan/ANewHope/Mizuho_data.csv");
+		float depth,index;
+		while(in.good() && ~in.eof())
+		{
+			in>>depth;
+			in>>index;
+			_indexVsDepth.push_back(std::pair<float,float>(depth,index));
+		}
+		in.close();
+	}
+	else if(modelName=="Eisen")
+	{
+		_A = 1.78;
+		_B = 0.48;
+		_C = 0.02;
+		std::ifstream in("/home/jordan/ANewHope/Eisen_Maud_data.csv");
+		float depth,index;
+		while(in.good() && ~in.eof())
+		{
+			in>>depth;
+			in>>index;
+			_indexVsDepth.push_back(std::pair<float,float>(depth,index));
+		}
+		in.close();
+	}
+	else if(modelName=="Gow")
+	{
+		_A = 1.78;
+		_B = 0.435;
+		_C = 0.016;
+		std::ifstream in("/home/jordan/ANewHope/Gow_withOnePlus86_data.csv");
 		float depth,index;
 		while(in.good() && ~in.eof())
 		{
