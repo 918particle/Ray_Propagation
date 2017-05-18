@@ -19,6 +19,7 @@ class Ice
 	float _C; //Index parameter C, units of 1/meters because it's the compactification rate
 	void CreateIce(float,float,bool,bool,std::string = "");
 	float GetIndex(float); //Return index of refraction at given depth in meters
+	float GetAttenuationLength(float); //Return attenuation length at given depth in meters
 	void LoadIndexData(std::string); //Load and interpolate index of refraction data
 };
 

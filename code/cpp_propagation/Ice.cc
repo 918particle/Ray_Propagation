@@ -151,3 +151,39 @@ float Ice::GetIndex(float z)
 		}
 	}
 }
+
+float Ice::GetAttenuationLength(float z)
+{
+	if(_useAttenuationLengthFit)
+	{
+		if(z>0)
+		{
+			return 1.0e6;
+		}
+		else
+		{
+			return 1000.0;
+		}
+	}
+	else
+	{
+		if(z>0.0)
+		{
+			return 1.0;
+		}
+		else
+		{
+			std::vector<std::pair<float,float> >::iterator i = _attenuationLengthVsDepth.begin();
+			while(i!=_attenuationLengthVsDepth.end())
+			{
+				if(z<=(*i).first) ++i;
+				else break;
+			}
+			if(i==_indexVsDepth.end()) return 1000.0;
+			else
+			{
+				return (*i).second + ((*(i-1)).second-(*i).second)/((*(i-1)).first-(*i).first)*(z-(*i).first);
+			}
+		}
+	}
+}

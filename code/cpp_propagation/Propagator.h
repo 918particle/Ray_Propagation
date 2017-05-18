@@ -6,7 +6,7 @@
 #ifndef PROPAGATOR_H_
 #define PROPAGATOR_H_
 
-class Propagator : public Ice, public Reflector, public Emitter
+class Propagator : public Ice, public Reflector, public Emitter, public RFRay
 {
 	public:
 		float _globalTime; //nanoseconds
