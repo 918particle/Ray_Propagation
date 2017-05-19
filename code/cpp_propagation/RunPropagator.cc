@@ -18,12 +18,12 @@ int main()
 		p.AddReflector(z,r);
 		std::cout<<"Added reflecting layer at "<<z<<" meters with R= "<<r<<std::endl;
 	}
-	for(float t=20.0;t<=30.0;t+=0.5)
+	for(float t=-6.5;t<=-6.5;t+=0.5)
 	{
 		std::cout<<"Angle: "<<t<<std::endl;
-		for(int i=0;i<100;++i)
+		for(int i=0;i<1;++i)
 		{
-			p.InitializePropagator(20000.0,1000.0,-2700.0,true,true,"SPICE",250.0,-1200.0,t);
+			p.InitializePropagator(20000.0,1000.0,-2700.0,true,true,"SPICE",0.0,20.0,t);
 			p.Propagate();
 			std::stringstream ss;
 			ss<<count;

@@ -17,7 +17,10 @@ void Reflector::CheckForAReflection(float &alpha,float z)
 		{
 			if(float(rand())/float(RAND_MAX)<(*i).second)
 			{
-				alpha = -alpha;
+				if(alpha>0.0 && alpha<=90.0*3.14159/180.0)
+				{
+					alpha = -alpha;
+				}
 			}
 		}
 		++i;

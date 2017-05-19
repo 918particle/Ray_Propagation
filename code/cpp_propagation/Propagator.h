@@ -13,8 +13,6 @@ class Propagator : public Reflector, public RFRay
 		float _globalTime; //nanoseconds
 		float _timeStep; //nanoseconds
 		std::pair<float,float> _currentPosition; //(x,z) coordinates, meters
-		//The path traveled in (x,z) coordinates by the ray, and each pair goes with one time-step.
-		std::vector<std::pair<float,float> > _path;
 		bool _isInitialized; //1 if InitializePropagator has been executed.
 		//Constructor
 		Propagator() : _globalTime(0.0), _timeStep(10.0), _isInitialized(false)
