@@ -3,10 +3,9 @@
 #include <fstream>
 #include <iostream>
 
-void Ice::CreateIce(float r,float z,bool fitn,bool fitl,std::string modelName)
+void Ice::CreateIce(std::pair<float,float> d,bool fitn,bool fitl,std::string modelName)
 {
-	_r = r;
-	_z = z;
+	_dimensions = d;
 	_useIndexFit = fitn;
 	_useAttenuationLengthFit = fitl;
 	if(modelName=="SPICE" || modelName=="RICE")

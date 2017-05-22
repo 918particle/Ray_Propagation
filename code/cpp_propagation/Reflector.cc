@@ -2,10 +2,10 @@
 #include <cmath>
 #include <cstdlib>
 
-void Reflector::CreateReflector(float z,float r)
+void Reflector::CreateReflector(std::pair<float,float> x)
 {
 	//That's the depth, and the reflection coefficient
-	_data.push_back(std::pair<float,float>(z,r));
+	_data.push_back(x);
 }
 
 void Reflector::CheckForAReflection(float &alpha,float z)
@@ -17,10 +17,7 @@ void Reflector::CheckForAReflection(float &alpha,float z)
 		{
 			if(float(rand())/float(RAND_MAX)<(*i).second)
 			{
-				if(alpha>0.0 && alpha<=90.0*3.14159/180.0)
-				{
-					alpha = -alpha;
-				}
+				alpha = -alpha;
 			}
 		}
 		++i;
