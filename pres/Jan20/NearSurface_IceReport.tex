@@ -15,7 +15,7 @@ The standard model for the index of refraction in Antarctic firn is presented as
 
 \section{A Derivation of the Density Profile}
 
-The \textit{compressibility} $\chi$ of a simple block of material with volume $l^3 = v$ and uniform pressure $p$ is defined as
+The \textit{compressibility} $\chi$ of a simple block of material with volume $l^2\Delta z' = v$ and uniform pressure $p$ is defined as
 
 \begin{equation}
 \chi = -\frac{1}{v} \frac{\Delta v}{\Delta p}
@@ -29,96 +29,155 @@ Rearranging,
 \label{eq:comp2}
 \end{equation}
 
-Suppose that a block comprised of snow, ice and air, known as \textit{firn}, with volume $l^3 = v$ is compressed by a pressure $p$ originating from a force in one direction.  The density of the block is $m/l^3$, where $m$ is the mass.  The length of the block on the compressed side becomes $l-\epsilon = \Delta l$, the volume decreases by $\Delta v = v_{ f} - v_{ i} = -\epsilon l^2$, and the change in density is
+Suppose that a block comprised of snow, ice and air, known as \textit{firn}, with volume $l^2\Delta z' = v$ is compressed by a pressure $p$ originating from a force in the z-direction.  The density of the uncompressed block is $m/(l^2\Delta z')$, where $m$ is the mass.  The length of the block on the compressed side becomes $\Delta z'-\epsilon = \Delta z$, the volume decreases by $\Delta v = v_{ f} - v_{ i} = -\epsilon l^2$, and the change in density is
 
 \begin{equation}
-\Delta \rho = \rho_{f} - \rho_{i} = m \left( \frac{1}{v_{f}} - \frac{1}{v_{i}} \right) = -\frac{m\Delta v}{v_{f} v_{ i}} = -\rho_{f} \frac{\Delta v}{v}
+\Delta \rho = \rho_{f} - \rho_{\rm ice} = m \left( \frac{1}{v_{f}} - \frac{1}{v_{i}} \right) = -\frac{m\Delta v}{v_{f} v_{ i}} = -\rho_{f} \frac{\Delta v}{v}
 \label{eq:deltarho}
 \end{equation}
 
-The initial volume $v_i = v = l^3$.  Substituting Eq. \ref{eq:comp2} into Eq. \ref{eq:deltarho}, 
+From now on, the initial volume is $v_i = v$.  Substituting Eq. \ref{eq:comp2} into Eq. \ref{eq:deltarho}, 
 
 \begin{align}
 \Delta \rho =& \rho_{f} \chi \Delta p \\
 \Delta p =& \left(\chi \rho_{f}\right)^{-1} \Delta \rho
 \end{align}
 
-Dividing both sides by $\Delta l$, and taking the limit that $\Delta l \to 0$ and that $\chi$ does not depend on $l$, 
+Dividing both sides by $\Delta z$, taking the limit $\Delta z \to 0$, and relabelling $\rho_{\rm f}$ to simply $\rho$:
 
 \begin{align}
-\frac{\Delta \rho}{\Delta l} =& \left(\rho_{f} \chi \right)^{-1} \frac{\Delta p}{\Delta l} \\
-\Aboxed{p' =& \left(\chi \rho_{f}\right)^{-1} \rho'} \label{eq:note}
+\frac{\Delta p}{\Delta z} =& \left(\rho_{f} \chi \right)^{-1} \frac{\Delta \rho}{\Delta z} \\
+\Aboxed{p' =& \left(\chi \rho\right)^{-1} \rho'} \label{eq:note}
 \end{align}
 
-This compressibility result relates changes in pressure to changes in density, and will become useful for simplification in the following derivation.  Let the region of firn be described by $N$ firn blocks labelled by $j$, with varying density $\rho_j$.  Let the snow surface correspond to $j=N$, $z=0$, and the beginning of solid ice (the bottom of the firn) correspond to $j=0$, $z=-h$.  Each block has a height $\Delta z$, and a volume $v = A\Delta z$.  The normal force $f = p_{n} A$ on block $j$ must oppose the weight of block $j$, and the weight of the firn mass above block $j$, summed up to the surface:
+Equation \ref{eq:note} relates changes in pressure to changes in density, and it will be required for the derivation of the firn density profile.  There are three potential choices for implementing Eq. \ref{eq:note} in the firn derivations.  First, the assumption may be taken that \textit{$\left(\chi \rho\right)^{-1} = \left(\chi_0 \rho_0\right)^{-1}$ is an empirical constant} relating $p'(z)$ to $\rho'(z)$, akin to assuming constant compressibility for some average density range.  Second, the assumption may be taken that \textit{$\chi(z)$ depends on depth, and $\rho=\rho_0$ is some empirical constant}.  This assumption simplifies the following mathematics, relative to the third possibility that both factors in \textit{$(\chi(z)\rho(z))^{-1}$ depend on depth}.  The following three sections compare the implications of these assumptions.
+
+\subsection{Firn profile, with $p'(z) = (\chi_0\rho_0)^{-1} \rho'(z)$}
+\label{sec:firn1}
+
+Let the region of firn be described by $N$ firn blocks labelled by $j$, with varying density $\rho_j$.  Let the snow surface correspond to $j=N$, $z=0$, and the beginning of solid ice (the bottom of the firn) correspond to $j=0$, $z=-h$.  Each compressed block has a height $\Delta z$, and a volume $v = l^2\Delta z$.  The normal force $f = p_{j} A$ on block $j$ must oppose the weight of block $j$, and the total mass M of the firn above block $j$:
 
 \begin{align}
-A p_{nj} &= g\left(m_{j} + M\right) \label{eq:force1} \\
-M &= \sum_{i = j+1}^{N} m_{i} = \sum_{i = j+1}^{N} \rho_{i} A dz g \label{eq:force2} \\
-m_{j} &= \rho_{i} A dz g \label{eq:force3}
+l^2 p_{j} &= g\left(m_{j} + M\right) \label{eq:force1} \\
+M &= \sum_{i = j+1}^{N} m_{i} = \sum_{i = j+1}^{N} \rho_{\rm ice} l^2 \Delta z g \label{eq:force2} \\
+m_{j} &= \rho_{j} l^2 \Delta z g \label{eq:force3}
 \end{align}
 
-Combining the Eqs. \ref{eq:force1}-\ref{eq:force3}, and cancelling the common $A$ factor,
+Combining Eqs. \ref{eq:force1}-\ref{eq:force3}, and cancelling the common $l^2$ factor,
 
 \begin{equation}
-p_{nj} = g \sum_{i = j}^{N} \rho_{i} dz
+p_{j} = g \sum_{i = j}^{N} \rho_{\rm ice} \Delta z
 \end{equation}
 
-Taking the limit $dz \to 0$, $A \to \infty$ in a way that leaves $v = A dz$ constant, 
+Take the limit $\Delta z \to 0$:
 
 \begin{equation}
 p(z) = g \int_{z}^{0} \rho(z') dz'
 \label{eq:rho1}
 \end{equation}
 
-Taking the derivative of both sides, applying the fundamental theorem of calculus, and rearranging
+Reversing the limits of integration, and taking the derivative of both sides:
 
 \begin{equation}
--g^{-1} p'(z) = \rho(z) - \rho(0)
+p'(z) = -g(\rho(z) - \rho(0))
 \label{eq:rho2}
 \end{equation}
 
-Substituting Eq. \ref{eq:note} into Eq. \ref{eq:rho2} (relabelling the final density $\rho_0$), and rearranging
+Substituting Eq. \ref{eq:note} into Eq. \ref{eq:rho2}, assuming $(\chi_0\rho_0)^{-1}$ is some coefficient,
 
 \begin{equation}
-\rho' = -\left(g \chi \rho_{0}\right)\rho(z) + \left(g \chi \rho_{0}\right)\rho(0)
+\rho' = -\left(g \chi_0 \rho_0\right)(\rho(z)-\rho(0))
 \label{eq:rho3}
 \end{equation}
 
-Defining two constants $k_1$ and $k_2$, Eq. \ref{eq:rho3} may be put into the following form:
+Differentiating once more yields:
 
 \begin{equation}
-\rho' = k_1 \rho(z) + k_2
+\rho'' = -\left(g \chi_0 \rho_{0}\right) \rho'
 \label{eq:rho4}
 \end{equation}
 
-Try the following solution, with boundary conditions $\rho(0) = \rho_s$ and $\rho(z\to-\infty) \to \rho_i$:
+The factor in parentheses has dimensions of inverse length: $z_0^{-1} = \left(g \chi_0 \rho_{0}\right)$.  There are two boundary conditions: the surface behavior $\rho(0) = \rho_{\rm s}$, and the deep behavior $\lim_{z\to-\infty} \rho(z) = \rho_{\rm ice}$, requiring the second-order differential equation.  Letting $\Delta\rho = \rho_{\rm ice} - \rho_{\rm s}$, the following equation is a solution to Eq. \ref{eq:rho4}:
 
 \begin{equation}
-\rho(z) = A - B \exp(z/z_0)
+\boxed{\rho(z) = \rho_{\rm ice} - \Delta \rho \exp(z/z_0)}
 \label{eq:rho5}
 \end{equation}
 
-For now, assume $z_0$ is a free parameter.  Equation \ref{eq:rho5} solves Eq. \ref{eq:rho4} if $A = \rho_i$ and $B = \Delta \rho = \rho_i - \rho_s$, giving the final solution
+Although the depth-scale $z_0$ of the firn is controlled by the compressibility of the firn ice $chi_0$, this relation is empirical until the compressibility depth-dependence is specified.  It is shown in Sec. \ref{sec:fit} that Eq. \ref{eq:rho5} is an excellent fit to firn data taken from around Antarctica.
+
+\subsection{Firn profile, with $p'(z) = (\chi(z)\rho_0)^{-1} \rho'(z)$}
+\label{sec:firn2}
+
+If the compressibility $\chi=\chi(z)$ depends on depth, then Eq. \ref{eq:rho5} becomes
 
 \begin{equation}
-\boxed{\rho(z) = \rho_i - \Delta \rho \exp(z/z_0)}
+\rho'' = -(g\rho_0)(\chi\rho'+\chi'\rho)
 \label{eq:rho6}
 \end{equation}
 
-Physical insight on the remaining parameter $z_0$ may be gained by using Eq. \ref{eq:rho4} with Eq. \ref{eq:rho6} to find
+Given that the form of Eq. \ref{eq:rho5} matches empirical data, then $\chi(z)$ may be found by solving Eq. \ref{eq:rho6}.  Inserting $\rho(z)$ and $\rho'(z)$ from Eq. \ref{eq:rho5} into Eq. \ref{eq:rho6},
 
 \begin{equation}
-k_1 = z_0^{-1} \label{eq:insight1}
+\chi' = \frac{\chi z_0^{-1} + g\rho_0z_0^{-2}}{\left(\frac{\rho_{\rm ice}}{\Delta\rho}\right)e^{-z/z_0} - 1}
+\label{eq:rho7}
 \end{equation}
 
-From Eq. \ref{eq:rho3}
+Let $y = z_0^{-1} \chi + g\rho_0 z_0^{-2}$, $\Delta\rho/\rho_{\rm ice} = q$, and $u = z/z_0$.  Equation \ref{eq:rho7} simplifies to
 
 \begin{equation}
-\boxed{z_0^{-1} =  g\chi\rho_0} \label{eq:insight2}
+\frac{dy}{du} = \frac{q e^{u}}{1-q e^{u}}
+\label{eq:diffrho1}
 \end{equation}
 
-In conclusion, the steepness of the density profile with depth (controlled by $z_0$) depends directly on the compressibility of the firn.
+This differential equation is first-order, admitting one integration constant $c_1$ in the solution:
+
+\begin{equation}
+y(u) = c_1(1-qe^u)^{-1}
+\label{eq:diffrho2}
+\end{equation}
+
+Replacing variables with the original definitions,
+
+\begin{equation}
+\chi(z) = \frac{c_1z_0}{1-\left(\frac{\Delta\rho}{\rho_{\rm ice}}\right)e^{z/z_0}} - (g\rho_0z_0)^{-1}
+\end{equation}
+
+Taking the deep limit $\lim_{z\to-\infty} \chi(z) = \chi_{\rm ice}$, $c_1 = z_0^{-1}(\chi_{\rm ice}-(g\rho_0z_0)^{-1})$.  Defining the \textit{firn compressibility} $\chi_{\rm f} = (g\rho_0z_0)^{-1}$, Eq. \ref{eq:diffrho2} becomes
+
+\begin{equation}
+\chi(z) = \frac{\chi_{\rm ice}+\chi_{\rm f}}{1-\left(\frac{\Delta\rho}{\rho_{\rm ice}}\right)e^{z/z_0}}-\chi_{\rm f}
+\label{eq:chi1}
+\end{equation}
+
+Notice that if the deep limit is taken, $\chi \to \chi_{\rm ice}$.  If $z = 0$, $\chi(0) = \chi_{\rm s}$ is
+
+\begin{equation}
+\rho_{\rm s} \chi_{\rm s} = \rho_{\rm ice}\chi_{\rm ice}+\Delta\rho\chi_{\rm f}
+\label{eq:chi2}
+\end{equation}
+
+Equation \ref{eq:chi2} is physically intuitive.  The ice compressibility should be much smaller than than the snow compressibility ($\chi_{\rm ice} \ll \chi_{\rm s}$), in which case the firn compressibility is the snow compressibility times the fractional density change from the surface to the firn.
+
+\subsection{Firn profile, with $p'(z) = (\chi(z)\rho(z))^{-1} \rho'(z)$}
+\label{sec:firn3}
+The model for compressibilty $\chi(z)$ in Sec. \ref{sec:firn2} that preserves the firn density profile found in Sec. \ref{sec:firn1} (which matches the data in Sec. \ref{sec:fit}) is physically intiuitive for several reasons.  First, it must contain the fact that snow in the upper firn is more compressible than pure ice at depths $z \ll z_0$.  Second, it fits the boundary conditions, in that the firn compressibility is a weighted difference between the surface compressibility and ice compressibility (Eq. \ref{eq:chi2}).  Third, the firn scale $z_0^{-1} = g\rho_0\chi_{\rm f}$ is shown to be proportional to the firn compressibility, $\chi_{\rm f}$.  That is, the more compressible the surface snow for a given glacier, ice sheet, or ice shelf, the smaller is $z_0$, leading to a shallower transition to solid ice.
+
+The $\rho_0$ parameter is not yet explained, however.  It may be included in the model, provided that $p'(z) = (\chi(z)\rho(z))^{-1} \rho'(z)$.  Let $\rho(0) = \rho_{\rm s}$,  $p'(z) = (\chi(z)\rho(z))^{-1} \rho'(z)$, and insert these statements into Eq. \ref{eq:rho3}:
+
+\begin{equation}
+\rho'(z) = -g\rho^2(z)\chi(z) + g\rho(z)\rho_{\rm s}\chi(z)
+\label{eq:chi3}
+\end{equation}
+
+In the same fashion as Sec. \ref{sec:firn2}, the compressibility function $chi(z)$ may be derived by asserting Eq. \ref{eq:rho5}.  The result is
+
+\begin{equation}
+\chi(z) = \frac{\chi_{\rm ice}}{ 2\cosh(z/z_0) - \left(\frac{\rho_{\rm s}}{\rho_{\rm ice}}\right) e^{z/z_0} - \left(1+\frac{\Delta\rho}{\rho_{\rm ice}}\right)  }
+\label{eq:chi4}
+\end{equation}
+
+This result is very similar in behavior to Eq. \ref{eq:chi1}, as shown in Fig.
 
 \section{Remark about the Index of Refraction Profile}
 
@@ -178,6 +237,7 @@ Using $n_s = \epsilon_s'^2 = 1.3$, $n_i = \epsilon_i'^2 = 1.78$, $\rho_s = 0.4$ 
 \end{equation}
 
 \section{Fitting the Firn Model to the Data}
+\label{sec:fit}
 
 Many analyses and derivations have been done to produce the index of refraction versus depth curve in different locations throughout Antarctica.  Figure \ref{fig:fig1} contains a summary of such measurements.  In the figure, the function $n(z) = A-B\exp(Cz)$ is fit to the data points.  Where density data was available, the empirical conversion of $n(z) = 1.0 + 0.86\rho(z)$ has been used.
 
@@ -203,7 +263,7 @@ Note that the Schytt model quoted by (Hanson 2015) found that $q = z_0 = 35.4$ m
 z = \left( \frac{p-p_0}{\rho_i g}\right) \left \lbrace 1-\chi\left(\frac{p+p_0}{2} - p_n \right) \right \rbrace (1+\alpha_i\theta) \\ + \left \lbrace \frac{1}{\rho_0 g}-\frac{1-\chi(p_0-p_n)}{\rho_i g} \right \rbrace p_0 \ln (p/p_0) (1+\beta_a\theta)
 \end{multline}
 
-The parameters in the equation of depth, $z$, versus pressure, $p$, are as follows: $p_0$ is the pressure at the surface, $\rho_i$ is the density of ice (0.91670 g/cc) at a pressure $p_n=1$ atmosphere and a temperature $\theta = 0^{\circ}$ C, with a  volumetric compressibility of $\chi = 1.2 \times 10^{-5}$ bar$^{-1}$, a coefficient of linear expansion of $\alpha_i = 5.1 \times 10^{-5}$ C$^{\circ -1}$, and surface density of $\rho_0$.  A value of $94.306$ kPa is chosen for the surface pressure, corresponding to an altitude of $\approx 0.5$ km.  The temperature $\theta$ is the average temperature through the firn, taken to be $-10$ C$^{\circ}$ in Fig. 1 (Hanson dissertation).
+The parameters in the equation of depth, $z$, versus pressure, $p$, are as follows: $p_0$ is the pressure at the surface, $\rho_{\rm ice}$ is the density of ice (0.91670 g/cc) at a pressure $p_n=1$ atmosphere and a temperature $\theta = 0^{\circ}$ C, with a  volumetric compressibility of $\chi = 1.2 \times 10^{-5}$ bar$^{-1}$, a coefficient of linear expansion of $\alpha_i = 5.1 \times 10^{-5}$ C$^{\circ -1}$, and surface density of $\rho_0$.  A value of $94.306$ kPa is chosen for the surface pressure, corresponding to an altitude of $\approx 0.5$ km.  The temperature $\theta$ is the average temperature through the firn, taken to be $-10$ C$^{\circ}$ in Fig. 1 (Hanson dissertation).
 
 \begin{table}[ht]
 \centering
