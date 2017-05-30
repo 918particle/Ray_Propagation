@@ -14,14 +14,14 @@ int main()
 	std::pair<float,float> emitter_p(0.0,-800.0);
 	std::pair<bool,bool> preferences(true,true);
 	float globalTime = 10000.0;
-	
+
 	Propagator p;
-	// for(float z=-75.0;z<0.0;z+=5.0)
-	// {
-	// 	float r = float(rand())/float(RAND_MAX)/10.0;
-	// 	p.AddReflector(std::pair<float,float>(z,r));
-	// 	std::cout<<"Added reflecting layer at "<<z<<" meters with R= "<<r<<std::endl;
-	// }
+	for(float z=-75.0;z<0.0;z+=5.0)
+	{
+		float r = float(rand())/float(RAND_MAX)/10.0;
+		p.AddReflector(std::pair<float,float>(z,r));
+		std::cout<<"Added reflecting layer at "<<z<<" meters with R= "<<r<<std::endl;
+	}
 	for(float t=10.0;t<=60.0;t+=1.0)
 	{
 		std::cout<<"Angle: "<<t<<std::endl;
@@ -31,7 +31,7 @@ int main()
 			p.Propagate();
 			std::stringstream ss;
 			ss<<count;
-			std::string title = "propagation_path_"+ss.str()+".dat";
+			std::string title = "data/propagation_path_"+ss.str()+".dat";
 			p.ReadoutPath(title);
 			++count;
 		}
