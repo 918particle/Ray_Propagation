@@ -20,7 +20,7 @@ bool Reflector::CheckForAReflection(float &alpha,float z, int scattering_type, d
 			{
 				if(alpha>0.0 && alpha<=90.0*3.14159/180.0)
 				{
-					if(scattering_type == 1) // specular
+					if(scattering_type == 1) // Specular
 					{
 						alpha = -alpha;
 						ray_refracted = false;

@@ -26,7 +26,7 @@ def select_model(): #User inputs desired model (selects which file to use as mai
 		print ''
 		os.system('echo option invalid')
 		model = select_model()
-	return model  #python 3 switches raw_input to just input. However, input evaluates expession.
+	return model  #Python 3 switches raw_input to just input. However, input evaluates expession.
 
 def select_scatter(): #User inputs desired scatter (Sets scatter_type in cpp files)
 	print ''

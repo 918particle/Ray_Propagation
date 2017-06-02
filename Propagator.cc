@@ -45,7 +45,7 @@ void Propagator::ReadoutPath(std::string title)
 void Propagator::Propagate()
 {
 	float tolerance = 0.02; //To prevent unphysical propagation, treat specical angles
-	float c0 = 0.299792458; //speed of light in vacuum, meters per nanosecond
+	float c0 = 0.299792458; //Speed of light in vacuum, meters per nanosecond
 	float dz = 1.0e-4; //units: meters
 	float dndz = 0.0; //units: meters^(-1)
 	float theTime = 0.0;

@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 			{
 				pos_angle = t;
 			}
-			p.gaussianDist = g.rand_normal(pos_angle,90.0); // inputs are mean,STD
+			p.gaussianDist = g.rand_normal(pos_angle,90.0); // Inputs are mean,STD
 			if(p.gaussianDist < 0.0)
 			{
 				p.gaussianDist = 0.0;

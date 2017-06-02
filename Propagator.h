@@ -13,7 +13,7 @@ class Propagator : public Reflector, public RFRay
 	public:
 		float _globalTime; //nanoseconds
 		float _timeStep; //nanoseconds
-		double gaussianDist; //random number from gaussian distribution about specular angle
+		double gaussianDist; //Random number from gaussian distribution about specular angle
 		int scatteringType; //1: Specular 
 							//2: Lamberitian Diffuse (gassian dist around specular angle)
 
