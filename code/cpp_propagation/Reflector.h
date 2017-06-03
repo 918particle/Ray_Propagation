@@ -2,6 +2,7 @@
 #include <vector>
 #include "Ice.h"
 #include "Gaussian.h"
+#include "Gaussian.h"
 
 #ifndef REFLECTOR_H_
 #define REFLECTOR_H_
