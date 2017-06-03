@@ -15,8 +15,9 @@ class Reflector
 	};
 	float _range; //If the ray is within _range meters of the depth of some reflector, introduce a reflection
 	std::vector<std::pair<float,float> > _data; //Structure of depths and reflection coefficients (meters and unitless)
-	void CreateReflector(float,float); //Add a reflection surface
+	void CreateReflector(std::pair<float,float>); //Add a reflection surface
 	bool CheckForAReflection(float&,float,int,double); //If the ray-depth is near a reflector, change the angle (specularly)
+
 };
 
 #endif
