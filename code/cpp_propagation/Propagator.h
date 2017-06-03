@@ -1,19 +1,23 @@
 #include "Ice.h"
 #include "Reflector.h"
 #include "Emitter.h"
+#include "RFRay.h"
+#include "Gaussian.h"
 #include <string>
 
 #ifndef PROPAGATOR_H_
 #define PROPAGATOR_H_
 
-class Propagator : public Ice, public Reflector, public Emitter
+class Propagator : public Reflector, public RFRay
 {
 	public:
 		float _globalTime; //nanoseconds
 		float _timeStep; //nanoseconds
+		double gaussianDist; //Random number from gaussian distribution about specular angle
+		int scatteringType; //1: Specular 
+							//2: Lamberitian Diffuse (gassian dist around specular angle)
+
 		std::pair<float,float> _currentPosition; //(x,z) coordinates, meters
-		//The path traveled in (x,z) coordinates by the ray, and each pair goes with one time-step.
-		std::vector<std::pair<float,float> > _path;
 		bool _isInitialized; //1 if InitializePropagator has been executed.
 		//Constructor
 		Propagator() : _globalTime(0.0), _timeStep(10.0), _isInitialized(false)
