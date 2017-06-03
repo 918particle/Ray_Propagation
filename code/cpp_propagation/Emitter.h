@@ -12,7 +12,7 @@ class Emitter
 	}
 	float _initialAngle; //initial angle with respect to horizontal, entered as degrees
 	std::pair<float,float> _emitterPosition; //(x,z) position
-	void InitializeEmitter(float,float,float); //set emitter x, z, and initial angle
+	void InitializeEmitter(std::pair<float,float>,float); //set emitter x, z, and initial angle
 };
 
 #endif

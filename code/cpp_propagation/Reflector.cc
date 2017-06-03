@@ -2,10 +2,10 @@
 #include <cmath>
 #include <cstdlib>
 
-void Reflector::CreateReflector(float z,float r)
+void Reflector::CreateReflector(std::pair<float,float> x)
 {
 	//That's the depth, and the reflection coefficient
-	_data.push_back(std::pair<float,float>(z,r));
+	_data.push_back(x);
 }
 
 bool Reflector::CheckForAReflection(float &alpha,float z, int scattering_type, double diffuse_angle)

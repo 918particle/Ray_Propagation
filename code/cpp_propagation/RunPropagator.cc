@@ -10,6 +10,11 @@ int main(int argc, char *argv[])
 	//Seed rand()
 	srand(time(NULL));
 	int count = 0;
+	std::pair<float,float> ice_d(1000.0,-2000.0);
+	std::pair<float,float> emitter_p(0.0,-800.0);
+	std::pair<bool,bool> preferences(true,true);
+	float globalTime = 10000.0;
+
 	Gaussian g;
 	Propagator p;
 	p.scatteringType = atoi(argv[1]); // 1: Speculac, 2: Diffuse
@@ -50,6 +55,8 @@ int main(int argc, char *argv[])
 			}
 			// Run propagation functions
 			p.InitializePropagator(20000.0,1000.0,-2700.0,true,true,"SPICE",250.0,-600.0,t);
+			//p.InitializePropagator(globalTime,ice_d,preferences,"SPICE",emitter_p,t);
+
 			p.Propagate();
 			// Terminal output
 			std::stringstream ss;
