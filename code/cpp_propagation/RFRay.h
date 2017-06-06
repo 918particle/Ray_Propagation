@@ -9,7 +9,7 @@ class RFRay : public Emitter, public Ice
 	public:
 	RFRay() : _distanceTravelled(0.0), _rfLoss(0.0), _freq(0.0){};
 	void SetFreq(float);
-	void Update(std::pair<float,float>,float); //Updates _distanceTravelled and _rfLoss, after changing the position
+	void Update(float,float,float); //Updates _distanceTravelled and _rfLoss, after changing the position
 	//Variables
 	std::pair<float,float> _currentPosition; //Current position in (x,z)
 	float _currentAngle; //Current angle with respect to horizontal
