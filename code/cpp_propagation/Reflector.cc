@@ -8,7 +8,7 @@ void Reflector::CreateReflector(std::pair<float,float> x,std::pair<int,float> y)
 	_reflectorTypes.push_back(y);
 }
 
-void Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
+void Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p,float &amplitude)
 {
 	std::vector<std::pair<float,float> >::iterator i = _data.begin();
 	std::vector<std::pair<int,float> >::iterator j = _reflectorTypes.begin();
@@ -21,21 +21,34 @@ void Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
 			//s-polarized component
 			float a = s*cos(alpha);
 			float b = sqrt(1.0-(s*s*sin(alpha)*sin(alpha)));
-			float rs = p[1]*(a-b)/(a+b)*p[1]*(a-b)/(a+b);
+			float rs = (a-b)/(a+b); //reflected s-pol. relative amplitude (Jackson 7.39)
+			//rs = rs*sqrt(p[2]*p[2]); //multiply by fraction of incomming wave that is in this polarization direction
+			float ts = (2*a)/(a+b);	//transmitted s-pol. relative amplitude	(Jackson 7.39)	
 			//p-polarized component
 			float c = cos(alpha);
 			float d = s*sqrt(1.0-(s*s*sin(alpha)*sin(alpha)));
-			float rp = (d-c)/(c+d)*(d-c)/(c+d)*(p[0]*p[0]+p[2]*p[2]);
-			if(float(rand())/float(RAND_MAX)<(rs+rp)) //Account for reflection coefficient
+			float rp = (c-d)/(c+d); //reflected p-pol. relative amplitude (Jackson 7.41)
+			//rp = rp*sqrt(p[0]*p[0]+p[1]*p[1]); //multiply by fraction of incomming wave that is in this polarization direction
+			float tp = (2*s*c)/(c+d); //transmitted p-pol. relative amplitude (Jackson 7.41)
+			//Reflection and Transmission coefficients
+			float R = rs*rs+rp*rp;
+			float T = (b/a)*(ts*ts+tp*tp);
+			if(float(rand())/float(RAND_MAX)<(R)) //Account for reflection coefficient
 			{
+				float s_amplitude = amplitude * p[2] * rs;
+				float p_amplitude = amplitude * sqrt(p[0]*p[0] + p[1]*p[1]) * rp;
+				amplitude = sqrt(s_amplitude*s_amplitude + p_amplitude*p_amplitude); //amplitude of reflected ray
 				if((*j).first == 1) //Specular case
 				{
 					alpha = -alpha;
+
 				}
 				if((*j).first == 2) //Diffuse Lambertian case
 				{
 					alpha = -alpha+RandomGauss((*j).second);
 				}
+
+
 			}
 		}
 		++i;

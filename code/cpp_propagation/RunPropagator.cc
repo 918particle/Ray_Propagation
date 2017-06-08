@@ -18,17 +18,18 @@ int main(int argc, char *argv[])
 	pol[0] = 0.0;
 	pol[1] = 0.0;
 	pol[2] = 1.0;
+	float amplitude = 1.0;
 	float globalTime = 10000.0;
 
 	Propagator p;
-	p.AddReflector(std::pair<float,float>(-1.0,0.13),std::pair<int,float>(2,0.1));
+	p.AddReflector(std::pair<float,float>(-1.0,0.13),std::pair<int,float>(atof(argv[1]),0.1));
 
 	for(float t=40.0;t<=50.0;t+=0.5)
 	{
 		std::cout<<"Angle: "<<t<<std::endl;
 		for(int i=0;i<100;++i)
 		{
-			p.InitializePropagator(globalTime,ice_d,preferences,"SPICE",emitter_p,t,pol);
+			p.InitializePropagator(globalTime,ice_d,preferences,"SPICE",emitter_p,t,pol,amplitude);
 			p.Propagate();
 			std::stringstream ss;
 			ss<<count;
