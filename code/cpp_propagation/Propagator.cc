@@ -86,6 +86,8 @@ void Propagator::Propagate(int tag)
 		{
 			T->StoreNewReflection(std::pair<float,float>(),_currentPosition.second,currentReflection);
 		}
+		this->_currentAmplitude*=currentReflection;
+		//CheckForAReflection(_currentAngle,_currentPosition.second,this->_polarization)
 	}
 	T->StoreFinalData(_currentAngle,_currentPosition);
 	std::stringstream ss;

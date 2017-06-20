@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
 	pol[0] = 0.0;
 	pol[1] = 0.0;
 	pol[2] = 1.0;
+	float amplitude = 1.0;
 	float globalTime = 10000.0;
 
 	Propagator p;
