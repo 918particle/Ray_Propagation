@@ -10,9 +10,7 @@ set lmargin 14.0
 set rmargin 9.0
 set bmargin 7.0
 set tmargin 3.0
-#set style line 1 linecolor -1 linewidth 0.8 dashtype 2 pointtype 2 pointsize default pointinterval 1
-#set arrow 1 from 0,-100 to 4000,-100 nohead ls 1
 set terminal postscript color enhanced
-set output "June6_plot2.eps"
+set output "June6_plot3.eps"
 
-plot for [i=0:2099] 'data/propagation_path_'.i.'.dat' w l lw 0.2 lc rgb "#999999"
+plot for [i=0:2499] 'data/propagation_path_'.i.'.dat' w l lw 0.2 lc rgb "#999999"

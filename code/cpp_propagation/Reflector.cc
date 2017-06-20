@@ -8,16 +8,17 @@ void Reflector::CreateReflector(std::pair<float,float> x,std::pair<int,float> y)
 	_reflectorTypes.push_back(y);
 }
 
-void Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
+float Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
 {
+	float result = 0.0;
 	std::vector<std::pair<float,float> >::iterator i = _data.begin();
 	std::vector<std::pair<int,float> >::iterator j = _reflectorTypes.begin();
 	while(i!=_data.end())
 	{
 		if(std::abs((*i).first-z)<_range) //Within range of reflector
 		{
-			float r = (*i).second; //The maximum value of the reflection coefficient (theta = 0)
-			float s = (sqrt(r)+1.0)/(sqrt(r)-1.0); //The ratio of the two indices of refraction
+			result = (*i).second; //The maximum value of the reflection coefficient (theta = 0)
+			float s = (sqrt(result)-1.0)/(sqrt(result)+1.0); //The ratio of the two indices of refraction
 			//s-polarized component
 			float a = s*cos(alpha);
 			float b = sqrt(1.0-(s*s*sin(alpha)*sin(alpha)));
@@ -41,6 +42,7 @@ void Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
 		++i;
 		++j;
 	}
+	return result;
 }
 
 float Reflector::RandomGauss(float stddev)
