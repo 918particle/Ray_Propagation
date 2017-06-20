@@ -13,13 +13,14 @@ std::pair<bool,bool> pref, //Preferences for index and attenuation length treatm
 std::string ice_model, //The name of the ice model for index vs. depth
 std::pair<float,float> pos, //Position of the underlying emitter: (r,z) coordinates
 float angle_em, //The initial angle of the emitter in degrees, with respect to horizontal
-std::vector<float> p //The polarization vector of the emitter
+std::vector<float> p, //The polarization vector of the emitter
+float a //The initial amplitude of emitter 
 )
 {
 	this->_path.clear();
 	_globalTime = t;
 	this->CreateIce(ice_d,pref.first,pref.second,ice_model);
-	this->InitializeEmitter(pos,angle_em,p);
+	this->InitializeEmitter(pos,angle_em,p,a);
 	_isInitialized = true;
 }
 void Propagator::AddReflector(std::pair<float,float> x,std::pair<int,float> y)
@@ -52,6 +53,7 @@ void Propagator::Propagate()
 	this->_path.push_back(_emitterPosition);
 	this->_currentPosition = _emitterPosition;
 	this->_currentAngle = _initialAngle;
+	this->_currentAmplitude = _emitterAmplitude;
 	while(theTime<_globalTime)
 	{
 		float n = GetIndex(_currentPosition.second);
@@ -73,6 +75,6 @@ void Propagator::Propagate()
 		dTheta = _timeStep*cos(_currentAngle)*dndz*c0/(n*n);
 		this->Update(dx,dz,dTheta);
 		this->_path.push_back(_currentPosition);
-		CheckForAReflection(_currentAngle,_currentPosition.second,this->_polarization);
+		CheckForAReflection(_currentAngle,_currentPosition.second,this->_polarization,_currentAmplitude);
 	}
 }
