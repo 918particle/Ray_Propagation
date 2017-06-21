@@ -79,7 +79,7 @@ void Propagator::Propagate(int tag)
 		{
 			dndz = (GetIndex(this->_currentPosition.second)-GetIndex(this->_currentPosition.second-z0))/(_currentPosition.second-z0);
 		}
-		dTheta = _timeStep*cos(_currentAngle)*dndz*c0/(n*n);
+		dTheta = _timeStep*cos(this->_currentAngle)*dndz*c0/(n*n);
 		this->Update(dx,dz,dTheta);
 		this->_path.push_back(_currentPosition);
 		if((currentReflection = CheckForAReflection(_currentAngle,_currentPosition.second,this->_polarization)))
