@@ -68,7 +68,7 @@ void Propagator::Propagate(int tag)
 			if(this->_currentAngle<(pi/2.0-asin(1.0/n))/n_snow)
 			{
 				_tir = true;
-				_currentAngle = 0.0; //JCH: June 20th, 2017.  This doesn't have to remain this way.
+				this->_currentAngle = 0.0; //JCH: June 20th, 2017.  This doesn't have to remain this way.
 			}
 		}
 		if(dz>z0)
@@ -82,14 +82,14 @@ void Propagator::Propagate(int tag)
 		dTheta = _timeStep*cos(this->_currentAngle)*dndz*c0/(n*n);
 		this->Update(dx,dz,dTheta);
 		this->_path.push_back(_currentPosition);
-		if((currentReflection = CheckForAReflection(_currentAngle,_currentPosition.second,this->_polarization)))
+		if((currentReflection = CheckForAReflection(this->_currentAngle,_currentPosition.second,this->_polarization)))
 		{
 			T->StoreNewReflection(std::pair<float,float>(),_currentPosition.second,currentReflection);
 		}
 		this->_currentAmplitude*=currentReflection;
 		//CheckForAReflection(_currentAngle,_currentPosition.second,this->_polarization)
 	}
-	T->StoreFinalData(_currentAngle,_currentPosition);
+	T->StoreFinalData(this->_currentAngle,_currentPosition);
 	std::stringstream ss;
 	ss<<tag;
 	T->ReadoutTracker("data/report_"+ss.str()+".dat");
