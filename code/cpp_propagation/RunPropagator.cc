@@ -27,7 +27,9 @@ int main(int argc, char *argv[])
 	float globalTime = 10000.0;
 
 	Propagator p;
-	//p.AddReflector(std::pair<float,float>(-20.0,0.13),std::pair<int,float>(2,0.1));
+	p.AddReflector(std::pair<float,float>(-10.0,0.13),std::pair<int,float>(atof(argv[1]),0.1));
+	p.AddReflector(std::pair<float,float>(-20.0,0.13),std::pair<int,float>(atof(argv[1]),0.1));
+	p.AddReflector(std::pair<float,float>(-40.0,0.13),std::pair<int,float>(atof(argv[1]),0.1));
 
 	for(float t=angle_1;t<=angle_2;t+=dtheta)
 	{

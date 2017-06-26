@@ -65,6 +65,8 @@ def create_compilation_string():
 def checkFor_executable_directiory():
 	if not os.path.isdir("data"): #checks if data directory exists in working directory, if not, creates it.
 		os.system('mkdir data')
+	else:
+		os.system('rm data/*.dat')
 	if os.path.exists("RunPropagator"): #Checks is pre-compiled binary file exists, if so, deletes it <- helps for debugging
 		os.system('rm RunPropagator')
 

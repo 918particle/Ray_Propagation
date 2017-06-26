@@ -77,17 +77,22 @@ void Propagator::Propagate(int tag)
 		}
 		else
 		{
-			dndz = (GetIndex(this->_currentPosition.second)-GetIndex(this->_currentPosition.second-z0))/(_currentPosition.second-z0);
+			dndz = (GetIndex(this->_currentPosition.second)-GetIndex(this->_currentPosition.second-z0))/(z0);
 		}
 		dTheta = _timeStep*cos(this->_currentAngle)*dndz*c0/(n*n);
 		this->Update(dx,dz,dTheta);
 		this->_path.push_back(_currentPosition);
-		if((currentReflection = CheckForAReflection(this->_currentAngle,_currentPosition.second,this->_polarization)))
+		float unreflected_angle = _currentAngle; // Used to check if ray got reflected
+		if((currentReflection = CheckForAReflection(this->_currentAngle,this->_currentPosition.second,this->_polarization,dz)))
 		{
 			T->StoreNewReflection(std::pair<float,float>(),_currentPosition.second,currentReflection);
 		}
+		if(unreflected_angle != _currentAngle) // Insures same reflector doesn't reflect a single ray twice in a row
+		{
+			_currentPosition.second -= dz; // This forces the next CheckForReflection to not be true at same reflecter that just reflected
+		}                                  // Logic necessary for when dz causes ray to pass the reflector before being reflected
 		this->_currentAmplitude*=currentReflection;
-		//CheckForAReflection(_currentAngle,_currentPosition.second,this->_polarization)
+		//CheckForAReflection(_currentAngle,_currentPosition.second,this->_polarization,dz)
 	}
 	T->StoreFinalData(this->_currentAngle,_currentPosition);
 	std::stringstream ss;
