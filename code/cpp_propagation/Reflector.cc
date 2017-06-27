@@ -9,31 +9,39 @@ void Reflector::CreateReflector(std::pair<float,float> x,std::pair<int,float> y)
 	_reflectorTypes.push_back(y);
 }
 
-float Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p, float range)
+float Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p, float range, float n_i, float n_f)
 {
 	float currentAmplitude = 1.0;
 	std::vector<std::pair<float,float> >::iterator i = _data.begin();
 	std::vector<std::pair<int,float> >::iterator j = _reflectorTypes.begin();
-	while(i!=_data.end())
-	{
-		if(std::abs((*i).first-z)<std::abs(range)) //Within range of reflector
-		{
-			float r = (*i).second; //The maximum value of the reflection coefficient (theta = 0)
-			float s = std::abs((sqrt(r)-1.0)/(sqrt(r)+1.0)); //The ratio of the two indices of refraction
+	bool TIR = false;
+	//while(i!=_data.end())
+	//{
+		//if(std::abs((*i).first-z)<std::abs(range)) //Within range of reflector
+		//{
+			float pi_2 = 3.14159/2.0;
+			//float r = (*i).second; //The maximum value of the reflection coefficient (theta = 0)
+			//float spr = (sqrt(r)-1.0)/(sqrt(r)+1.0);
+			float s = std::abs(n_i/n_f);      //(sqrt(r)-1.0)/(sqrt(r)+1.0)); //The ratio of the two indices of refraction
 			//s-polarized component
-			float a = std::abs(s*cos(alpha));
-			float b = sqrt(1.0-(s*s*sin(alpha)*sin(alpha)));
+			float a = std::abs(s*cos(pi_2 - alpha));
+			float b = sqrt(1.0-(s*s*sin(pi_2 - alpha)*sin(pi_2 - alpha)));
 			float rs = (a-b)/(a+b); //reflected s-pol. relative amplitude (Jackson 7.39)
 			float ts = (2*a)/(a+b);	//transmitted s-pol. relative amplitude	(Jackson 7.39)	
 			//p-polarized component
-			float c = std::abs(cos(alpha));
-			float d = s*sqrt(1.0-(s*s*sin(alpha)*sin(alpha)));
+			float c = std::abs(cos(pi_2 - alpha));
+			float d = s*sqrt(1.0-(s*s*sin(pi_2 - alpha)*sin(pi_2 - alpha)));
 			float rp = (c-d)/(c+d); //reflected p-pol. relative amplitude (Jackson 7.41)
 			float tp = (2*s*c)/(c+d); //transmitted p-pol. relative amplitude (Jackson 7.41)
 			//Reflection and Transmission coefficients
 			float R = rs*rs+rp*rp;
 			float T = (b/a)*(ts*ts+tp*tp);
-			if(float(rand())/float(RAND_MAX)<(R)) //Account for reflection coefficient
+			if((s*s*sin(pi_2 - alpha)*sin(pi_2 - alpha))>1.0)
+			{
+				TIR = true;
+			}
+
+			if((float(rand())/float(RAND_MAX)<(R)) || TIR) //Account for reflection coefficient
 			{
 				float s_amp = currentAmplitude*p[2]*rs;
 				float p_amp = currentAmplitude*sqrt(p[0]*p[0]+p[1]*p[1])*rp;
@@ -50,10 +58,10 @@ float Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p, 
 
 
 			}
-		}
-		++i;
-		++j;
-	}
+		//}
+		//++i;
+		//++j;
+	//}
 	return currentAmplitude;
 }
 

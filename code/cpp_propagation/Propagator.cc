@@ -83,7 +83,9 @@ void Propagator::Propagate(int tag)
 		this->Update(dx,dz,dTheta);
 		this->_path.push_back(_currentPosition);
 		float unreflected_angle = _currentAngle; // Used to check if ray got reflected
-		if((currentReflection = CheckForAReflection(this->_currentAngle,this->_currentPosition.second,this->_polarization,dz)))
+		float n_i = GetIndex(_currentPosition.second - z0);
+		float n_f = GetIndex(_currentPosition.second + z0);
+		if((currentReflection = CheckForAReflection(this->_currentAngle,this->_currentPosition.second,this->_polarization,dz,n_i,n_f)))
 		{
 			T->StoreNewReflection(std::pair<float,float>(),_currentPosition.second,currentReflection);
 		}
