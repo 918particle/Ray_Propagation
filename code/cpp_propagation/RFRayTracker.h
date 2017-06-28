@@ -8,7 +8,7 @@
 class RFRayTracker
 {
 	public:
-		RFRayTracker(float initAng,std::pair<float,float> initP)
+		RFRayTracker(float initAng,std::pair<float,float> initP) : _numberOfReflections(0)
 		{
 			_initialAngle_tracking = initAng;
 			_initialRange = initP.first;

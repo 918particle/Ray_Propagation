@@ -38,9 +38,10 @@ float Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p, 
 			if((s*s*sin(pi_2 - alpha)*sin(pi_2 - alpha))>1.0)
 			{
 				TIR = true;
+				alpha = -alpha;
 			}
 
-			if((float(rand())/float(RAND_MAX)<(R)) || TIR) //Account for reflection coefficient
+			if((float(rand())/float(RAND_MAX)<(R)) && !TIR) //Account for reflection coefficient
 			{
 				float s_amp = currentAmplitude*p[2]*rs;
 				float p_amp = currentAmplitude*sqrt(p[0]*p[0]+p[1]*p[1])*rp;

@@ -85,14 +85,22 @@ def checkFor_executable_directiory():
 ### Run executable with specifed scattering
 def execute(scatter, reflection):
 	time.sleep(.1) #sometimes python runs executive commands to quickly, can cause bugs.
+	reflection_str = ''
 	print ''
-	if int(scatter) == 0 or float(scatter) == 0.0:
+	try:
+		int(scatter) or float(scatter)
 		print 'Running specular scatters only'
 		print 'CPP Program Output:'
+	except:
+		pass
 	else:
 		print 'Running diffuse scattering with std: ' + scatter
-		print 'CPP Program Output:'	
-	executable = './RunPropagator ' + scatter + reflection
+		print 'CPP Program Output:'				
+	if reflection == 's':
+		reflection_str = str(1)
+	if reflection == 'e':
+		reflection_str = str(2)
+	executable = './RunPropagator ' + scatter + ' ' + reflection_str
 	os.system(executable) #termianl command
 
 ### Compiles specific model
