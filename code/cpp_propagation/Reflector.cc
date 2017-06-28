@@ -3,26 +3,25 @@
 #include <cstdlib>
 #include <stdio.h> // For printf function
 
-void Reflector::CreateReflector(std::pair<float,float> x,std::pair<int,float> y)
+void Reflector::CreateReflector(std::pair<float,float> x,float y)
 {
 	_data.push_back(x);
 	_reflectorTypes.push_back(y);
 }
 
-float Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p, float range, float n_i, float n_f)
+float Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p, float range)
 {
 	float currentAmplitude = 1.0;
 	std::vector<std::pair<float,float> >::iterator i = _data.begin();
-	std::vector<std::pair<int,float> >::iterator j = _reflectorTypes.begin();
+	std::vector<float>::iterator j = _reflectorTypes.begin();
 	bool TIR = false;
-	//while(i!=_data.end())
-	//{
-		//if(std::abs((*i).first-z)<std::abs(range)) //Within range of reflector
-		//{
+	while(i!=_data.end())
+	{
+		if(std::abs((*i).first-z)<std::abs(range)) //Within range of reflector
+		{
 			float pi_2 = 3.14159/2.0;
-			//float r = (*i).second; //The maximum value of the reflection coefficient (theta = 0)
-			//float spr = (sqrt(r)-1.0)/(sqrt(r)+1.0);
-			float s = std::abs(n_i/n_f);      //(sqrt(r)-1.0)/(sqrt(r)+1.0)); //The ratio of the two indices of refraction
+			float r = (*i).second; //The maximum value of the reflection coefficient (theta = 0)
+			float s = (sqrt(r)-1.0)/(sqrt(r)+1.0);
 			//s-polarized component
 			float a = std::abs(s*cos(pi_2 - alpha));
 			float b = sqrt(1.0-(s*s*sin(pi_2 - alpha)*sin(pi_2 - alpha)));
@@ -46,22 +45,12 @@ float Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p, 
 				float s_amp = currentAmplitude*p[2]*rs;
 				float p_amp = currentAmplitude*sqrt(p[0]*p[0]+p[1]*p[1])*rp;
 				currentAmplitude = sqrt(s_amp*s_amp+p_amp*p_amp); //amplitude of reflected ray
-				if((*j).first == 1) //Specular case
-				{
-					alpha = -alpha;
-
-				}
-				if((*j).first == 2) //Diffuse Lambertian case
-				{
-					alpha = -alpha+RandomGauss((*j).second);
-				}
-
-
+				alpha = -alpha+RandomGauss(*j);
 			}
-		//}
-		//++i;
-		//++j;
-	//}
+		}
+		++i;
+		++j;
+	}
 	return currentAmplitude;
 }
 

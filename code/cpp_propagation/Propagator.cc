@@ -24,9 +24,14 @@ std::vector<float> p //The polarization vector of the emitter
 	this->InitializeEmitter(pos,angle_em,p);
 	_isInitialized = true;
 }
-void Propagator::AddReflector(std::pair<float,float> x,std::pair<int,float> y)
+void Propagator::AddReflector(std::pair<float,float> x,float y)
 {
 	this->CreateReflector(x,y);
+}
+
+void Propagator::ReflectionSmoothness(float smoothness)
+{
+	this->Smoothness(smoothness);
 }
 
 void Propagator::ReadoutPath(std::string title)
@@ -85,10 +90,20 @@ void Propagator::Propagate(int tag)
 		float unreflected_angle = _currentAngle; // Used to check if ray got reflected
 		float n_i = GetIndex(_currentPosition.second - z0);
 		float n_f = GetIndex(_currentPosition.second + z0);
-		if((currentReflection = CheckForAReflection(this->_currentAngle,this->_currentPosition.second,this->_polarization,dz,n_i,n_f)))
+		if(this->_ReflectionMethod == 1)  // Reflections only at hardcoded locations
 		{
-			T->StoreNewReflection(std::pair<float,float>(),_currentPosition.second,currentReflection);
+			if((currentReflection = CheckForAReflection(this->_currentAngle,this->_currentPosition.second,this->_polarization,dz)))
+			{
+				T->StoreNewReflection(std::pair<float,float>(),_currentPosition.second,currentReflection);
+			}
 		}
+		if(this->_ReflectionMethod == 2)  // Every point in propogation is treated as possibe reflector
+		{
+			if((currentReflection = ReflectionOrRefraction(this->_currentAngle,this->_currentPosition.second,this->_polarization,dz,n_i,n_f)))
+			{
+				T->StoreNewReflection(std::pair<float,float>(),_currentPosition.second,currentReflection);
+			}
+		}		
 		if(unreflected_angle != _currentAngle) // Insures same reflector doesn't reflect a single ray twice in a row
 		{
 			_currentPosition.second -= dz; // This forces the next CheckForReflection to not be true at same reflecter that just reflected
