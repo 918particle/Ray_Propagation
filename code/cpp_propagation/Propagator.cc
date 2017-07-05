@@ -73,43 +73,55 @@ void Propagator::Propagate(int tag)
 			if(this->_currentAngle<(pi/2.0-asin(1.0/n))/n_snow)
 			{
 				_tir = true;
-				this->_currentAngle = 0.0; //JCH: June 20th, 2017.  This doesn't have to remain this way.
+				//this->_currentAngle = 0.0; //JCH: June 20th, 2017.  This doesn't have to remain this way.
 			}
 		}
-		if(dz>z0)
+		if(std::abs(dz)>z0)
 		{
-			dndz = (GetIndex(this->_currentPosition.second+dz)-GetIndex(this->_currentPosition.second))/dz;
+			dndz = (GetIndex(this->_currentPosition.second+(dz/2))-GetIndex(this->_currentPosition.second-(dz/2)))/dz;
 		}
 		else
 		{
-			dndz = (GetIndex(this->_currentPosition.second)-GetIndex(this->_currentPosition.second-z0))/(z0);
+			if(dz>0)
+			{
+				dndz = (GetIndex(this->_currentPosition.second+(z0/2))-GetIndex(this->_currentPosition.second-(z0/2)))/(z0);
+			}
+			else
+			{
+				dndz = -(GetIndex(this->_currentPosition.second+(z0/2))-GetIndex(this->_currentPosition.second-(z0/2)))/(z0);
+			}
 		}
 		dTheta = _timeStep*cos(this->_currentAngle)*dndz*c0/(n*n);
 		this->Update(dx,dz,dTheta);
 		this->_path.push_back(_currentPosition);
-		float unreflected_angle = _currentAngle; // Used to check if ray got reflected
-		float n_i = GetIndex(_currentPosition.second - z0);
-		float n_f = GetIndex(_currentPosition.second + z0);
+		float previousAngle = _currentAngle; // Used to check if ray got reflected
+		float n_i = GetIndex(_currentPosition.second - 1.0);
+		float n_f = GetIndex(_currentPosition.second + 1.0);
+		if(dz < 0)
+		{
+			float n_i = GetIndex(_currentPosition.second + 1.0);
+			float n_f = GetIndex(_currentPosition.second - 1.0);
+		}
 		if(this->_ReflectionMethod == 1)  // Reflections only at hardcoded locations
 		{
-			if((currentReflection = CheckForAReflection(this->_currentAngle,this->_currentPosition.second,this->_polarization,dz)))
+			currentReflection = CheckForAReflection(this->_currentAngle,this->_currentPosition.second,this->_polarization,dz);
+			if(previousAngle * _currentAngle < 0) // switched condition statemnt to include TIR (reflection causes sign flip)
 			{
-				T->StoreNewReflection(std::pair<float,float>(),_currentPosition.second,currentReflection);
+				T->StoreNewReflection(std::pair<float,float>(previousAngle,_currentAngle),_currentPosition,currentReflection);
+				// would be better for following two lines to only happen when the ray past the reflector, but got reflected.
+				_currentPosition.second -= dz; // This forces the next CheckForReflection to not be true at same reflecter that just reflected
+				_currentPosition.first += dx; 
 			}
 		}
 		if(this->_ReflectionMethod == 2)  // Every point in propogation is treated as possibe reflector
 		{
-			if((currentReflection = ReflectionOrRefraction(this->_currentAngle,this->_currentPosition.second,this->_polarization,dz,n_i,n_f)))
+			currentReflection = ReflectionOrRefraction(this->_currentAngle,this->_currentPosition.second,this->_polarization,dz,n_i,n_f);
+			if(previousAngle * _currentAngle < 0)
 			{
-				T->StoreNewReflection(std::pair<float,float>(),_currentPosition.second,currentReflection);
+				T->StoreNewReflection(std::pair<float,float>(previousAngle,_currentAngle),_currentPosition,currentReflection);
 			}
 		}		
-		if(unreflected_angle != _currentAngle) // Insures same reflector doesn't reflect a single ray twice in a row
-		{
-			_currentPosition.second -= dz; // This forces the next CheckForReflection to not be true at same reflecter that just reflected
-		}                                  // Logic necessary for when dz causes ray to pass the reflector before being reflected
 		this->_currentAmplitude*=currentReflection;
-		//CheckForAReflection(_currentAngle,_currentPosition.second,this->_polarization,dz)
 	}
 	T->StoreFinalData(this->_currentAngle,_currentPosition);
 	std::stringstream ss;

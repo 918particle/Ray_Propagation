@@ -11,9 +11,8 @@ void Reflection::Smoothness(float smoothness)
 float Reflection::ReflectionOrRefraction(float &alpha,float z,std::vector<float> p, float range, float n_i, float n_f)
 {
 	float currentAmplitude = 1.0;
-	bool TIR = false; //Total internal reflection
 	float pi_2 = 3.14159/2.0;
-	float s = std::abs(n_i/n_f);
+	float s = n_i/n_f;
 	//s-polarized component
 	float a = std::abs(s*cos(pi_2 - alpha));
 	float b = sqrt(1.0-(s*s*sin(pi_2 - alpha)*sin(pi_2 - alpha)));
@@ -27,17 +26,20 @@ float Reflection::ReflectionOrRefraction(float &alpha,float z,std::vector<float>
 	//Reflection and Transmission coefficients
 	float R = rs*rs+rp*rp;
 	float T = (b/a)*(ts*ts+tp*tp);
-	if((s*s*sin(pi_2 - alpha)*sin(pi_2 - alpha))>1.0) //Check for total internal reflection
+	float random = float(rand())/float(RAND_MAX);
+	if((s*sin(pi_2 - alpha))>1.0) //Check for total internal reflection
 	{
-		TIR = true;
+		alpha = -alpha;
 	}
-
-	if((float(rand())/float(RAND_MAX)<(R)) || TIR) //Account for reflection coefficient
+	else
 	{
-		float s_amp = currentAmplitude*p[2]*rs;
-		float p_amp = currentAmplitude*sqrt(p[0]*p[0]+p[1]*p[1])*rp;
-		currentAmplitude = sqrt(s_amp*s_amp+p_amp*p_amp); //amplitude of reflected ray
-		alpha = -alpha+Reflector::RandomGauss(_smoothness);
+		if(random<(R)) //Account for reflection coefficient
+		{
+			float s_amp = currentAmplitude*p[2]*rs;
+			float p_amp = currentAmplitude*sqrt(p[0]*p[0]+p[1]*p[1])*rp;
+			currentAmplitude = sqrt(s_amp*s_amp+p_amp*p_amp); //amplitude of reflected ray
+			alpha = -alpha+Reflector::RandomGauss(_smoothness);
+		}
 	}
 	return currentAmplitude;
 }
