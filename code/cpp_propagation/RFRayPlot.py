@@ -37,6 +37,8 @@ def get_all_inputs():
 	global PhotometerSeperation
 	global PhotometerAngle
 	print ''
+	print 'Please type number of binary files to input:'
+	NumOfFiles = int(get_input())
 	print 'Please type photometer x position:'
 	PhotometerX = get_input()
 	print 'Please type photometer z position:'
@@ -51,6 +53,7 @@ def get_all_inputs():
 	PhotometerAngle = get_input()
 
 #get_all_inputs()
+NumOfFiles = 10
 xBeforePhotometer = 0
 xAfterPhotometer = 0
 zBeforePhotometer = 0
@@ -58,7 +61,7 @@ zAfterPhotometer = 0
 flux = []
 for i in range(NumberOfPhotometers):
 	flux.append(0)
-for i in range(10):
+for i in range(NumOfFiles):
 	FileName = "data/propagation_path_" + str(i) + ".dat"
 	FileI = open(FileName, "r").read().splitlines()
 	xPos = []
@@ -83,7 +86,6 @@ for i in range(10):
 		zPositionAtPhotometer = (slope * (PhotometerXAtJ - xBeforePhotometer)) + zBeforePhotometer
 		if zPositionAtPhotometer < (PhotometerZAtJ + PhotometerArea/2) and zPositionAtPhotometer > (PhotometerZAtJ - PhotometerArea/2):
 			flux[j] = flux[j] + 1
-print flux
 
 fig = plt.figure()
 titleString = "flux dependence on distance"
