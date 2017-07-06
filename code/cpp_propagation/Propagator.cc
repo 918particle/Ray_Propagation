@@ -57,7 +57,8 @@ void Propagator::Propagate(int tag)
 	float dndz = 0.0; //units: meters^(-1)
 	float currentReflection = 0.0;
 	float n_snow = 1.5;
-	float theTime,dx,dz,dTheta; //units: nanoseconds, meters, meters, radians
+	float dx,dz,dTheta; //units: nanoseconds, meters, meters, radians
+	float theTime = 0.0;
 	this->_path.push_back(_emitterPosition);
 	this->_currentPosition = _emitterPosition;
 	this->_currentAngle = _initialAngle;
@@ -82,14 +83,7 @@ void Propagator::Propagate(int tag)
 		}
 		else
 		{
-			if(dz>0)
-			{
-				dndz = (GetIndex(this->_currentPosition.second+(z0/2))-GetIndex(this->_currentPosition.second-(z0/2)))/(z0);
-			}
-			else
-			{
-				dndz = -(GetIndex(this->_currentPosition.second+(z0/2))-GetIndex(this->_currentPosition.second-(z0/2)))/(z0);
-			}
+			dndz = (GetIndex(this->_currentPosition.second+(z0/2))-GetIndex(this->_currentPosition.second-(z0/2)))/(z0);
 		}
 		dTheta = _timeStep*cos(this->_currentAngle)*dndz*c0/(n*n);
 		this->Update(dx,dz,dTheta);
