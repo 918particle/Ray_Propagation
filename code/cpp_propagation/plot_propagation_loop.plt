@@ -11,6 +11,6 @@ set rmargin 9.0
 set bmargin 7.0
 set tmargin 3.0
 set terminal postscript color enhanced
-set output "June6_plot3.eps"
+set output "Test.eps"
 
 plot for [i=0:2499] 'data/propagation_path_'.i.'.dat' w l lw 0.2 lc rgb "#999999"

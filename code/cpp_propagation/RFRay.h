@@ -21,6 +21,7 @@ class RFRay : public Emitter, public Ice
 	float _distanceTravelled; //Keeps track of the propagation distance
 	float _rfLoss; //Amount of attenuation (apart from distance) accumulated
 	float _freq; //Frequency of the ray
+	int _ReflectionMethod;
 	//The path traveled in (x,z) coordinates by the ray, and each pair goes with one time-step.
 	std::vector<std::pair<float,float> > _path;
 };

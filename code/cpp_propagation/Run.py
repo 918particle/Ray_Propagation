@@ -28,17 +28,29 @@ def select_model(): #User inputs desired model (selects which file to use as mai
 		model = select_model()
 	return model  #Python 3 switches raw_input to just input. However, input evaluates expession.
 
-def select_scatter(): #User inputs desired scatter (Sets scatter_type in cpp files)
+def select_std(): #User inputs desired scatter (Sets scatter_type in cpp files)
 	print ''
-	print 'Please select scattering type, Options:'
-	print 's: specular reflections'
-	print 'l: lambertian diffuse reflections (gaussian dist. about specular angle)'
-	scatter = str(raw_input())
-	if (scatter != 's' and scatter != 'l'): #Forces user to pick valid option
+	print 'Please type in desired Gaussian STD (0 = Specular reflection):'
+	scatter = raw_input()
+	try:
+		float(scatter)
+	except:
+		print ''
+		os.system('echo option invalid, please type in a number')
+		scatter = select_std()
+	return str(scatter)
+
+def select_reflection_mothed(): #User inputs desired scatter (Sets scatter_type in cpp files)
+	print ''
+	print 'Please select scattering method, Options:'
+	print 's: specific hard coded reflection layers'
+	print 'e: every point in propagation can reflect'
+	reflection = str(raw_input())
+	if (reflection != 's' and reflection != 'e'): #Forces user to pick valid option
 		print ''
 		os.system('echo option invalid')
-		scatter = select_scatter()
-	return scatter
+		reflection = select_reflection_mothed()
+	return reflection
 
 def create_compilation_string():
 	nonModelFiles = []
@@ -65,35 +77,51 @@ def create_compilation_string():
 def checkFor_executable_directiory():
 	if not os.path.isdir("data"): #checks if data directory exists in working directory, if not, creates it.
 		os.system('mkdir data')
+	else:
+		os.system('rm data/*.dat')
 	if os.path.exists("RunPropagator"): #Checks is pre-compiled binary file exists, if so, deletes it <- helps for debugging
 		os.system('rm RunPropagator')
+
+### Run executable with specifed scattering
+def execute(scatter, reflection):
+	time.sleep(.1) #sometimes python runs executive commands to quickly, can cause bugs.
+	reflection_str = ''
+	print ''
+	try:
+		int(scatter) or float(scatter)
+		print 'Running specular scatters only'
+		print 'CPP Program Output:'
+	except:
+		pass
+	else:
+		print 'Running diffuse scattering with std: ' + scatter
+		print 'CPP Program Output:'				
+	if reflection == 's':
+		reflection_str = str(1)
+	if reflection == 'e':
+		reflection_str = str(2)
+	executable = './RunPropagator ' + scatter + ' ' + reflection_str
+	os.system(executable) #termianl command
+
+### Compiles specific model
+def compile(model):
+	osString = create_compilation_string()
+	print ''
+	if model == 'r':
+		print 'Compiling Spice/Rice model'
+		print'CPP Compilation Errors:'
+		os.system(osString) #termianl command
+	if model == 'm':
+		print 'Compiling Moores Bay Model'
+		print'CPP Compilation Errors:'
+		os.system(osString)
 
 ### Pre-compile steps
 checkFor_executable_directiory()
 model = select_model()
-scatter = select_scatter()
+scatter = select_std()
+reflection = select_reflection_mothed()
+compile(model)
+execute(scatter, reflection)
 
-### Compiles specific model
-osString = create_compilation_string()
-print ''
-if model == 'r':
-	print 'Compiling Spice/Rice model'
-	print'CPP Compilation Errors:'
-	os.system(osString) #termianl command
-if model == 'm':
-	print 'Compiling Moores Bay Model'
-	print'CPP Compilation Errors:'
-	os.system(osString)
 
-time.sleep(.1) #sometimes python runs executive commands to quickly, can cause bugs.
-
-### Run executable with specifed scattering
-print ''
-if scatter == 's':
-	print 'Running specual scatters only'
-	print 'CPP Program Output:'
-	os.system('./RunPropagator 1') #termianl command
-if scatter == 'l':
-	print 'Running lamberitan diffuse scattering'
-	print 'CPP Program Output:'
-	os.system('./RunPropagator 2') #termianl command

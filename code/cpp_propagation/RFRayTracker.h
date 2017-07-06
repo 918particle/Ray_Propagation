@@ -8,13 +8,13 @@
 class RFRayTracker
 {
 	public:
-		RFRayTracker(float initAng,std::pair<float,float> initP)
+		RFRayTracker(float initAng,std::pair<float,float> initP) : _numberOfReflections(0)
 		{
 			_initialAngle_tracking = initAng;
 			_initialRange = initP.first;
 			_initialDepth = initP.second;
 		};
-		void StoreNewReflection(std::pair<float,float>,float,float);
+		void StoreNewReflection(std::pair<float,float>,std::pair<float,float>,float);
 		void StoreFinalData(float,std::pair<float,float>);
 		void ReadoutTracker(std::string);
 		int _numberOfReflections;
@@ -25,7 +25,7 @@ class RFRayTracker
 		float _initialRange;
 		float _finalRange;
 		std::vector<std::pair<float,float> > _intialFinalAnglesDuringReflections;
-		std::vector<float> _depthsOfReflections;
+		std::vector<std::pair<float,float> > _depthsOfReflections;
 		std::vector<float> _reflectionCoefficients;
 };
 

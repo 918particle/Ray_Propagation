@@ -15,9 +15,9 @@ class Reflector
 	};
 	float _range; //If the ray is within _range meters of the depth of some reflector, introduce a reflection
 	std::vector<std::pair<float,float> > _data; //Structure of depths and reflection coefficients (meters and unitless)
-	std::vector<std::pair<int,float> > _reflectorTypes; //First: 1) specular 2) Lambertian diffuse Second: Width of scattering angle distribution
-	void CreateReflector(std::pair<float,float>,std::pair<int,float>); //Add a reflection surface
-	float CheckForAReflection(float&,float,std::vector<float>); //angle (radians), depth (meters), polarization vector (unit-less)
+	std::vector<float > _reflectorTypes; // Gaussian STD
+	void CreateReflector(std::pair<float,float>,float); //Add a reflection surface
+	float CheckForAReflection(float&,float,std::vector<float>,float); //angle (radians), depth (meters), polarization vector (unit-less), range
 	float RandomGauss(float); //For random numbers drawn from Gaussian distribution with Box-Muller method (0-radian mean, float stddev)
 };
 

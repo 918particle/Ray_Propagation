@@ -1,55 +1,52 @@
 #include "Reflector.h"
 #include <cmath>
 #include <cstdlib>
+#include <stdio.h> // For printf function
 
-void Reflector::CreateReflector(std::pair<float,float> x,std::pair<int,float> y)
+void Reflector::CreateReflector(std::pair<float,float> x,float y)
 {
 	_data.push_back(x);
 	_reflectorTypes.push_back(y);
 }
 
-float Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
+float Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p, float range)
 {
 	float currentAmplitude = 1.0;
 	std::vector<std::pair<float,float> >::iterator i = _data.begin();
-	std::vector<std::pair<int,float> >::iterator j = _reflectorTypes.begin();
+	std::vector<float>::iterator j = _reflectorTypes.begin();
+	bool TIR = false;
 	while(i!=_data.end())
 	{
-		if(std::abs((*i).first-z)<_range) //Within range of reflector
+		if(std::abs((*i).first-z)<std::abs(range)) //Within range of reflector
 		{
+			float pi_2 = 3.14159/2.0;
 			float r = (*i).second; //The maximum value of the reflection coefficient (theta = 0)
-			float s = (sqrt(r)-1.0)/(sqrt(r)+1.0); //The ratio of the two indices of refraction
+			float s = (sqrt(r)-1.0)/(sqrt(r)+1.0);
 			//s-polarized component
-			float a = s*cos(alpha);
-			float b = sqrt(1.0-(s*s*sin(alpha)*sin(alpha)));
+			float a = std::abs(s*cos(pi_2 - alpha));
+			float b = sqrt(1.0-(s*s*sin(pi_2 - alpha)*sin(pi_2 - alpha)));
 			float rs = (a-b)/(a+b); //reflected s-pol. relative amplitude (Jackson 7.39)
-			//rs = rs*sqrt(p[2]*p[2]); //multiply by fraction of incomming wave that is in this polarization direction
 			float ts = (2*a)/(a+b);	//transmitted s-pol. relative amplitude	(Jackson 7.39)	
 			//p-polarized component
-			float c = cos(alpha);
-			float d = s*sqrt(1.0-(s*s*sin(alpha)*sin(alpha)));
+			float c = std::abs(cos(pi_2 - alpha));
+			float d = s*sqrt(1.0-(s*s*sin(pi_2 - alpha)*sin(pi_2 - alpha)));
 			float rp = (c-d)/(c+d); //reflected p-pol. relative amplitude (Jackson 7.41)
-			//rp = rp*sqrt(p[0]*p[0]+p[1]*p[1]); //multiply by fraction of incomming wave that is in this polarization direction
 			float tp = (2*s*c)/(c+d); //transmitted p-pol. relative amplitude (Jackson 7.41)
 			//Reflection and Transmission coefficients
 			float R = rs*rs+rp*rp;
 			float T = (b/a)*(ts*ts+tp*tp);
-			if(float(rand())/float(RAND_MAX)<(R)) //Account for reflection coefficient
+			if((s*s*sin(pi_2 - alpha)*sin(pi_2 - alpha))>1.0)
+			{
+				TIR = true;
+				alpha = -alpha;
+			}
+
+			if((float(rand())/float(RAND_MAX)<(R)) && !TIR) //Account for reflection coefficient
 			{
 				float s_amp = currentAmplitude*p[2]*rs;
 				float p_amp = currentAmplitude*sqrt(p[0]*p[0]+p[1]*p[1])*rp;
 				currentAmplitude = sqrt(s_amp*s_amp+p_amp*p_amp); //amplitude of reflected ray
-				if((*j).first == 1) //Specular case
-				{
-					alpha = -alpha;
-
-				}
-				if((*j).first == 2) //Diffuse Lambertian case
-				{
-					alpha = -alpha+RandomGauss((*j).second);
-				}
-
-
+				alpha = -alpha+RandomGauss(*j);
 			}
 		}
 		++i;
