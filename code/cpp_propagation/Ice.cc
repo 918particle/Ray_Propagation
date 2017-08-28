@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 
-void Ice::CreateIce(std::pair<float,float> d,bool fitn,bool fitl,std::string modelName)
+void Ice::CreateIce(std::vector<float> d,bool fitn,bool fitl,std::string modelName)
 {
 	_dimensions = d;
 	_useIndexFit = fitn;
@@ -13,7 +13,7 @@ void Ice::CreateIce(std::pair<float,float> d,bool fitn,bool fitl,std::string mod
 		_A = 1.78;
 		_B = 0.427;
 		_C = 0.014;
-		std::ifstream in("/home/jordan/ANewHope/SPICE_data.dat");
+		std::ifstream in("/home/geoffrey/Ray_Propagation/code/cpp_propagation/Maker2/SPICE_data.dat");
 		float depth,density;
 		while(in.good() && ~in.eof())
 		{
@@ -115,13 +115,17 @@ void Ice::CreateIce(std::pair<float,float> d,bool fitn,bool fitl,std::string mod
 	}
 }
 
-float Ice::GetIndex(float z)
+float Ice::GetIndex(float z, bool fit)
 {
-	if(_useIndexFit)
+	if(fit)
 	{
 		if(z>0)
 		{
 			return 1.0;
+		}
+		if(z < -200.0)
+		{
+			return _A-_B*exp(_C*-200.0);
 		}
 		else
 		{
@@ -136,6 +140,10 @@ float Ice::GetIndex(float z)
 		}
 		else
 		{
+			if(z < -200.0)
+			{
+				return _A-_B*exp(_C*-200.0);
+			}
 			std::vector<std::pair<float,float> >::iterator i = _indexVsDepth.begin();
 			while(i!=_indexVsDepth.end())
 			{
