@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <stdio.h> // For printf function
 
-void Reflector::CreateReflector(std::pair<float,float> x,float y)
+void Reflector::CreateReflector(std::vector<float> x,float y)
 {
 	_data.push_back(x);
 	_reflectorTypes.push_back(y);
@@ -12,15 +12,15 @@ void Reflector::CreateReflector(std::pair<float,float> x,float y)
 float Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p, float range)
 {
 	float currentAmplitude = 1.0;
-	std::vector<std::pair<float,float> >::iterator i = _data.begin();
+	std::vector<std::vector<float> >::iterator i = _data.begin();
 	std::vector<float>::iterator j = _reflectorTypes.begin();
 	bool TIR = false;
 	while(i!=_data.end())
 	{
-		if(std::abs((*i).first-z)<std::abs(range)) //Within range of reflector
+		if(std::abs((*i).at(2)-z)<std::abs(range)) //Within range of reflector
 		{
 			float pi_2 = 3.14159/2.0;
-			float r = (*i).second; //The maximum value of the reflection coefficient (theta = 0)
+			float r = (*i).at(2); //The maximum value of the reflection coefficient (theta = 0)
 			float s = (sqrt(r)-1.0)/(sqrt(r)+1.0);
 			//s-polarized component
 			float a = std::abs(s*cos(pi_2 - alpha));

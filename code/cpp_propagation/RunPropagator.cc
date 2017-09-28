@@ -8,48 +8,25 @@
 
 int main(int argc, char *argv[])
 {
-	//Seed rand()
+	// Seed random number generator
 	srand(time(NULL));
-	float angle_1 = 20.0;
-	float angle_2 = 25.0;
-	float dtheta = 0.5;
-	int count = 0;
-	int nrays = 10;
-	int globalCount = 0;
-	std::pair<float,float> ice_d(1000.0,-2000.0);
-	std::pair<float,float> emitter_p(0.0,-200.0);
-	std::pair<bool,bool> preferences(true,true);
-	std::vector<float> pol(3);
-	pol[0] = 0.0;
-	pol[1] = 0.0;
-	pol[2] = 1.0;
-	float amplitude = 1.0;
-	float globalTime = 10000.0;
 
+	// Initilize global variables
 	Propagator p;
-	p._ReflectionMethod = 1; // atof(argv[2]);   <--- For python script
-	if(p._ReflectionMethod == 1)  // Reflections only at hardcoded locations
-	{
-		p.AddReflector(std::pair<float,float>(-14.0,0.13),0.1);    //atof(argv[1]));   <---When using python script
-	}    
-	if(p._ReflectionMethod == 2)  // Every point in propogation is treated as possibe reflector
-	{
-		p.ReflectionSmoothness(0.1); // atof(argv[1]);  <--- python script, Gaussian STD;
-	}
+	p.Initialize(argv);
 
-	for(float t=angle_1;t<=angle_2;t+=dtheta)
+	// loop between range of input angles
+	int count = 0;
+	for(float t = p._angleI; t <= p._angleF; t+=p._dtheta)
 	{
-		std::cout<<"Angle: "<<t<<std::endl;
-		for(int i=0;i<nrays;++i)
+		std::cout << "Angle: " << t << std::endl;
+		// loop through individual rays per angle
+		for(int i = 0; i < p._nrays; ++i)
 		{
-			p.InitializePropagator(globalTime,ice_d,preferences,"SPICE",emitter_p,t,pol);
-			p.Propagate(globalCount);
-			std::stringstream ss;
-			ss<<count;
-			std::string title = "data/propagation_path_"+ss.str()+".dat";
-			p.ReadoutPath(title);
+			p.InitializePropagator(t,p._pol);
+			p.Propagate(count);
+			p.ReadoutPath(count);
 			++count;
-			++globalCount;
 		}
 	}
 }
