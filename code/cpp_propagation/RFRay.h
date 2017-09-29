@@ -4,7 +4,7 @@
 
 #ifndef RFRAY_H_
 #define RFRAY_H_
-class RFRay : public Emitter, public Ice
+class RFRay : public Emitter
 {
 	public:
 	RFRay() : _distanceTravelled(0.0), _rfLoss(0.0), _freq(0.0)
