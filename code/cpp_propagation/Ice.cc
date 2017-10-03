@@ -5,6 +5,10 @@
 
 void Ice::CreateIce(std::vector<float> d,bool fitn,bool fitl,std::string modelName)
 {
+	const char* env_p = std::getenv("RAYPROP");
+	char fileIn[256];
+	strncpy(fileIn, env_p, sizeof(fileIn));
+	strncat(fileIn, "/code/cpp_propagation/SPICE_data.dat", sizeof(fileIn));
 	_dimensions = d;
 	_useIndexFit = fitn;
 	_useAttenuationLengthFit = fitl;
@@ -13,13 +17,13 @@ void Ice::CreateIce(std::vector<float> d,bool fitn,bool fitl,std::string modelNa
 		_A = 1.78;
 		_B = 0.427;
 		_C = 0.014;
-		std::ifstream in("/home/geoffrey/Ray_Propagation/code/cpp_propagation/currentPlots/NearFitMod.dat");
+		std::ifstream in(fileIn);
 		float depth,density;
 		while(in.good() && ~in.eof())
 		{
 			in>>depth;
 			in>>density;
-			_indexVsDepth.push_back(std::pair<float,float>(-depth,density));
+			_indexVsDepth.push_back(std::pair<float,float>(-depth,1.0+0.86*density/1000.0));
 		}
 		in.close();
 	}
