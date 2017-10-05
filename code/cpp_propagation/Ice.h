@@ -1,5 +1,7 @@
+#pragma once
 #include <vector>
 #include <string>
+#include <cstring>
 #include <utility>
 
 #ifndef ICE_H_

@@ -11,7 +11,7 @@ void RFRay::Update(float dx,float dy,float dz,float a)
 	_priorPosition = _currentPosition;
 	_currentAngle += a;
 	_currentPosition.at(0) += dx;
-	_currentPosition.at(1) += dx;
+	_currentPosition.at(1) += dy;
 	_currentPosition.at(2) += dz;
 	_distanceTravelled += sqrt((_currentPosition.at(0)-_priorPosition.at(0))*(_currentPosition.at(0)-_priorPosition.at(0))
 		+(_currentPosition.at(2)-_priorPosition.at(2))*(_currentPosition.at(2)-_priorPosition.at(2)));

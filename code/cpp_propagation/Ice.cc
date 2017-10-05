@@ -5,6 +5,10 @@
 
 void Ice::CreateIce(std::vector<float> d,bool fitn,bool fitl,std::string modelName)
 {
+	const char* env_p = std::getenv("RAYPROP");
+	char fileIn[256];
+	strncpy(fileIn, env_p, sizeof(fileIn));
+	strncat(fileIn, "/code/cpp_propagation/SPICE_data.dat", sizeof(fileIn));
 	_dimensions = d;
 	_useIndexFit = fitn;
 	_useAttenuationLengthFit = fitl;
@@ -13,7 +17,7 @@ void Ice::CreateIce(std::vector<float> d,bool fitn,bool fitl,std::string modelNa
 		_A = 1.78;
 		_B = 0.427;
 		_C = 0.014;
-		std::ifstream in("/home/geoffrey/Ray_Propagation/code/cpp_propagation/Maker2/SPICE_data.dat");
+		std::ifstream in(fileIn);
 		float depth,density;
 		while(in.good() && ~in.eof())
 		{

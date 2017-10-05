@@ -13,8 +13,9 @@ void Propagator::Initialize(char *argv[])
 	float emitterX = atof(argv[7]);
 	float emitterY = atof(argv[8]);
 	float emitterZ = atof(argv[9]);
+	std::stringstream ider;
 	_pol = {0.0,0.0,0.1};
-	_globalTime = 15000.0;
+	_globalTime = 11000.0;
 	_emitterPosition = {emitterX,emitterY,emitterZ};
 	_iceSize = {1000.0,1000.0,2000.0};
 	_preferences.first = false; //Preferences for index and attenuation length treatment
@@ -22,6 +23,7 @@ void Propagator::Initialize(char *argv[])
 	InitializeIce("SPICE"); //Ice Model
 	std::vector<float> Reflector_pos = {100.0,0.0,-200.0};
 	AddReflector(Reflector_pos,_sigma); // This is necessary for _ReflectionMethod 1 only
+	InitializeCollector();
 }
 
 void Propagator::InitializePropagator(float angle_em, std::vector<float> p)
@@ -35,14 +37,13 @@ void Propagator::InitializePropagator(float angle_em, std::vector<float> p)
 	this->_currentAngle = _initialAngle;
 	_isInitialized = true;
 	yangle = 0.0;
-	dndz = 0.0; //units: meters^(-1)
 	rAmplitude = 0.0;
-	dx,dz,dTheta; //units: nanoseconds, meters, meters, radians
+	dx,dy,dz; //units: nanoseconds, meters, meters, radians
 	theTime = 0.0;
 	previousAngle = 0.0;
 	InAir = false;
 	stepNum = 1;
-	indexFit = false; //reflections
+	indexFit = true; //reflections
 	surfaceReflection = false;
 }
 
@@ -55,12 +56,17 @@ void Propagator::AddReflector(std::vector<float> x,float y)
 {
 	this->CreateReflector(x,y);
 }
+void Propagator::InitializeCollector()
+{
+	std::vector<float> collector_pos = {1400.0,0.0,-22.0};
+	this->CreateCollectors(0.0,40,2.0,collector_pos,50.0);
+}
 
 void Propagator::ReadoutPath(int count)
 {
 	std::stringstream ss;
 	ss<<count;
-	std::string title = "data/propagation_path_"+ss.str()+".dat";
+	std::string title ="data/propagation_path_"+ss.str()+".dat";
 	std::ofstream out(title.c_str());
 	std::vector<std::vector<float> >::iterator i = this->_path.begin();
 	while(i!=this->_path.end())
@@ -73,19 +79,48 @@ void Propagator::ReadoutPath(int count)
 	this->_path.clear();
 }
 
+void Propagator::ReadoutAngles()
+{
+	std::string title = "anglesAt1400plus.dat";
+	std::ofstream out(title.c_str());
+	std::vector<float>::iterator i = this->anglesAt1400.begin();
+	while(i!=this->anglesAt1400.end())
+	{
+		//3DCODEout<<(*i)[0]<<" "<<(*i)[1]<<" "<<(*i)[2]<<std::endl;
+		out<<(*i)<<std::endl;
+		++i;
+	}
+	out.close();
+	this->anglesAt1400.clear();
+	Collector::ReadoutPath();
+}
 //Propagation from t=0 to the global time.  This makes it trivial to run
 // the same propagation effect for different times with the same settings.
 void Propagator::Propagate(int tag)
 {
 	RFRayTracker *T = new RFRayTracker(_initialAngle,_currentPosition);
+	int angle_bool = false;
 	while(theTime<_globalTime)
 	{
 		theTime+=_timeStep;
 		// Continuous Refraction
-		Refract();
+		//Refractions::Refract();
+
+		if(this->_currentPosition[2] > 0)
+		{
+			InAir = true;
+		}
+
+		float n = GetIndex(_currentPosition[2],indexFit);
+		dx=cos(this->_currentAngle)*_timeStep*c0/n;
+		dy=0; //3DCODEdy=sin(yangle)*_timeStep*c0/n;
+		dz=sin(this->_currentAngle)*_timeStep*c0/n;
+
+		dTheta = Reflections::Refractions::Refract(this->_currentPosition, this->_currentAngle, dz, indexFit, _sigma, stepNum, _scatterLength,_timeStep, n,surfaceReflection,InAir);
+		previousPosition = this->_currentPosition;
 		this->Update(dx,dy,dz,dTheta);
 		this->_path.push_back(_currentPosition);
-
+		Collector::Collect(previousPosition,this->_currentPosition);
 		// Check for Reflection
 		previousAngle = this->_currentAngle; // Used to check if ray got reflected
 		CheckForReflection();
@@ -95,7 +130,6 @@ void Propagator::Propagate(int tag)
 		}
 		stepNum++;
 	}
-
 	T->StoreFinalData(this->_currentAngle,_currentPosition);
 	std::stringstream ss;
 	ss<<tag;
@@ -103,73 +137,11 @@ void Propagator::Propagate(int tag)
 	delete T;
 }
 
-void Propagator::Refract()
-{
-	if(this->_currentPosition[2] > 0)
-	{
-		InAir = true;
-	}
-	float n = GetIndex(_currentPosition[2],indexFit);
-	dx=cos(this->_currentAngle)*_timeStep*c0/n;
-	//3DCODEdy=sin(yangle)*_timeStep*c0/n;
-	dy=0;
-	dz=sin(this->_currentAngle)*_timeStep*c0/n;
-	if(std::abs(dz)>z0)
-	{
-		dndz = (GetIndex(this->_currentPosition[2]+(dz/2),indexFit)-GetIndex(this->_currentPosition[2]-(dz/2),indexFit))/dz;
-	}
-	else
-	{
-		dndz = (GetIndex(this->_currentPosition[2],indexFit)-GetIndex(this->_currentPosition[2]-z0,indexFit))/(z0);
-	}
-	dTheta = 0;
-	if(!InAir)
-	{
-		if((stepNum % _scatterLength) == 0 && this->_currentPosition[2] > -200.0)
-		{
-			dTheta = _timeStep*cos(this->_currentAngle)*dndz*c0/(n*n);// + (RandomGauss(_sigma));
-		}
-		else
-		{
-			dTheta = _timeStep*cos(this->_currentAngle)*dndz*c0/(n*n);				
-		}
-	}
-	if(dz>0 && surfaceReflection)
-	{
-		dTheta = 0;
-	}
-}
-
 void Propagator::CheckForReflection()
 {
-	// For Reflections
-	float n_i_true = GetIndex(_currentPosition[2] - 0.5,indexFit);
-	float n_f_true = GetIndex(_currentPosition[2] + 0.5,indexFit);
-	float n_i_dev = std::abs(GetIndex(_currentPosition[2] - 0.5,true) - GetIndex(_currentPosition[2] - 0.5,indexFit));
-	float n_f_dev = std::abs(GetIndex(_currentPosition[2] + 0.5,true) - GetIndex(_currentPosition[2] + 0.5,indexFit));
-	float n_i_TIR = n_i_dev * n_f_dev * n_i_true;  
-	float n_f_TIR = n_f_dev * n_i_dev * n_f_true; 	
-
-	float n_i_trueR = GetIndex(_currentPosition[2] - (dz/2) - 0.01,indexFit);
-	float n_f_trueR = GetIndex(_currentPosition[2] + (dz/2) + 0.01,indexFit);
-	float n_i_devR = std::abs(GetIndex(_currentPosition[2] - (dz/2) - 0.01,true) - GetIndex(_currentPosition[2] - (dz/2) - 0.01,indexFit));
-	float n_f_devR = std::abs(GetIndex(_currentPosition[2] + (dz/2) + 0.01,true) - GetIndex(_currentPosition[2] + (dz/2) + 0.01,indexFit));
-	float n_i_reflection = n_i_dev * n_f_dev * n_i_true;  
-	float n_f_reflection = n_f_dev * n_i_dev * n_f_true; 
-	//  For TIR condition
-	if(dz>0)
-	{
-		float n_i_true = GetIndex(_currentPosition[2] + 0.5,indexFit);
-		float n_f_true = GetIndex(_currentPosition[2] - 0.5,indexFit);
-		float n_i_dev = std::abs(GetIndex(_currentPosition[2] + 0.5,true) - GetIndex(_currentPosition[2] + 0.5,indexFit));
-		float n_f_dev = std::abs(GetIndex(_currentPosition[2] - 0.5,true) - GetIndex(_currentPosition[2] - 0.5,indexFit));
-		float n_i_TIR = n_i_dev * n_f_dev * n_i_true;  
-		float n_f_TIR = n_f_dev * n_i_dev * n_f_true; 
-	}
-
 	if(_ReflectionMethod == 1)  // Reflections only at hardcoded locations
 	{
-		rAmplitude = CheckForAReflection(this->_currentAngle,this->_currentPosition[2],this->_polarization,dz);
+		CheckForAReflection(this->_currentAngle,this->_currentPosition[2],this->_polarization,dz);
 		if(previousAngle * _currentAngle < 0) // switched condition statemnt to include TIR (reflection causes sign flip)
 		{
 			_currentPosition[2] -= dz; // This forces the next CheckForReflection to not be true at same reflecter that just reflected
@@ -178,19 +150,24 @@ void Propagator::CheckForReflection()
 			//3DCODEyangle += RandomGauss(_sigma);
 		}
 	}
+
 	if(_ReflectionMethod == 2 && !InAir)  // Every point in propogation is treated as possibe reflector
 	{
-		rAmplitude = Reflect(n_i_TIR,n_f_TIR,n_i_reflection,n_f_reflection);
-		if(previousAngle == -this->_currentAngle)
+		float currentAmplitude = 1.0;			
+		//    TIR
+		if(!Reflections::TIR(this->_currentPosition, this->_currentAngle, dz, indexFit, _sigma, stepNum, _scatterLength))
 		{
-			this->Update(dx,dy,-dz,dTheta);
-			this->_path.push_back(_currentPosition);
-		}
-		else
-		{
-			//#DCODEyangle += RandomGauss(_sigma);
+			//		Reflections
+			if(Reflections::Reflect(this->_currentPosition,this->_polarization, this->_currentAngle,currentAmplitude, dz, indexFit, _sigma, stepNum, _scatterLength))
+			{
+				//		Account for symmetry in specular reflection
+					//	this->Update(dx,dy,-dz,dTheta);
+					//	this->_path.push_back(_currentPosition);
+			}
 		}
 	}		
+
+
 	if(this->_currentPosition[2] + (dz/2) > 0 || this->_currentPosition[2] - (dz/2) > 0 )
 	{
 		surfaceReflection = true;
@@ -199,61 +176,5 @@ void Propagator::CheckForReflection()
 	{
 		surfaceReflection = false;
 	}
-	this->_currentAmplitude*=rAmplitude;
 }
 
-
-float Propagator::Reflect(float n_i_TIR, float n_f_TIR, float n_i_reflection, float n_f_reflection)
-{
-	float currentAmplitude = 1.0;
-	float pi_2 = pi/2.0;
-	float s = n_i_TIR/n_f_TIR;
-	//    TIR
-	if(std::abs(s*sin(pi_2 - this->_currentAngle))>1.0)
-	{
-		if(stepNum % _scatterLength != 0)
-		{
-			this->_currentAngle = -this->_currentAngle;
-		}
-		else
-		{
-			float ran = Reflector::RandomGauss(_sigma);
-			this->_currentAngle = -this->_currentAngle+ran;
-		}
-	}
-	else
-	{
-		s = n_i_reflection/n_f_reflection;
-		//s-polarized component
-		float a = std::abs(s*cos(pi_2 - this->_currentAngle));
-		float b = sqrt(1.0-(s*s*sin(pi_2 - this->_currentAngle)*sin(pi_2 - this->_currentAngle)));
-		float rs = (a-b)/(a+b); //reflected s-pol. relative amplitude (Jackson 7.39)
-		float ts = (2*a)/(a+b);	//transmitted s-pol. relative amplitude	(Jackson 7.39)	
-		//p-polarized component
-		float c = std::abs(cos(pi_2 - this->_currentAngle));
-		float d = s*sqrt(1.0-(s*s*sin(pi_2 - this->_currentAngle)*sin(pi_2 - this->_currentAngle)));
-		float rp = (c-d)/(c+d); //reflected p-pol. relative amplitude (Jackson 7.41)
-		float tp = (2*s*c)/(c+d); //transmitted p-pol. relative amplitude (Jackson 7.41)
-		//Reflection and Transmission coefficients
-		float R = rs*rs+rp*rp;
-		float T = (b/a)*(ts*ts+tp*tp);
-		float random = float(rand())/float(RAND_MAX);
-		///   Reflection
-		if(random<(R)) //Account for reflection coefficient
-		{
-			if(stepNum % _scatterLength != 0)
-			{
-				this->_currentAngle = -this->_currentAngle;
-			}	
-			else
-			{
-				float s_amp = currentAmplitude*this->_polarization[2]*rs;
-				float p_amp = currentAmplitude*sqrt(this->_polarization[0]*this->_polarization[0]+this->_polarization[1]*this->_polarization[1])*rp;
-				currentAmplitude = sqrt(s_amp*s_amp+p_amp*p_amp); //amplitude of reflected ray
-				float ran = Reflector::RandomGauss(_sigma);
-				this->_currentAngle = -this->_currentAngle+ran;
-			}
-		}
-	}
-	return currentAmplitude;
-}

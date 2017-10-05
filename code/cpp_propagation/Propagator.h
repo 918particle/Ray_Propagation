@@ -1,9 +1,12 @@
 #include "Ice.h"
 #include "Reflector.h"
+#include "Reflections.h"
+#include "Refractions.h" 
 #include "Emitter.h"
 #include "RFRay.h"
 #include "RFRayTracker.h"
 #include "Constants.h"
+#include "Collector.h"
 #include <fstream>
 #include <cmath>
 #include <iostream>
@@ -16,7 +19,7 @@
 #ifndef PROPAGATOR_H_
 #define PROPAGATOR_H_
 
-class Propagator : public Reflector, public RFRay
+class Propagator : public Reflector, public Reflections, public RFRay, public Collector
 {
 	public:
 		// Global Variables
@@ -32,14 +35,17 @@ class Propagator : public Reflector, public RFRay
 		int _nrays;
 		std::vector<float> _emitterPos;
 		std::vector<float> _pol;
+		std::vector<float> anglesAt1400;
 		std::vector<float> _iceSize;
+		std::vector<float> previousPosition;
 		std::pair<bool,bool> _preferences;
+		std::string ideration;
 
 		// Initial variables for each ray
 		float dndz;
 		float rAmplitude;
 		float n_snow;
-		float dx,dy,dz,dTheta;
+		float dx,dy,dz;
 		float yangle;
 		float theTime;
 		float previousAngle;
@@ -53,11 +59,12 @@ class Propagator : public Reflector, public RFRay
 		void InitializePropagator(float,std::vector<float>); //See source file.
 		void InitializeIce(std::string); //See source file.
 		void AddReflector(std::vector<float>,float); //See source file.
+		void InitializeCollector();
 		void ReflectionSmoothness(float);
 		void Propagate(int); //Propagate ray through medium
 		void ReadoutPath(int); //Save path in an output file.
-		void Refract();
-		float Reflect(float,float,float,float);
+		void ReadoutAngles(); //Save path in an output file.
+		float Reflect(std::vector<float>);
 		void CheckForReflection();
 };
 
