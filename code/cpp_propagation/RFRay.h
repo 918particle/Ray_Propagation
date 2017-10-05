@@ -10,7 +10,7 @@ class RFRay : public Emitter
 	RFRay() : _distanceTravelled(0.0), _rfLoss(0.0), _freq(0.0)
 	{
 		_currentAmplitude = this->_emitterAmplitude;
-		_currentPosition = {0.0,0.0,0.0};
+		_currentPosition = this->_emitterPosition;
 	};
 	void SetFreq(float);
 	void Update(float,float,float,float); //Updates _distanceTravelled and _rfLoss, after changing the position
@@ -23,7 +23,6 @@ class RFRay : public Emitter
 	float _distanceTravelled; //Keeps track of the propagation distance
 	float _rfLoss; //Amount of attenuation (apart from distance) accumulated
 	float _freq; //Frequency of the ray
-	int _ReflectionMethod;
 	//The path traveled in (x,z) coordinates by the ray, and each pair goes with one time-step.
 	std::vector<std::vector<float> > _path;
 };

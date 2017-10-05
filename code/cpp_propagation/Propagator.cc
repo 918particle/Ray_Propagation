@@ -1,65 +1,17 @@
 #include "Propagator.h"
 
-//Initialize base classes with data, choose models
-void Propagator::Initialize(char *argv[])
-{
-	_sigma = atof(argv[1]);  // Standard Deviation for diffuse scatters
-	_ReflectionMethod = atof(argv[2]); // 1 = force reflecting surfaces, 2 = Every point treated as possible reflection
-	_angleI = atof(argv[3]); // Initial Angle
-	_angleF = atof(argv[4]); // Final Angle
-	_dtheta = 0.1; // Angle step size
-	_scatterLength = atof(argv[5]); // How many steps before a diffuse sactter is allowed (specular scatters possible at every step)
-	_nrays = atof(argv[6]); // How many rays to launch at a specific angle
-	float emitterX = atof(argv[7]);
-	float emitterY = atof(argv[8]);
-	float emitterZ = atof(argv[9]);
-	std::stringstream ider;
-	_pol = {0.0,0.0,0.1};
-	_globalTime = 11000.0;
-	_emitterPosition = {emitterX,emitterY,emitterZ};
-	_iceSize = {1000.0,1000.0,2000.0};
-	_preferences.first = false; //Preferences for index and attenuation length treatment
-	_preferences.second = false;
-	InitializeIce("SPICE"); //Ice Model
-	std::vector<float> Reflector_pos = {100.0,0.0,-200.0};
-	AddReflector(Reflector_pos,_sigma); // This is necessary for _ReflectionMethod 1 only
-	InitializeCollector();
-}
-
 void Propagator::InitializePropagator(float angle_em, std::vector<float> p)
 {
 	this->_path.clear();
-	this->InitializeEmitter(_emitterPos,angle_em,p);
-	_currentPosition[0] = _emitterPosition[0];
-	_currentPosition[1] = _emitterPosition[1];
-	_currentPosition[2] = _emitterPosition[2];
+	_currentPosition = this->_emitterPosition;
 	this->_path.push_back(_currentPosition);
 	this->_currentAngle = _initialAngle;
 	_isInitialized = true;
-	yangle = 0.0;
-	rAmplitude = 0.0;
-	dx,dy,dz; //units: nanoseconds, meters, meters, radians
-	theTime = 0.0;
-	previousAngle = 0.0;
-	InAir = false;
-	stepNum = 1;
-	indexFit = true; //reflections
-	surfaceReflection = false;
 }
 
-void Propagator::InitializeIce(std::string ice_model)
-{
-	this->_path.clear();
-	this->CreateIce(_iceSize,_preferences.first,_preferences.second,ice_model);
-}
 void Propagator::AddReflector(std::vector<float> x,float y)
 {
 	this->CreateReflector(x,y);
-}
-void Propagator::InitializeCollector()
-{
-	std::vector<float> collector_pos = {1400.0,0.0,-22.0};
-	this->CreateCollectors(0.0,40,2.0,collector_pos,50.0);
 }
 
 void Propagator::ReadoutPath(int count)
@@ -139,7 +91,7 @@ void Propagator::Propagate(int tag)
 
 void Propagator::CheckForReflection()
 {
-	if(_ReflectionMethod == 1)  // Reflections only at hardcoded locations
+	if(_reflectionMethod == 1)  // Reflections only at hardcoded locations
 	{
 		CheckForAReflection(this->_currentAngle,this->_currentPosition[2],this->_polarization,dz);
 		if(previousAngle * _currentAngle < 0) // switched condition statemnt to include TIR (reflection causes sign flip)
@@ -151,7 +103,7 @@ void Propagator::CheckForReflection()
 		}
 	}
 
-	if(_ReflectionMethod == 2 && !InAir)  // Every point in propogation is treated as possibe reflector
+	if(_reflectionMethod == 2 && !InAir)  // Every point in propogation is treated as possibe reflector
 	{
 		float currentAmplitude = 1.0;			
 		//    TIR
