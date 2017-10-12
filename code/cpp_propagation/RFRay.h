@@ -11,6 +11,7 @@ class RFRay : public Emitter
 	{
 		_currentAmplitude = this->_emitterAmplitude;
 		_currentPosition = this->_emitterPosition;
+		_currentAngle = this->_initialAngle;
 	};
 	void SetFreq(float);
 	void Update(float,float,float,float); //Updates _distanceTravelled and _rfLoss, after changing the position
