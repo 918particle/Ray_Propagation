@@ -5,10 +5,6 @@
 
 void Ice::CreateIce(std::vector<float> d,bool fitn,bool fitl,std::string modelName)
 {
-	const char* env_p = std::getenv("RAYPROP");
-	char fileIn[256];
-	strncpy(fileIn, env_p, sizeof(fileIn));
-	strncat(fileIn, "/code/cpp_propagation/SPICE_data.dat", sizeof(fileIn));
 	_dimensions = d;
 	_useIndexFit = fitn;
 	_useAttenuationLengthFit = fitl;
@@ -17,7 +13,9 @@ void Ice::CreateIce(std::vector<float> d,bool fitn,bool fitl,std::string modelNa
 		_A = 1.78;
 		_B = 0.427;
 		_C = 0.014;
-		std::ifstream in(fileIn);
+		ifstream in;
+		if(modelName=="SPICE") in.open("IceData/SPICE_data.dat");
+		if(modelName=="RICE") in.open("IceData/RICE_data.csv");
 		float depth,density;
 		while(in.good() && ~in.eof())
 		{
@@ -32,7 +30,7 @@ void Ice::CreateIce(std::vector<float> d,bool fitn,bool fitl,std::string modelNa
 		_A = 1.78;
 		_B = 0.464;
 		_C = 0.0244;
-		std::ifstream in("/home/jordan/ANewHope/Byrd_data.csv");
+		std::ifstream in("IceData/Byrd_data.csv");
 		float depth,index;
 		while(in.good() && ~in.eof())
 		{
@@ -47,7 +45,7 @@ void Ice::CreateIce(std::vector<float> d,bool fitn,bool fitl,std::string modelNa
 		_A = 1.78;
 		_B = 0.46;
 		_C = 0.029;
-		std::ifstream in("/home/jordan/ANewHope/ARIANNA_Borehole_1.dat");
+		std::ifstream in("IceData/ARIANNA_Borehole_1.dat");
 		float depth,density;
 		while(in.good() && ~in.eof())
 		{
@@ -62,7 +60,7 @@ void Ice::CreateIce(std::vector<float> d,bool fitn,bool fitl,std::string modelNa
 		_A = 1.78;
 		_B = 0.46;
 		_C = 0.027;
-		std::ifstream in("/home/jordan/ANewHope/ARIANNA_Borehole_2.dat");
+		std::ifstream in("IceData/ARIANNA_Borehole_2.dat");
 		float depth,density;
 		while(in.good() && ~in.eof())
 		{
@@ -77,7 +75,7 @@ void Ice::CreateIce(std::vector<float> d,bool fitn,bool fitl,std::string modelNa
 		_A = 1.78;
 		_B = 0.423;
 		_C = 0.027;
-		std::ifstream in("/home/jordan/ANewHope/Mizuho_data.csv");
+		std::ifstream in("IceData/Mizuho_data.csv");
 		float depth,index;
 		while(in.good() && ~in.eof())
 		{
@@ -92,7 +90,7 @@ void Ice::CreateIce(std::vector<float> d,bool fitn,bool fitl,std::string modelNa
 		_A = 1.78;
 		_B = 0.48;
 		_C = 0.02;
-		std::ifstream in("/home/jordan/ANewHope/Eisen_Maud_data.csv");
+		std::ifstream in("IceData/Eisen_Maud_data.csv");
 		float depth,index;
 		while(in.good() && ~in.eof())
 		{
@@ -107,7 +105,7 @@ void Ice::CreateIce(std::vector<float> d,bool fitn,bool fitl,std::string modelNa
 		_A = 1.78;
 		_B = 0.435;
 		_C = 0.016;
-		std::ifstream in("/home/jordan/ANewHope/Gow_withOnePlus86_data.csv");
+		std::ifstream in("IceData/Gow_withOnePlus86_data.csv");
 		float depth,index;
 		while(in.good() && ~in.eof())
 		{
@@ -119,9 +117,9 @@ void Ice::CreateIce(std::vector<float> d,bool fitn,bool fitl,std::string modelNa
 	}
 }
 
-float Ice::GetIndex(float z, bool fit)
+float Ice::GetIndex(float z)
 {
-	if(fit)
+	if(_useIndexFit)
 	{
 		if(z>0)
 		{

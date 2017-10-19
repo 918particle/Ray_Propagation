@@ -31,7 +31,7 @@ void Collector::Collect(std::vector<float> currentPosition,std::vector<float> pr
 		float xAfterPhotometer = currentPosition[0];
 		float zBeforePhotometer = previousPosition[2];
 		float zAfterPhotometer = currentPosition[2];
-		if(xAfterPhotometer != xBeforePhotometer);
+		if(xAfterPhotometer != xBeforePhotometer)
 		{
 			float slope = (zAfterPhotometer - zBeforePhotometer)/(xAfterPhotometer - xBeforePhotometer);
 			float zPositionAtPhotometer = (slope * (PhotometerXAtJ - xBeforePhotometer)) + zBeforePhotometer;

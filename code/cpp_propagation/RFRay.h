@@ -19,7 +19,6 @@ class RFRay : public Emitter
 	std::vector<float> _currentPosition; //Current position in (x,z)
 	float _currentAngle; //Current angle with respect to horizontal
 	float _currentAmplitude; //Amplitude of wave derived from emitter.
-	int _scatterLength;
 	std::vector<float> _priorPosition; //Current position in (x,z)
 	float _distanceTravelled; //Keeps track of the propagation distance
 	float _rfLoss; //Amount of attenuation (apart from distance) accumulated

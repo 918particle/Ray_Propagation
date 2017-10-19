@@ -9,11 +9,6 @@ void Propagator::InitializePropagator(float angle_em, std::vector<float> p)
 	_isInitialized = true;
 }
 
-void Propagator::AddReflector(std::vector<float> x,float y)
-{
-	this->CreateReflector(x,y);
-}
-
 void Propagator::ReadoutPath(int count)
 {
 	std::stringstream ss;
@@ -31,44 +26,46 @@ void Propagator::ReadoutPath(int count)
 	this->_path.clear();
 }
 
-void Propagator::ReadoutAngles()
-{
-	std::string title = "anglesAt1400plus.dat";
-	std::ofstream out(title.c_str());
-	std::vector<float>::iterator i = this->anglesAt1400.begin();
-	while(i!=this->anglesAt1400.end())
-	{
-		//3DCODEout<<(*i)[0]<<" "<<(*i)[1]<<" "<<(*i)[2]<<std::endl;
-		out<<(*i)<<std::endl;
-		++i;
-	}
-	out.close();
-	this->anglesAt1400.clear();
-	Collector::ReadoutPath();
-}
 //Propagation from t=0 to the global time.  This makes it trivial to run
 // the same propagation effect for different times with the same settings.
 void Propagator::Propagate(int tag)
 {
 	RFRayTracker *T = new RFRayTracker(_initialAngle,_currentPosition);
-	int angle_bool = false;
-	while(theTime<_globalTime)
+	float _theTime = 0.0;
+	bool _inAir = false;
+	float dx=0.0;
+	float dy=0.0;
+	float dz=0.0;
+	float dTheta=0.0;
+	float n=0.0;
+	while(_theTime<_globalTime)
 	{
-		theTime+=_timeStep;
+		_theTime+=_timeStep;
 		// Continuous Refraction
 		//Refractions::Refract();
-
 		if(this->_currentPosition[2] > 0)
 		{
-			InAir = true;
+			_inAir = true;
+			n = 1.0;
 		}
-
-		float n = GetIndex(_currentPosition[2],indexFit);
+		else
+		{
+			n = GetIndex(this->_currentPosition[2]);
+		}
 		dx=cos(this->_currentAngle)*_timeStep*c0/n;
-		dy=0; //3DCODEdy=sin(yangle)*_timeStep*c0/n;
 		dz=sin(this->_currentAngle)*_timeStep*c0/n;
-
-		dTheta = Reflections::Refractions::Refract(this->_currentPosition, this->_currentAngle, dz, indexFit, _sigma, stepNum, _scatterLength,_timeStep, n,surfaceReflection,InAir);
+		dTheta = Reflections::Refractions::Refract(
+			this->_currentPosition,
+			this->_currentAngle,
+			dz,
+			this->_useIndexFit,
+			this->_sigma,
+			stepNum,
+			_scatterLength,
+			_timeStep,
+			n,
+			surfaceReflection,
+			InAir);
 		previousPosition = this->_currentPosition;
 		this->Update(dx,dy,dz,dTheta);
 		this->_path.push_back(_currentPosition);
@@ -107,10 +104,10 @@ void Propagator::CheckForReflection()
 	{
 		float currentAmplitude = 1.0;			
 		//    TIR
-		if(!Reflections::TIR(this->_currentPosition, this->_currentAngle, dz, indexFit, _sigma, stepNum, _scatterLength))
+		if(!Reflections::TIR(this->_currentPosition, this->_currentAngle, dz, _useIndexFit, _sigma, stepNum, _scatterLength))
 		{
 			//		Reflections
-			if(Reflections::Reflect(this->_currentPosition,this->_polarization, this->_currentAngle,currentAmplitude, dz, indexFit, _sigma, stepNum, _scatterLength))
+			if(Reflections::Reflect(this->_currentPosition,this->_polarization, this->_currentAngle,currentAmplitude, dz, _useIndexFit, _sigma, stepNum, _scatterLength))
 			{
 				//		Account for symmetry in specular reflection
 					//	this->Update(dx,dy,-dz,dTheta);
