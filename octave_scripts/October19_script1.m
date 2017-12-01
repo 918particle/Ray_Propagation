@@ -80,27 +80,22 @@ for i=2:(length(time_bins))
 endfor
 
 %Plotting
-a=14;
-b=14;
-c=14;
-d=14;
-
 figure(1,'Position',[0,0,1600,1600]);
 subplot(2,2,2);
 grid off;
 box on;
-colormap(hot(15));
-contourf(T,F,Sdb,[-30:3:6],'linewidth',linewc,"linecolor",linec);
-colorbar("location","north");
+colormap(hot(7));
+contourf(T,F,Sdb,[-30:6:6],'linewidth',linewc,"linecolor",linec);
+colorbar("north");
+caxis([-30 6]);
+set(findobj(gcf(),'tag','colorbar'),"linewidth",linew,"fontname",fon,"fontsize",fonts,"xtick",[-30:6:6]);
 axisVector = [0 2.0 -0.01 1.5];
 axis(axisVector);
 axis("square");
 set(gca,"linewidth",linew,"fontname",fon,"fontsize",fonts,"ticklength",[0.05 0.05]);
-set(findobj(gcf(),'tag','colorbar'),"linewidth",linew,"fontname",fon,"fontsize",fonts);
 set(ylabel("Frequency (GHz)"),'position',[-0.5,0.7,0]);
-set(xlabel("Time (microseconds)"),'position',[0.9 -0.17 0]);
-title("dB (Max Voltage)");
-caxis([-30 6]);
+set(xlabel("Time (microseconds)"),'position',[1.0 -0.17 0]);
+%title("dB (Max Voltage)");
 subplot(2,2,1);
 grid off;
 box on;
@@ -118,15 +113,34 @@ axis(axisVector);
 axis("square");
 set(gca,"linewidth",linew,"fontname",fon,"fontsize",fonts,"ticklength",[0.05 0.05]);
 set(findobj(gcf(),'tag','colorbar'),"linewidth",linew,"fontname",fon,"fontsize",fonts);
-set(ylabel("Frequency (GHz)"),'position',[-37,0.75,0]);
-set(xlabel("dB (Max Voltage)"),'position',[-15 -0.17 0]);
+set(ylabel("Frequency (GHz)"),'position',[-39,0.7,0]);
+set(xlabel("dB (Max Voltage)"),'position',[-10 -0.17 0]);
 subplot(2,2,4);
 grid off;
 box on;
 hold on;
-plot(downsample(t,75),downsample(sh,75),"color",linec,"linewidth",linewl);
-%plot(downsample(t,100),downsample(s_noise,100),"color",linec,"linewidth",linewl);
-%plot(downsample(t,100),downsample(s1_noise,100),"color","red","linewidth",linewl);
+axisVector = [0 2.0 0.0 1.5];
+axis(axisVector);
+axis("square");
+set(gca,"linewidth",linew,"fontname",fon,"fontsize",fonts,"ticklength",[0.05 0.05]);
+set(ylabel("Hilbert Envelope"),'position',[-0.5,0.7,0]);
+set(xlabel("Time (microseconds)"),'position',[1.0 -0.17 0]);
+m = 10;
+n = 4;
+l = 29; %Is this 2(m+n)+1? This re-aligns the signals
+p = circshift(filter(ones(1:n)/n,eye(n,1),downsample(sh,m))/(n),[-l 0]);
+p = p/max(p);
+td = downsample(t,m);
+plot(td,p,"color",linec,"linewidth",linewl);
 
 %The saved graph.
 print -dpdf 'October20_plot1.pdf'
+
+%Cleanup phase
+clear m;
+clear n;
+clear p;
+clear pn;
+clear fc2;
+clear fc1;
+clear fs;
