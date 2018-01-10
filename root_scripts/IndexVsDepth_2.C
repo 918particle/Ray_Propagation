@@ -55,8 +55,8 @@ void IndexVsDepth_2()
 	delete load3;
 	
 	TGraph *RICE_Data = new TGraph("RICE_data.csv");
-	TGraph *Eisen_Data = new TGraph("Eisen_Maud_data.csv");
-	TGraph *Gow_Data = new TGraph("Gow_withOnePlus86_data.csv");
+	//~ TGraph *Eisen_Data = new TGraph("Eisen_Maud_data.csv");
+	//~ TGraph *Gow_Data = new TGraph("Gow_withOnePlus86_data.csv");
 	TGraph *Byrd_Data = new TGraph("Byrd_data.csv");
 	TGraph *Mizuho_Data = new TGraph("Mizuho_data.csv");
 	
@@ -66,8 +66,8 @@ void IndexVsDepth_2()
 	SPICE_Fit->SetParameter(0,0.3);
 	SPICE_Fit->SetParameter(1,0.02);
 	TF1 *RICE_Data_Fit = new TF1("RICE_Data_Fit","1.78-[0]*exp([1]*x)",-MaxDepth,MinDepth);
-	TF1 *Eisen_Data_Fit = new TF1("Eisen_Data_Fit","1.78-[0]*exp([1]*x)",-MaxDepth,MinDepth);
-	TF1 *Gow_Data_Fit = new TF1("Gow_Data_Fit","1.78-[0]*exp([1]*x)",-MaxDepth,MinDepth);
+	//~ TF1 *Eisen_Data_Fit = new TF1("Eisen_Data_Fit","1.78-[0]*exp([1]*x)",-MaxDepth,MinDepth);
+	//~ TF1 *Gow_Data_Fit = new TF1("Gow_Data_Fit","1.78-[0]*exp([1]*x)",-MaxDepth,MinDepth);
 	TF1 *Byrd_Data_Fit = new TF1("Byrd_Data_Fit","1.78-[0]*exp([1]*x)",-MaxDepth,MinDepth);
 	TF1 *Mizuho_Data_Fit = new TF1("Mizuho_Data_Fit","1.78-[0]*exp([1]*x)",-MaxDepth,MinDepth);
 	TF1 *Asymp = new TF1("Asymp","1.78",-MaxDepth,MinDepth);
@@ -75,8 +75,8 @@ void IndexVsDepth_2()
 	Moores_Bay_Hole_1->Fit("Hole_1_Fit","R0");
 	Moores_Bay_Hole_2->Fit("Hole_2_Fit","R0");
 	RICE_Data->Fit("RICE_Data_Fit","R0");
-	Eisen_Data->Fit("Eisen_Data_Fit","R0");
-	Gow_Data->Fit("Gow_Data_Fit","R0");
+	//~ Eisen_Data->Fit("Eisen_Data_Fit","R0");
+	//~ Gow_Data->Fit("Gow_Data_Fit","R0");
 	Byrd_Data->Fit("Byrd_Data_Fit","R0");
 	Mizuho_Data->Fit("Mizuho_Data_Fit","R0");
 	SPICE_Hole->Fit("SPICE_Fit","R0");
@@ -91,11 +91,11 @@ void IndexVsDepth_2()
 	sprintf(result3,"A-B exp(Cz), B: %2.3f +/- %1.3f, C: %2.3f +/- %1.3f",
 		RICE_Data_Fit->GetParameter(0),RICE_Data_Fit->GetParError(0),RICE_Data_Fit->GetParameter(1),RICE_Data_Fit->GetParError(1));
 	char result4[100];
-	sprintf(result4,"A-B exp(Cz), B: %2.3f +/- %1.3f, C: %2.3f +/- %1.3f",
-		Eisen_Data_Fit->GetParameter(0),Eisen_Data_Fit->GetParError(0),Eisen_Data_Fit->GetParameter(1),Eisen_Data_Fit->GetParError(1));
-	char result5[100];
-	sprintf(result5,"A-B exp(Cz), B: %2.3f +/- %1.3f, C: %2.3f +/- %1.3f",
-		Gow_Data_Fit->GetParameter(0),Gow_Data_Fit->GetParError(0),Gow_Data_Fit->GetParameter(1),Gow_Data_Fit->GetParError(1));
+	//~ sprintf(result4,"A-B exp(Cz), B: %2.3f +/- %1.3f, C: %2.3f +/- %1.3f",
+		//~ Eisen_Data_Fit->GetParameter(0),Eisen_Data_Fit->GetParError(0),Eisen_Data_Fit->GetParameter(1),Eisen_Data_Fit->GetParError(1));
+	//~ char result5[100];
+	//~ sprintf(result5,"A-B exp(Cz), B: %2.3f +/- %1.3f, C: %2.3f +/- %1.3f",
+		//~ Gow_Data_Fit->GetParameter(0),Gow_Data_Fit->GetParError(0),Gow_Data_Fit->GetParameter(1),Gow_Data_Fit->GetParError(1));
 	char result6[100];
 	sprintf(result6,"A-B exp(Cz), B: %2.3f +/- %1.3f, C: %2.4f +/- %1.4f",
 		Byrd_Data_Fit->GetParameter(0),Byrd_Data_Fit->GetParError(0),Byrd_Data_Fit->GetParameter(1),Byrd_Data_Fit->GetParError(1));
@@ -109,8 +109,8 @@ void IndexVsDepth_2()
 	Moores_Bay_Hole_1->SetMarkerStyle(2);
 	Moores_Bay_Hole_2->SetMarkerStyle(4);
 	RICE_Data->SetMarkerStyle(8);
-	Eisen_Data->SetMarkerStyle(21);
-	Gow_Data->SetMarkerStyle(3);
+	//~ Eisen_Data->SetMarkerStyle(21);
+	//~ Gow_Data->SetMarkerStyle(3);
 	Byrd_Data->SetMarkerStyle(20);
 	Mizuho_Data->SetMarkerStyle(21);
 	SPICE_Hole->SetMarkerStyle(22);
@@ -119,16 +119,16 @@ void IndexVsDepth_2()
 	Moores_Bay_Hole_2->SetMarkerSize(2);
 	SPICE_Hole->SetMarkerSize(2);
 	RICE_Data->SetMarkerSize(2);
-	Eisen_Data->SetMarkerSize(2);
-	Gow_Data->SetMarkerSize(2);
+	//~ Eisen_Data->SetMarkerSize(2);
+	//~ Gow_Data->SetMarkerSize(2);
 	Byrd_Data->SetMarkerSize(1);
 	Mizuho_Data->SetMarkerSize(1);
 	
 	Moores_Bay_Hole_1->SetMarkerColor(14);
 	Moores_Bay_Hole_2->SetMarkerColor(14);
 	RICE_Data->SetMarkerColor(kBlack);
-	Eisen_Data->SetMarkerColor(kBlack);
-	Gow_Data->SetMarkerColor(kBlack);
+	//~ Eisen_Data->SetMarkerColor(kBlack);
+	//~ Gow_Data->SetMarkerColor(kBlack);
 	SPICE_Hole->SetMarkerColor(kBlack);
 	Byrd_Data->SetMarkerColor(14);
 	Mizuho_Data->SetMarkerColor(14);
@@ -141,10 +141,10 @@ void IndexVsDepth_2()
 	SPICE_Hole->GetYaxis()->SetRangeUser(MinIndex,MaxIndex);
 	RICE_Data->GetYaxis()->SetRangeUser(MinIndex,MaxIndex);
 	RICE_Data->GetXaxis()->SetRangeUser(-MaxDepth,MinDepth);
-	Eisen_Data->GetYaxis()->SetRangeUser(MinIndex,MaxIndex);
-	Eisen_Data->GetXaxis()->SetRangeUser(-MaxDepth,MinDepth);
-	Gow_Data->GetYaxis()->SetRangeUser(-MaxDepth,MinDepth);
-	Gow_Data->GetXaxis()->SetRangeUser(MinIndex,MaxIndex);
+	//~ Eisen_Data->GetYaxis()->SetRangeUser(MinIndex,MaxIndex);
+	//~ Eisen_Data->GetXaxis()->SetRangeUser(-MaxDepth,MinDepth);
+	//~ Gow_Data->GetYaxis()->SetRangeUser(-MaxDepth,MinDepth);
+	//~ Gow_Data->GetXaxis()->SetRangeUser(MinIndex,MaxIndex);
 	Byrd_Data->GetYaxis()->SetRangeUser(-MaxDepth,MinDepth);
 	Byrd_Data->GetXaxis()->SetRangeUser(MinIndex,MaxIndex);
 	Mizuho_Data->GetYaxis()->SetRangeUser(-MaxDepth,MinDepth);
@@ -154,8 +154,8 @@ void IndexVsDepth_2()
 	Hole_2_Fit->SetLineColor(14);
 	SPICE_Fit->SetLineColor(kRed);
 	RICE_Data_Fit->SetLineColor(kBlack);
-	Eisen_Data_Fit->SetLineColor(kBlack);
-	Gow_Data_Fit->SetLineColor(kBlack);
+	//~ Eisen_Data_Fit->SetLineColor(kBlack);
+	//~ Gow_Data_Fit->SetLineColor(kBlack);
 	Byrd_Data_Fit->SetLineColor(14);
 	Mizuho_Data_Fit->SetLineColor(14);
 	Asymp->SetLineColor(kBlack);
@@ -165,8 +165,8 @@ void IndexVsDepth_2()
 	Hole_2_Fit->SetLineWidth(3);
 	SPICE_Fit->SetLineWidth(3);
 	RICE_Data_Fit->SetLineWidth(3);
-	Eisen_Data_Fit->SetLineWidth(3);
-	Gow_Data_Fit->SetLineWidth(3);
+	//~ Eisen_Data_Fit->SetLineWidth(3);
+	//~ Gow_Data_Fit->SetLineWidth(3);
 	Byrd_Data_Fit->SetLineWidth(3);
 	Mizuho_Data_Fit->SetLineWidth(3);
 	Asymp->SetLineWidth(4);
@@ -175,8 +175,8 @@ void IndexVsDepth_2()
 	Hole_1_Fit->SetLineStyle(1);
 	Hole_2_Fit->SetLineStyle(9);
 	RICE_Data_Fit->SetLineStyle(1);
-	Eisen_Data_Fit->SetLineStyle(9);
-	Gow_Data_Fit->SetLineStyle(2);
+	//~ Eisen_Data_Fit->SetLineStyle(9);
+	//~ Gow_Data_Fit->SetLineStyle(2);
 	Byrd_Data_Fit->SetLineStyle(7);
 	Mizuho_Data_Fit->SetLineStyle(2);
 	SPICE_Fit->SetLineStyle(1);
@@ -186,8 +186,8 @@ void IndexVsDepth_2()
 	Moores_Bay_Hole_1->Draw("P same");
 	Moores_Bay_Hole_2->Draw("P same");
 	RICE_Data->Draw("P same");
-	Eisen_Data->Draw("P same");
-	Gow_Data->Draw("P same");
+	//~ Eisen_Data->Draw("P same");
+	//~ Gow_Data->Draw("P same");
 	Byrd_Data->Draw("P same");
 	Mizuho_Data->Draw("P same");
 	SPICE_Hole->Draw("P same");
@@ -198,8 +198,8 @@ void IndexVsDepth_2()
 	Asymp->Draw("same");
 	Asymp2->Draw("same");
 	RICE_Data_Fit->Draw("same");
-	Eisen_Data_Fit->Draw("same");
-	Gow_Data_Fit->Draw("same");
+	//~ Eisen_Data_Fit->Draw("same");
+	//~ Gow_Data_Fit->Draw("same");
 	Byrd_Data_Fit->Draw("same");
 	Mizuho_Data_Fit->Draw("same");
 	
@@ -209,16 +209,16 @@ void IndexVsDepth_2()
 	legend->AddEntry(Hole_1_Fit,result1,"l");
 	legend->AddEntry(Moores_Bay_Hole_2,"MB #2 (n(z) = 1.0+0.86#rho(z)) (ARIANNA 2016)","p");
 	legend->AddEntry(Hole_2_Fit,result2,"l");
-	legend->AddEntry(Byrd_Data,"Byrd: Ebimuna et al (1983)","p");
+	legend->AddEntry(Byrd_Data,"Byrd: Ebinuma et al (1983)","p");
 	legend->AddEntry(Byrd_Data_Fit,result6,"l");
-	legend->AddEntry(Mizuho_Data,"Mizuho: Ebimuna et al (1983)","p");
+	legend->AddEntry(Mizuho_Data,"Mizuho: Ebinuma et al (1983)","p");
 	legend->AddEntry(Mizuho_Data_Fit,result7,"l");
 	legend->AddEntry(RICE_Data,"SP: RICE data (2004)","p");
 	legend->AddEntry(RICE_Data_Fit,result3,"l");
-	legend->AddEntry(Eisen_Data,"SP: Eisen et al (2003)","p");
-	legend->AddEntry(Eisen_Data_Fit,result4,"l");
-	legend->AddEntry(Gow_Data,"SP: Gow et al (xxxx)","p");
-	legend->AddEntry(Gow_Data_Fit,result5,"l");
+	//~ legend->AddEntry(Eisen_Data,"SP: Eisen et al (2003)","p");
+	//~ legend->AddEntry(Eisen_Data_Fit,result4,"l");
+	//~ legend->AddEntry(Gow_Data,"SP: Gow et al (xxxx)","p");
+	//~ legend->AddEntry(Gow_Data_Fit,result5,"l");
 	legend->AddEntry(SPICE_Hole,"SP: SPICE Core (n(z) = 1.0+0.86#rho(z)) (2015)","p");
 	legend->AddEntry(SPICE_Fit,result8,"l");
 	legend->AddEntry(Asymp,"Bulk ice value (n = 1.78)","l");
