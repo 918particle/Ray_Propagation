@@ -1,6 +1,6 @@
-void IndexVsDepth_2()
+void IndexVsDepth_2_zoom()
 {
-	const Double_t MaxDepth = 150.0;
+	const Double_t MaxDepth = 25.0;
 	const Double_t MinDepth = 0.0;
 	const Double_t MaxIndex = 1.9;
 	const Double_t MinIndex = 1.0;
@@ -233,7 +233,7 @@ void IndexVsDepth_2()
 	Byrd_Data_Fit->Draw("same");
 	Mizuho_Data_Fit->Draw("same");
 	
-	TLegend *legend = new TLegend(0.18,0.125,0.73,0.5); //wide
+	TLegend *legend = new TLegend(0.4,0.6,0.95,0.975); //wide
 	//~ TLegend *legend = new TLegend(0.28,0.5,0.83,0.85); //zoom
 	legend->AddEntry(Moores_Bay_Hole_1,"MB #1 (n(z) = 1.0+0.86#rho(z)) (ARIANNA 2016)","p");
 	legend->AddEntry(Hole_1_Fit,result1,"l");
@@ -326,14 +326,14 @@ void IndexVsDepth_2()
 	Byrd_Data_residual->SetMarkerColor(14);
 	Mizuho_Data_Fit_residual->SetMarkerColor(14);
 
-	Moores_Bay_Hole_1_residual->Draw("P same");
-	Moores_Bay_Hole_2_residual->Draw("P same");
+	Moores_Bay_Hole_1_residual->Draw("PL same");
+	Moores_Bay_Hole_2_residual->Draw("PL same");
 	SPICE_Hole_residual->Draw("P same");
 	RICE_Data_residual->Draw("P same");
 	Byrd_Data_residual->Draw("P same");
 	Mizuho_Data_Fit_residual->Draw("P same");
 	
 	char fileOut[100];
-	sprintf(fileOut,"January17_plot1.pdf");
+	sprintf(fileOut,"January17_plot2.pdf");
 	c->Print(fileOut);
 }
