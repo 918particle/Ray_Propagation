@@ -57,7 +57,7 @@ void IndexVsDepth_2()
 	for(Int_t i=0;i<load1->GetN();++i)
 	{
 		x1[i] = -x1[i];
-		y1[i] = 1.0+0.86*y1[i]/1000.0;
+		y1[i] = 1.0+0.86*y1[i]/917.0;
 	}
 	TGraph *Moores_Bay_Hole_1 = new TGraph(load1->GetN(),x1,y1);
 	delete load1;
@@ -68,7 +68,7 @@ void IndexVsDepth_2()
 	for(Int_t i=0;i<load2->GetN();++i)
 	{
 		x2[i] = -x2[i];
-		y2[i] = 1.0+0.86*y2[i]/1000.0;
+		y2[i] = 1.0+0.86*y2[i]/917.0;
 	}
 	TGraph *Moores_Bay_Hole_2 = new TGraph(load2->GetN(),x2,y2);
 	delete load2;
@@ -79,7 +79,7 @@ void IndexVsDepth_2()
 	for(Int_t i=0;i<load3->GetN();++i)
 	{
 		x3[i] = -x3[i];
-		y3[i] = 1.0+0.86*y3[i]/1000.0;
+		y3[i] = 1.0+0.86*y3[i]/917.0;
 	}
 	TGraph *SPICE_Hole = new TGraph(load3->GetN(),x3,y3);
 	delete load3;
