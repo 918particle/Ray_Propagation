@@ -12,10 +12,10 @@ f(x) = -0.5*Q1/z_0*(x-y_1)**2+Q0/Q1*z_0
 
 set xrange [-50:50]
 set yrange [-250:250]
-set xlabel "y (m)" font "Courier,24" offset 0,-2
-set ylabel "z (m)" font "Courier,24" offset -2,0
+set xlabel "y (m)" font "Courier,24" offset 0,-1.5
+set ylabel "z (m)" font "Courier,24" offset -1.5,0
 set ytics font "Courier,24"
 set xtics font "Courier,24"
-#set terminal postscript color enhanced
-#set output "Jan24_plot1.eps"
+set terminal postscript color enhanced
+set output "Jan24_plot1.eps"
 plot f(x) w l lw 3 lc rgb "#000000" title "Shelf"
