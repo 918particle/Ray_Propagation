@@ -1,8 +1,8 @@
 #include "Emitter.h"
 
-void Emitter::InitializeEmitter(float x, float z, float angle)
+void Emitter::InitializeEmitter(std::pair<float,float> pos, float angle,std::vector<float> pol)
 {
 	_initialAngle = angle*3.14159/180.0;
-	_emitterPosition.first = x;
-	_emitterPosition.second = z;
+	_emitterPosition = pos;
+	this->SetPolarization(pol);
 }

@@ -3,10 +3,9 @@
 #include <fstream>
 #include <iostream>
 
-void Ice::CreateIce(float r,float z,bool fitn,bool fitl,std::string modelName)
+void Ice::CreateIce(std::pair<float,float> d,bool fitn,bool fitl,std::string modelName)
 {
-	_r = r;
-	_z = z;
+	_dimensions = d;
 	_useIndexFit = fitn;
 	_useAttenuationLengthFit = fitl;
 	if(modelName=="SPICE" || modelName=="RICE")
@@ -144,6 +143,42 @@ float Ice::GetIndex(float z)
 				else break;
 			}
 			if(i==_indexVsDepth.end()) return _A-_B*exp(_C*z);
+			else
+			{
+				return (*i).second + ((*(i-1)).second-(*i).second)/((*(i-1)).first-(*i).first)*(z-(*i).first);
+			}
+		}
+	}
+}
+
+float Ice::GetAttenuationLength(float z)
+{
+	if(_useAttenuationLengthFit)
+	{
+		if(z>0)
+		{
+			return 1.0e6;
+		}
+		else
+		{
+			return 1000.0;
+		}
+	}
+	else
+	{
+		if(z>0.0)
+		{
+			return 1.0;
+		}
+		else
+		{
+			std::vector<std::pair<float,float> >::iterator i = _attenuationLengthVsDepth.begin();
+			while(i!=_attenuationLengthVsDepth.end())
+			{
+				if(z<=(*i).first) ++i;
+				else break;
+			}
+			if(i==_indexVsDepth.end()) return 1000.0;
 			else
 			{
 				return (*i).second + ((*(i-1)).second-(*i).second)/((*(i-1)).first-(*i).first)*(z-(*i).first);
