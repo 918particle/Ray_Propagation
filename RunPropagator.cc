@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 	//Seed rand()
 	srand(time(NULL));
 	float angle_1 = 40.0;
-	float angle_2 = 45.0;
+	float angle_2 = 41.0;
 	float dtheta = 0.2;
 	int count = 0;
 	int nrays = 100;
