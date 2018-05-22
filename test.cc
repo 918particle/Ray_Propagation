@@ -10,7 +10,7 @@ int main(int argc, char **argv)
 	float z_0 = 35.0;
 	float C_1 = 0.0;
 	float b = 2.0 * n_ice;
-	for(float C_0=0.0;C_0<10;C_0+=0.01)
+	for(float C_0=-10.0;C_0<10.0;C_0+=0.01)
 	{
 		float c = n_ice*n_ice - 1.0/C_0/C_0;
 		float y_0 = 1.0/C_0 * 1.0/sqrt(c) * z_0;
@@ -31,8 +31,6 @@ int main(int argc, char **argv)
 				float delta_z = z_f - z_i;
 				float angle = atan(delta_z/delta_y);
 				cout<<angle<<","<<C_0<<endl;
-				// if(angle>0) cout<<angle<<","<<C_0-1.0/n<<endl;
-				// else cout<<angle<<","<<C_0+1.0/n<<endl;
 			}
 		}
 	}
