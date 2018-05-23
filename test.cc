@@ -1,37 +1,49 @@
- #include <iostream>
+#include <iostream>
 #include <cmath>
 #include <cstdlib>
 using namespace std;
 
+bool F(float*,float,float,float);
+
 int main(int argc, char **argv)
 {
-	float delta_n = 1.8-1.3;
-	float n_ice = 1.8;
-	float z_0 = 35.0;
-	float C_1 = 0.0;
-	float b = 2.0 * n_ice;
-	for(float C_0=-10.0;C_0<10.0;C_0+=0.01)
+	//Inputs
+	float theta_i = atof(argv[1])*3.14159/180.0;
+	float delta_theta = atof(argv[2])*3.14159/180.0;
+	float theta_f = atof(argv[3])*3.14159/180.0;
+	float z_i = atof(argv[4]);
+	float delta_z = atof(argv[5]);
+	float z_f = atof(argv[6]);
+	float C_1 = atof(argv[7]);
+	//Constants
+	float n_ice = 1.78;
+	float n_snow = 1.29;
+	float delta_n = n_ice-n_snow;
+	float z_0 = 70.0;
+	float *out = new float;
+	for(float theta=theta_i;theta<=theta_f;theta+=delta_theta)
 	{
-		float c = n_ice*n_ice - 1.0/C_0/C_0;
-		float y_0 = 1.0/C_0 * 1.0/sqrt(c) * z_0;
-		if(c>0)
+		for(float z=z_i;z<=z_f;z+=delta_z)
 		{
-			for(float z_i=-100.0;z_i<-25;z_i+=2)
+			float gamma = delta_n * exp(z/z_0);
+			if(F(out,gamma,n_ice,theta))
 			{
-				float n = n_ice - delta_n*exp(z_i/z_0);
-				float z_f = z_i+1.0;
-				float c = n_ice*n_ice - 1/C_0/C_0;
-				float gamma_i = delta_n * exp(z_i/z_0);
-				float k_i = log( (gamma_i) / (2.0*sqrt(c)*sqrt(gamma_i*gamma_i-b*gamma_i+c) - b*gamma_i + 2.0*c) );
-				float branch_1_i = y_0*k_i-z_0*C_1;
-				float gamma_f = delta_n * exp(z_f/z_0);
-				float k_f = log( (gamma_f) / (2.0*sqrt(c)*sqrt(gamma_f*gamma_f-b*gamma_f+c) - b*gamma_f + 2.0*c) );
-				float branch_1_f = y_0*k_f-z_0*C_1;
-				float delta_y = branch_1_f-branch_1_i;
-				float delta_z = z_f - z_i;
-				float angle = atan(delta_z/delta_y);
-				cout<<angle<<","<<C_0<<endl;
+				float y_plus = (z_0 / tan(theta) * log(*out)+C_1*z_0)*0.6;
+				float y_minus = -y_plus;
+				cout<<" "<<y_plus<<" "<<y_minus<<" "<<z<<endl;
 			}
 		}
 	}
+}
+
+bool F(float *out,float gamma,float n_ice, float theta_i)
+{
+	float c = n_ice*n_ice*sin(theta_i)*sin(theta_i);
+	float b = 2.0*n_ice;
+	if((gamma*gamma-b*gamma+c)>0)
+	{
+		*out = gamma/(2*sqrt(c)*sqrt(gamma*gamma-b*gamma+c)-b*gamma+2.0*c);
+		return true;
+	}
+	else return false;
 }
