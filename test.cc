@@ -8,11 +8,11 @@ bool F(float*,float,float,float);
 int main(int argc, char **argv)
 {
 	//Constants, looking at positive wing of the solution only, because we are interested in slopes.
-	float theta_i = 0.0*3.14159/180.0;
-	float delta_theta = 0.1*3.14159/180.0;
+	float theta_i = -90.0*3.14159/180.0;
+	float delta_theta = 1.0*3.14159/180.0;
 	float theta_f = 90.0*3.14159/180.0;
-	float z_i = -450.0;
-	float delta_z = 1.0;
+	float z_i = -1000.0;
+	float delta_z = 5;
 	float z_f = 0.0;
 	float C_1 = 0.0;
 	//Ice properties
