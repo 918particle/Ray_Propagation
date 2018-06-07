@@ -4,143 +4,112 @@ graphics_toolkit fltk
 
 distance_long = 543.0;
 distance_short = 23.0;
-distance_factor = 10*log10(distance_long/distance_short);
 
-atten_20dB = 20.0;
-atten_3dB = 3.0;
-ampl_62dB = -62.5;
-
+nl = -30.0;
+delta_dB = 1;
 n = 800; 
-m = 0;
+m = 80;
 linew = 2.0;
 fon = "Courier";
-fonts = 14.0;
-linewc = 0.1;
-linewl = 2.0;
-linec = "black";
-
-time_bins = [0.4:0.1:2.0];
-correction_factor = 22.0;  %Can we explain this number? It is related to
-%noise power removed by selecting only signal in a given time-window.
+fonts = 13.0;
+axisVector_contour = [nl:delta_dB:0];
+Fmax = 1.0; %Units: GHz
+start_slice = 13;
+power_level = -30:-15.0;
 
 %Surface propagation data
 fc1 = 0.08;
-fc2 = 1.08;
 data = load('surface_propagation.dat');
 t = data(:,1)*1.0e9; %Units: nanoseconds
 s = data(:,2);
+s = s-mean(s);
+
 dt = t(2)-t(1);
 fs = 1.0/dt; %Units: GHz
 t = t/1.0e3; %Units: microseconds
 [b,a] = butter(2,fc1/(fs/2),'high');
-[d,c] = butter(8,fc2/(fs/2),'low');
 %Filtering
 s = filter(b,a,s);
-s = filter(d,c,s);
-clear a;
-clear b;
-clear c;
-clear d;
-s_noise = randn(size(s))*max(s)/1.0e3;
-s = s+s_noise;
+clear a b c d;
 %Fourier and Time Domains
-s = s-mean(s);
-s = s/max(s);
 [S,F,T] = specgram(s,n,fs,hanning(n),m);
-T = T+t(1);
 T = T/1.0e3; %Units change: microseconds
+T = T+t(1);
 Sdb = 10.0*log10(abs(S));
-SpecMax = max(10*log10(sum(abs(S),2)));
-TimeFactor = 10*log10((0.4-0.2)/1.75);
-Sf = 10*log10(sum(abs(S),2))-SpecMax;
-%Hilbert envelope
-sh = abs(hilbert(s));
-%RMS and Mean of First Spectral Slice
-Sf_mean = 0.0;
-Sf_rms = 0.0;
+Sdb = Sdb - max(max(Sdb));
+Sdb(find(Sdb<=nl)) = nl;
+axisVector1 = [0 T(end) 0.0 Fmax];
+axisVector2 = [nl 0.0 0.0 Fmax];
+[x,y] = size(Sdb);
+F_low = find(F>0.4,1);
+T_high = find(T>1.45,1);
+T_low = find(T>0.33,1);
+chirp_data = [];
 
-Sf_n = [];
-for i=2:(length(time_bins))
-	si = s;
-	si_noise = s_noise;
-	t = t-t(1);
-	si(find(t>time_bins(i) | t<time_bins(i-1)))=0.0;
-	si_noise(find(t<time_bins(i) & t>time_bins(i-1)))=0.0;
-	si_noise*=correction_factor;
-	si+=si_noise;
-	[Si,Fi,Ti] = specgram(si,n,fs,hanning(n),m);
-	Ti/=1.0e3; %Units change: microseconds
-	Ti+=t(1);
-	Sfi = 10*log10(sum(abs(Si),2))-SpecMax;
-	Sf_n = [Sf_n Sfi];
-	if(i==2)
-		Sf_mean = mean(Sfi);
-		Sf_rms = std(Sfi);
-	endif
+for this_power_level=power_level
+	for i=T_low+1:T_high
+		%For a given time-slice, we want to know where is the spectrum closest to a give power level?
+		mark = 100;
+		for j=1:F_low
+			if(abs(Sdb(j,i)-power_level)<=mark)
+				mark = abs(Sdb(j,i)-this_power_level);
+				F_mark = F(j);
+			endif
+		endfor
+		if(F_mark>0 && F_mark<0.25)
+			chirp_data = [chirp_data; [T(i) F_mark]];
+		endif
+	endfor
 endfor
+
+p = polyfit(chirp_data(:,1),chirp_data(:,2),2);
+x0 = linspace(T(1),T(end),100);
+y0 = polyval(p,x0); 
 
 %Plotting
 figure(1,'Position',[0,0,1600,1600]);
-subplot(2,2,2);
-grid off;
-box on;
-colormap(hot(7));
-contourf(T,F,Sdb,[-30:6:6],'linewidth',linewc,"linecolor",linec);
-colorbar("north");
-caxis([-30 6]);
-set(findobj(gcf(),'tag','colorbar'),"linewidth",linew,"fontname",fon,"fontsize",fonts,"xtick",[-30:6:6]);
-axisVector = [0 2.0 -0.01 1.5];
-axis(axisVector);
-axis("square");
-set(gca,"linewidth",linew,"fontname",fon,"fontsize",fonts,"ticklength",[0.05 0.05]);
-set(ylabel("Frequency (GHz)"),'position',[-0.5,0.7,0]);
-set(xlabel("Time (microseconds)"),'position',[1.0 -0.17 0]);
-%title("dB (Max Voltage)");
 subplot(2,2,1);
 grid off;
 box on;
 hold on;
-plot(Sf,F,"color",linec,"linewidth",linewl);
-for i=1:(length(time_bins)-1)
-	cn = i/length(time_bins)+0.05;
-	plot(Sf_n(:,i),F,"color",[cn cn cn],"linewidth",linewl);
-endfor
-plot([Sf_mean Sf_mean],[axisVector(3) axisVector(4)],'--','Color','Red');
-plot([Sf_mean+5*Sf_rms Sf_mean+5*Sf_rms],[axisVector(3) axisVector(4)],'--','Color','Red');
-plot([Sf_mean-5*Sf_rms Sf_mean-5*Sf_rms],[axisVector(3) axisVector(4)],'--','Color','Red');
-axisVector = [-30 6 -0.01 1.5];
-axis(axisVector);
+colormap(bone(length(axisVector_contour)-1));
+[C,h] = contourf(T,F,Sdb,axisVector_contour);
+plot(chirp_data(:,1),chirp_data(:,2),'o','color','red','markersize',1);
+set(h,'LineColor','none');
+colorbar("eastoutside");
+caxis([min(axisVector_contour) max(axisVector_contour)]);
+set(findobj(gcf(),'tag','colorbar'),
+	"linewidth",linew,"fontname",fon,"fontsize",fonts,"xtick",axisVector_contour);
+set(gca(),'xtick',[0:0.5:T(end)]);
+axis(axisVector1);
 axis("square");
 set(gca,"linewidth",linew,"fontname",fon,"fontsize",fonts,"ticklength",[0.05 0.05]);
-set(findobj(gcf(),'tag','colorbar'),"linewidth",linew,"fontname",fon,"fontsize",fonts);
-set(ylabel("Frequency (GHz)"),'position',[-39,0.7,0]);
-set(xlabel("dB (Max Voltage)"),'position',[-10 -0.17 0]);
-subplot(2,2,4);
+set(ylabel("Frequency (GHz)"),'position',[-0.45,0.5,0]);
+set(xlabel("Time (microseconds)"),'position',[0.9 -0.15 0]);
+title("dB (relative to max)");
+subplot(2,2,2);
 grid off;
 box on;
 hold on;
-axisVector = [0 2.0 0.0 1.5];
-axis(axisVector);
+plot(Sdb(:,T_low),F,'color',[1 0 0],'linewidth',linew);
+for i=T_low+1:T_high
+	plot(Sdb(:,i),F,'color',[i/y i/y i/y],'linewidth',linew);
+endfor
+axis(axisVector2);
 axis("square");
-set(gca,"linewidth",linew,"fontname",fon,"fontsize",fonts,"ticklength",[0.05 0.05]);
-set(ylabel("Hilbert Envelope"),'position',[-0.5,0.7,0]);
-set(xlabel("Time (microseconds)"),'position',[1.0 -0.17 0]);
-m = 10;
-n = 4;
-l = 29; %Is this 2(m+n)+1? This re-aligns the signals
-p = circshift(filter(ones(1:n)/n,eye(n,1),downsample(sh,m))/(n),[-l 0]);
-p = p/max(p);
-td = downsample(t,m);
-plot(td,p,"color",linec,"linewidth",linewl);
-
+set(gca,"linewidth",linew,"fontname",fon,"fontsize",fonts,"ticklength",[0.05 0.05],'YaxisLocation','right');
+set(ylabel("Frequency (GHz)"),'position',[6,0.5,0]);
+set(xlabel("dB (relative to max)"),'position',[-14.5 -0.15 0]);
+subplot(2,2,4);
+hold on;
+grid off;
+box on;
+plot(chirp_data(:,1),chirp_data(:,2),'o');
+plot(x0,y0,'-');
+set(gca,"linewidth",linew,"fontname",fon,"fontsize",fonts,"ticklength",[0.05 0.05],'YaxisLocation','right');
+axis(axisVector1);
+axis("square");
+set(ylabel("Frequency (GHz)"),'position',[-0.45,0.5,0]);
+set(xlabel("Time (microseconds)"),'position',[0.9 -0.15 0]);
 %The saved graph.
-print -dpdf 'October20_plot1.pdf'
-
-%Cleanup phase
-clear m;
-clear n;
-clear p;
-clear pn;
-clear fc2;
-clear fc1;
-clear fs;
+print -dpng 'October20_plot1.png'
