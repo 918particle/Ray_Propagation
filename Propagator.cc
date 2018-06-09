@@ -43,7 +43,7 @@ void Propagator::ReadoutPath(std::string title)
 
 //Propagation from t=0 to the global time.  This makes it trivial to run
 // the same propagation effect for different times with the same settings.
-void Propagator::Propagate(int tag)
+void Propagator::Propagate()
 {
 	float pi = 3.14159;
 	float total_internal_reflection_tolerance = 0.1; //To prevent unphysical answers, units of meters
@@ -56,7 +56,6 @@ void Propagator::Propagate(int tag)
 	this->_path.push_back(_emitterPosition);
 	this->_currentPosition = _emitterPosition;
 	this->_currentAngle = _initialAngle;
-	RFRayTracker *T = new RFRayTracker(_initialAngle,_currentPosition);
 	while(theTime<_globalTime)
 	{
 		float n = GetIndex(_currentPosition.second);
@@ -82,14 +81,6 @@ void Propagator::Propagate(int tag)
 		dTheta = _timeStep*cos(_currentAngle)*dndz*c0/(n*n);
 		this->Update(dx,dz,dTheta);
 		this->_path.push_back(_currentPosition);
-		if((currentReflection = CheckForAReflection(_currentAngle,_currentPosition.second,this->_polarization)))
-		{
-			T->StoreNewReflection(std::pair<float,float>(),_currentPosition.second,currentReflection);
-		}
+		currentReflection = CheckForAReflection(_currentAngle,_currentPosition.second,this->_polarization);
 	}
-	T->StoreFinalData(_currentAngle,_currentPosition);
-	std::stringstream ss;
-	ss<<tag;
-	T->ReadoutTracker("data/report_"+ss.str()+".dat");
-	delete T;
 }
