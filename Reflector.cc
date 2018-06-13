@@ -1,6 +1,7 @@
 #include "Reflector.h"
 #include <cmath>
 #include <cstdlib>
+#include <iostream>
 
 void Reflector::CreateReflector(std::pair<float,float> x,std::pair<int,float> y)
 {
@@ -8,25 +9,34 @@ void Reflector::CreateReflector(std::pair<float,float> x,std::pair<int,float> y)
 	_reflectorTypes.push_back(y);
 }
 
-float Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
+void Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
 {
-	float result = 0.0;
 	std::vector<std::pair<float,float> >::iterator i = _data.begin();
 	std::vector<std::pair<int,float> >::iterator j = _reflectorTypes.begin();
 	while(i!=_data.end())
 	{
 		if(std::abs((*i).first-z)<_range) //Within range of reflector
 		{
-			result = (*i).second; //The maximum value of the reflection coefficient (theta = 0)
-			float s = (sqrt(result)-1.0)/(sqrt(result)+1.0); //The ratio of the two indices of refraction
+			float beta = 3.14159/2.0-alpha;  //Angle with respect to vertical (Fresnel equations)
+			float s = (1.0-(*i).second)/(1.0+(*i).second); //The ratio of the two indices of refraction
 			//s-polarized component
-			float a = s*cos(alpha);
-			float b = sqrt(1.0-(s*s*sin(alpha)*sin(alpha)));
-			float rs = p[1]*(a-b)/(a+b)*p[1]*(a-b)/(a+b);
+			float a = s*cos(beta);
+			float b = sqrt(1.0-(s*s*sin(beta)*sin(beta)));
+			float rs = (a-b)/(a+b)*(a-b)/(a+b)*p[0]*p[0];
 			//p-polarized component
-			float c = cos(alpha);
-			float d = s*sqrt(1.0-(s*s*sin(alpha)*sin(alpha)));
-			float rp = (d-c)/(c+d)*(d-c)/(c+d)*(p[0]*p[0]+p[2]*p[2]);
+			float c = s*sqrt(1.0-(s*s*sin(beta)*sin(beta)));
+			float d = cos(beta);
+			float rp = (c-d)/(c+d)*(c-d)/(c+d)*(p[1]*p[1]+p[2]*p[2]);
+			if(rs>1.0) //Deals with these weird cases where rs>1
+			{
+				rs=1.0;
+				_tir = true;
+			}
+			if(rp>1.0) //Deals with these weird cases where rp>1
+			{
+				rp=1.0;
+				_tir = true;
+			}
 			if(float(rand())/float(RAND_MAX)<(rs+rp)) //Account for reflection coefficient
 			{
 				if((*j).first == 1) //Specular case
@@ -42,7 +52,6 @@ float Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
 		++i;
 		++j;
 	}
-	return result;
 }
 
 float Reflector::RandomGauss(float stddev)

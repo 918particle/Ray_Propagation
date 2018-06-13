@@ -10,26 +10,33 @@ int main(int argc, char *argv[])
 {
 	//Seed rand()
 	srand(time(NULL));
-	float angle = 35.0;
-	int nrays = 2000;
+	float angle_i = 20;
+	float angle_f = 70;
+	float delta_angle = 1.0;
+	int nrays = 1;
+	int count = 0;
 	std::pair<float,float> ice_d(1000.0,-2000.0);
-	std::pair<float,float> emitter_p(0.0,-800.0);
+	std::pair<float,float> emitter_p(0.0,-500.0);
 	std::pair<bool,bool> preferences(true,true);
 	std::vector<float> pol(3);
-	pol[0] = 0.0;
+	pol[0] = 1.0;
 	pol[1] = 0.0;
-	pol[2] = 1.0;
+	pol[2] = 0.0;
 	float globalTime = 10000.0;
-	#pragma omp parallel for
-	for(int i=0;i<nrays;++i)
+	for(float angle=angle_i;angle<=angle_f;angle+=delta_angle)
 	{
-		Propagator *p = new Propagator();
-		p->InitializePropagator(globalTime,ice_d,preferences,"SPICE",emitter_p,angle,pol);\
-		p->AddReflector(std::pair<float,float>(-200.0,0.1),std::pair<float,float>(1,0.01));
-		p->Propagate();
-		std::stringstream ss;
-		ss<<i;
-		p->ReadoutPath("data/propagation_path_"+ss.str()+".dat");
-		delete p;
+		#pragma omp parallel for
+		for(int i=0;i<nrays;++i)
+		{
+			Propagator *p = new Propagator();
+			p->InitializePropagator(globalTime,ice_d,preferences,"SPICE",emitter_p,angle,pol);
+			// p->AddReflector(std::pair<float,float>(-75.0,1),std::pair<float,float>(1,0.1));
+			p->Propagate();
+			std::stringstream ss;
+			ss<<count;
+			p->ReadoutPath("data/propagation_path_"+ss.str()+".dat");
+			delete p;
+			++count;
+		}
 	}
 }

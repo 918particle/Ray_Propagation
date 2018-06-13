@@ -12,7 +12,7 @@ class RFRay : public Emitter, public Ice
 	void Update(float,float,float); //Updates _distanceTravelled and _rfLoss, after changing the position
 	//Variables
 	std::pair<float,float> _currentPosition; //Current position in (x,z)
-	float _currentAngle; //Current angle with respect to horizontal
+	float _currentAngle; //Current angle with respect to horizontal in radians
 	std::pair<float,float> _priorPosition; //Current position in (x,z)
 	float _distanceTravelled; //Keeps track of the propagation distance
 	float _rfLoss; //Amount of attenuation (apart from distance) accumulated

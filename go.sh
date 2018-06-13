@@ -1,6 +1,6 @@
 make clean
-make RunPropagatorOMP
+make RunPropagator
 rm data/propagation_path*.dat
 ./RunPropagator
-gnuplot plot_propagation_loop.plt
+gnuplot -e "max='$1'" plot_propagation_loop.plt
 evince June6_plot3.eps
