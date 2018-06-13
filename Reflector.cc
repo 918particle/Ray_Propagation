@@ -1,7 +1,4 @@
 #include "Reflector.h"
-#include <cmath>
-#include <cstdlib>
-#include <iostream>
 
 void Reflector::CreateReflector(std::pair<float,float> x,std::pair<int,float> y)
 {
@@ -15,7 +12,7 @@ void Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
 	std::vector<std::pair<int,float> >::iterator j = _reflectorTypes.begin();
 	while(i!=_data.end())
 	{
-		if(std::abs((*i).first-z)<_range) //Within range of reflector
+		if(std::abs((*i).first-z)<_reflectorRange) //Within range of reflector
 		{
 			float beta = 3.14159/2.0-alpha;  //Angle with respect to vertical (Fresnel equations)
 			float s = (1.0-(*i).second)/(1.0+(*i).second); //The ratio of the two indices of refraction
@@ -30,12 +27,10 @@ void Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
 			if(rs>1.0) //Deals with these weird cases where rs>1
 			{
 				rs=1.0;
-				_tir = true;
 			}
 			if(rp>1.0) //Deals with these weird cases where rp>1
 			{
 				rp=1.0;
-				_tir = true;
 			}
 			if(float(rand())/float(RAND_MAX)<(rs+rp)) //Account for reflection coefficient
 			{

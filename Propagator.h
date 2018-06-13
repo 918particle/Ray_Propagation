@@ -2,8 +2,6 @@
 #include "Reflector.h"
 #include "Emitter.h"
 #include "RFRay.h"
-#include "RFRayTracker.h"
-#include <string>
 
 #ifndef PROPAGATOR_H_
 #define PROPAGATOR_H_
@@ -11,16 +9,16 @@
 class Propagator : public Reflector, public RFRay
 {
 	public:
-		float _globalTime; //nanoseconds
-		float _timeStep; //nanoseconds
 		bool _isInitialized; //1 if InitializePropagator has been executed.
 		bool _surfaceTIR; //Flag to record if TIR has occurred, reserved for surface.
 		//Constructor
-		Propagator() : _globalTime(0.0), _timeStep(10.0), _isInitialized(false){};
-		void InitializePropagator(float,std::pair<float,float>,std::pair<bool,bool>,std::string,std::pair<float,float>,float,std::vector<float>); //See source file.
+		Propagator() : _isInitialized(false), _globalTime(10000.0),_timeStep(1.0) {};
+		void InitializePropagator(float,float,float); //See source file.
 		void AddReflector(std::pair<float,float>,std::pair<int,float>); //See source file.
 		void Propagate(); //Propagate ray through medium
 		void ReadoutPath(std::string); //Save path in an output file.
+		float _globalTime; //Maximum propgation time of RFRay via Propagator before anything interrupts, nanoseconds
+		float _timeStep; //Time step for Propagator, nanoseconds
 };
 
 #endif

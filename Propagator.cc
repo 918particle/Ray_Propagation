@@ -1,27 +1,12 @@
 #include "Propagator.h"
-#include "RFRayTracker.h"
 #include <fstream>
-#include <cmath>
-#include <iostream>
-#include <vector>
-#include <sstream>
 
 //Initialize base classes with data, choose models
-void Propagator::InitializePropagator
-(
-float t, //Global time tracked in nanoseconds
-std::pair<float,float> ice_d, //dimensions of the ice (r,z) coordinates
-std::pair<bool,bool> pref, //Preferences for index and attenuation length treatment
-std::string ice_model, //The name of the ice model for index vs. depth
-std::pair<float,float> pos, //Position of the underlying emitter: (r,z) coordinates
-float angle_em, //The initial angle of the emitter in degrees, with respect to horizontal
-std::vector<float> p //The polarization vector of the emitter
-)
+void Propagator::InitializePropagator(float y,float z,float angle)
 {
 	this->_path.clear();
-	_globalTime = t;
-	this->CreateIce(ice_d,pref.first,pref.second,ice_model);
-	this->InitializeEmitter(pos,angle_em,p);
+	this->CreateIce();
+	this->InitializeEmitter(y,z,angle);
 	_isInitialized = true;
 }
 void Propagator::AddReflector(std::pair<float,float> x,std::pair<int,float> y)
@@ -41,18 +26,15 @@ void Propagator::ReadoutPath(std::string title)
 	out.close();
 }
 
-//Propagation from t=0 to the global time.  This makes it trivial to run
-// the same propagation effect for different times with the same settings.
 void Propagator::Propagate()
 {
 	float pi = 3.14159;
 	float total_internal_reflection_tolerance = 0.1; //To prevent unphysical answers, units of meters
 	float c0 = 0.299792458; //speed of light in vacuum, meters per nanosecond
-	float z0 = 0.1; //units: meters
-	bool min_dz = true; //see below.
 	float dndz = 0.0; //units: meters^(-1)
 	float n_snow = 1.3;
-	float theTime,dx,dz,dTheta; //units: nanoseconds, meters, meters, radians
+	float theTime=0.0; //Units: nanoseconds
+	float dx,dz,dTheta; //units: meters, meters, radians
 	this->_path.push_back(_emitterPosition);
 	this->_currentPosition = _emitterPosition;
 	this->_currentAngle = _initialAngle;
@@ -70,18 +52,7 @@ void Propagator::Propagate()
 				_currentAngle = 0.0; //JCH: June 20th, 2017.
 			}
 		}
-		if(std::abs(dz)>z0)
-		{
-			dndz = (GetIndex(this->_currentPosition.second+dz)-GetIndex(this->_currentPosition.second))/dz;
-		}
-		else if(std::abs(dz)<=z0 && min_dz)
-		{
-			dndz = (GetIndex(this->_currentPosition.second)-GetIndex(this->_currentPosition.second-z0))/(_currentPosition.second-z0);
-		}
-		else
-		{
-			dTheta = 0.0;
-		}
+		dndz = (GetIndex(this->_currentPosition.second+dz)-GetIndex(this->_currentPosition.second))/dz;
 		dTheta = _timeStep*cos(_currentAngle)*dndz*c0/(n*n);
 		this->Update(dx,dz,dTheta);
 		this->_path.push_back(_currentPosition);

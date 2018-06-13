@@ -1,18 +1,13 @@
 #include "Ice.h"
-#include <cmath>
-#include <fstream>
-#include <iostream>
 
-void Ice::CreateIce(std::pair<float,float> d,bool fitn,bool fitl,std::string modelName)
+void Ice::CreateIce()
 {
-	_dimensions = d;
-	_useIndexFit = fitn;
-	_useAttenuationLengthFit = fitl;
-	if(modelName=="SPICE" || modelName=="RICE")
+	if(_iceModelName=="SPICE" || _iceModelName=="RICE")
 	{
 		_A = 1.78;
 		_B = 0.427;
 		_C = 0.014;
+		_indexVsDepth.clear();
 		std::ifstream in("/home/jordan/ANewHope/SPICE_data.dat");
 		float depth,density;
 		while(in.good() && ~in.eof())
@@ -23,11 +18,12 @@ void Ice::CreateIce(std::pair<float,float> d,bool fitn,bool fitl,std::string mod
 		}
 		in.close();
 	}
-	else if(modelName=="Byrd")
+	else if(_iceModelName=="Byrd")
 	{
 		_A = 1.78;
 		_B = 0.464;
 		_C = 0.0244;
+		_indexVsDepth.clear();
 		std::ifstream in("/home/jordan/ANewHope/Byrd_data.csv");
 		float depth,index;
 		while(in.good() && ~in.eof())
@@ -38,11 +34,12 @@ void Ice::CreateIce(std::pair<float,float> d,bool fitn,bool fitl,std::string mod
 		}
 		in.close();
 	}
-	else if(modelName=="MB1")
+	else if(_iceModelName=="MB1")
 	{
 		_A = 1.78;
 		_B = 0.46;
 		_C = 0.029;
+		_indexVsDepth.clear();
 		std::ifstream in("/home/jordan/ANewHope/ARIANNA_Borehole_1.dat");
 		float depth,density;
 		while(in.good() && ~in.eof())
@@ -53,11 +50,12 @@ void Ice::CreateIce(std::pair<float,float> d,bool fitn,bool fitl,std::string mod
 		}
 		in.close();
 	}
-	else if(modelName=="MB2")
+	else if(_iceModelName=="MB2")
 	{
 		_A = 1.78;
 		_B = 0.46;
 		_C = 0.027;
+		_indexVsDepth.clear();
 		std::ifstream in("/home/jordan/ANewHope/ARIANNA_Borehole_2.dat");
 		float depth,density;
 		while(in.good() && ~in.eof())
@@ -68,11 +66,12 @@ void Ice::CreateIce(std::pair<float,float> d,bool fitn,bool fitl,std::string mod
 		}
 		in.close();
 	}
-	else if(modelName=="Mizuho")
+	else if(_iceModelName=="Mizuho")
 	{
 		_A = 1.78;
 		_B = 0.423;
 		_C = 0.027;
+		_indexVsDepth.clear();
 		std::ifstream in("/home/jordan/ANewHope/Mizuho_data.csv");
 		float depth,index;
 		while(in.good() && ~in.eof())
@@ -83,11 +82,12 @@ void Ice::CreateIce(std::pair<float,float> d,bool fitn,bool fitl,std::string mod
 		}
 		in.close();
 	}
-	else if(modelName=="Eisen")
+	else if(_iceModelName=="Eisen")
 	{
 		_A = 1.78;
 		_B = 0.48;
 		_C = 0.02;
+		_indexVsDepth.clear();
 		std::ifstream in("/home/jordan/ANewHope/Eisen_Maud_data.csv");
 		float depth,index;
 		while(in.good() && ~in.eof())
@@ -98,11 +98,12 @@ void Ice::CreateIce(std::pair<float,float> d,bool fitn,bool fitl,std::string mod
 		}
 		in.close();
 	}
-	else if(modelName=="Gow")
+	else if(_iceModelName=="Gow")
 	{
 		_A = 1.78;
 		_B = 0.435;
 		_C = 0.016;
+		_indexVsDepth.clear();
 		std::ifstream in("/home/jordan/ANewHope/Gow_withOnePlus86_data.csv");
 		float depth,index;
 		while(in.good() && ~in.eof())
@@ -117,7 +118,7 @@ void Ice::CreateIce(std::pair<float,float> d,bool fitn,bool fitl,std::string mod
 
 float Ice::GetIndex(float z)
 {
-	if(_useIndexFit)
+	if(_iceUseIndexFit)
 	{
 		if(z>0)
 		{
@@ -153,7 +154,7 @@ float Ice::GetIndex(float z)
 
 float Ice::GetAttenuationLength(float z)
 {
-	if(_useAttenuationLengthFit)
+	if(_iceUseAttenuationLengthFit)
 	{
 		if(z>0)
 		{
@@ -185,4 +186,10 @@ float Ice::GetAttenuationLength(float z)
 			}
 		}
 	}
+}
+
+void Ice::SetIceDimensions(float y,float z)
+{
+	_dimensions.first = y;
+	_dimensions.second = z;
 }

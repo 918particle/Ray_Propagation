@@ -13,7 +13,7 @@ class Emitter : public Polarization
 	}
 	float _initialAngle; //initial angle with respect to horizontal, entered as degrees
 	std::pair<float,float> _emitterPosition; //(x,z) position
-	void InitializeEmitter(std::pair<float,float>,float,std::vector<float>); //set emitter x, z, initial angle, and polarization
+	void InitializeEmitter(float,float,float); //set emitter y, z, initial angle
 };
 
 #endif

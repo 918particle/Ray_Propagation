@@ -1,5 +1,4 @@
 #include "RFRay.h"
-#include <cmath>
 
 void RFRay::SetFreq(float f)
 {
