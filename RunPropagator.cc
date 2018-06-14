@@ -12,12 +12,12 @@ int main(int argc, char *argv[])
 
 	//Seed rand()
 	srand(time(NULL));
-	int nrays = 100;
+	int nrays = 1;
 	#pragma omp parallel for
 	for(int i=0;i<nrays;++i)
 	{
 		PropagatorSettingsManager *m = new PropagatorSettingsManager(new Propagator());
-		m->InitializePropagator(0.0,-400.0,60.0);
+		m->InitializePropagator(0.0,-400.0,25.0);
 		m->AddReflector(reflector_p,reflector_p);
 		m->Propagate();
 		std::stringstream ss;
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 	{
 		PropagatorSettingsManager *m = new PropagatorSettingsManager(new Propagator());
 		m->SetIceModelName("MB1");
-		m->InitializePropagator(0.0,-400.0,60.0);
+		m->InitializePropagator(0.0,-400.0,25.0);
 		m->AddReflector(reflector_p,reflector_p);
 		m->Propagate();
 		std::stringstream ss;
