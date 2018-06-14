@@ -45,6 +45,7 @@ void Ice::CreateIce()
 		_B = 0.435;
 		_C = 0.016;
 	}
+	_iceBoundaryIndex = this->GetIndex(0.0);
 }
 
 float Ice::GetIndex(float z)

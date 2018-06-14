@@ -28,24 +28,22 @@ void Propagator::ReadoutPath(std::string title)
 void Propagator::Propagate()
 {
 	float pi = 3.14159;
-	float total_internal_reflection_tolerance = 0.1; //To prevent unphysical answers, units of meters
 	float c0 = 0.299792458; //speed of light in vacuum, meters per nanosecond
 	float dndz = 0.0; //units: meters^(-1)
-	float n_snow = 1.3;
 	float theTime=0.0; //Units: nanoseconds
-	float dx,dz,dTheta; //units: meters, meters, radians
+	float dy,dz,dTheta; //units: meters, meters, radians
 	this->_path.push_back(_emitterPosition);
 	this->_currentPosition = _emitterPosition;
-	this->_currentAngle = _initialAngle;
+	this->_currentAngle = _emitterInitialAngle;
 	while(theTime<_globalTime)
 	{
 		float n = GetIndex(_currentPosition.second);
 		theTime+=_timeStep;
-		dx=cos(this->_currentAngle)*_timeStep*c0/n;
+		dy=cos(this->_currentAngle)*_timeStep*c0/n;
 		dz=sin(this->_currentAngle)*_timeStep*c0/n;
-		if(std::abs(this->_currentPosition.second)<total_internal_reflection_tolerance)
+		if(std::abs(this->_currentPosition.second)<this->_reflectorRange)
 		{
-			if(this->_currentAngle<(pi/2.0-asin(1.0/n))/n_snow)
+			if(this->_currentAngle<(pi/2.0-asin(1.0/n))/this->_iceBoundaryIndex)
 			{
 				_surfaceTIR = true;
 				_currentAngle = 0.0; //JCH: June 20th, 2017.
@@ -53,7 +51,7 @@ void Propagator::Propagate()
 		}
 		dndz = (GetIndex(this->_currentPosition.second+dz)-GetIndex(this->_currentPosition.second))/dz;
 		dTheta = _timeStep*cos(_currentAngle)*dndz*c0/(n*n);
-		this->Update(dx,dz,dTheta);
+		this->Update(dy,dz,dTheta);
 		this->_path.push_back(_currentPosition);
 		CheckForAReflection(_currentAngle,_currentPosition.second,this->_polarization);
 	}

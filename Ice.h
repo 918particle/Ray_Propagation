@@ -15,7 +15,10 @@ class Ice
 		_A(1.78),
 		_B(0.427),
 		_C(0.014),
-		_iceModelName("SPICE"){};
+		_iceModelName("SPICE")
+		{
+			_iceBoundaryIndex = this->GetIndex(0.0);
+		};
 	std::pair<float,float> _dimensions; //dimensions in meters, (r,z)
 	float _A; //Index parameter A, no units because it's the ice index
 	float _B; //Index parameter B, no units because it's the difference ice index and surface index
@@ -27,6 +30,7 @@ class Ice
 	std::string _iceModelName; //Name of the model giving density or index of refraction versus depth.
 	void SetIceDimensions(float,float); //Sets the cylindrical radius and depth of the ice.
 	void SetIceModelName(std::string); //Resets physical constants of the ice, given the name of the model.
+	float _iceBoundaryIndex;
 };
 
 #endif

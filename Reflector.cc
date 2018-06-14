@@ -14,7 +14,8 @@ void Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
 	{
 		if(std::abs((*i).first-z)<_reflectorRange) //Within range of reflector
 		{
-			float beta = 3.14159/2.0-alpha;  //Angle with respect to vertical (Fresnel equations)
+			float beta = std::abs(alpha);
+			beta = 3.14159/2.0-beta;  //Angle with respect to vertical (Fresnel equations)
 			float s = (1.0-(*i).second)/(1.0+(*i).second); //The ratio of the two indices of refraction
 			//s-polarized component
 			float a = s*cos(beta);

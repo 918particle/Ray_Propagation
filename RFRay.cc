@@ -5,11 +5,11 @@ void RFRay::SetFreq(float f)
 	_freq = f;
 }
 
-void RFRay::Update(float dx,float dz,float a)
+void RFRay::Update(float dy,float dz,float a)
 {
 	_priorPosition = _currentPosition;
 	_currentAngle += a;
-	_currentPosition.first += dx;
+	_currentPosition.first += dy;
 	_currentPosition.second += dz;
 	_distanceTravelled += sqrt((_currentPosition.first-_priorPosition.first)*(_currentPosition.first-_priorPosition.first)
 		+(_currentPosition.second-_priorPosition.second)*(_currentPosition.second-_priorPosition.second));

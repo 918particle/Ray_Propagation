@@ -12,4 +12,5 @@ set tmargin 3.0
 set terminal postscript color enhanced
 set output "June13_plot1.eps"
 
-plot for [i=0:max] 'data/sp_propagation_path_'.i.'.dat' w l lw 0.2 lc rgb "#999999", 'data/mb_propagation_path_'.i.'.dat' w l lw 0.2 lc rgb "#222299"
+plot for [i=ARG1:ARG2] for [j=0:ARG3] 'data/sp_propagation_path_'.i.'_'.j.'.dat' w l lw 0.2 lc rgb "#999999"
+#for [i=0:max] 'data/mb_propagation_path_'.i.'.dat' w l lw 0.2 lc rgb "#222299"
