@@ -19,6 +19,7 @@ class Propagator : public Reflector, public RFRay
 		void ReadoutPath(std::string); //Save path in an output file.
 		float _globalTime; //Maximum propgation time of RFRay via Propagator before anything interrupts, nanoseconds
 		float _timeStep; //Time step for Propagator, nanoseconds
+		void SetGlobalTimeAndStep(float,float); //Set _globalTime and _timeStep
 };
 
 #endif

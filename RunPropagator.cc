@@ -3,7 +3,6 @@
 #include <cstdlib>
 #include <ctime>
 #include "Propagator.h"
-#include "PropagatorSettingsManager.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,13 +11,13 @@ int main(int argc, char *argv[])
 
 	//Seed rand()
 	srand(time(NULL));
-	int nrays = 1;
+	int nrays = 2000;
 	#pragma omp parallel for
 	for(int i=0;i<nrays;++i)
 	{
-		PropagatorSettingsManager *m = new PropagatorSettingsManager(new Propagator());
+		Propagator *m = new Propagator();
 		m->InitializePropagator(0.0,-400.0,25.0);
-		m->AddReflector(reflector_p,reflector_p);
+		m->AddReflector(reflector_p,reflector_s);
 		m->Propagate();
 		std::stringstream ss;
 		ss<<i;
@@ -28,10 +27,10 @@ int main(int argc, char *argv[])
 	#pragma omp parallel for
 	for(int i=0;i<nrays;++i)
 	{
-		PropagatorSettingsManager *m = new PropagatorSettingsManager(new Propagator());
+		Propagator *m = new Propagator();
 		m->SetIceModelName("MB1");
 		m->InitializePropagator(0.0,-400.0,25.0);
-		m->AddReflector(reflector_p,reflector_p);
+		m->AddReflector(reflector_p,reflector_s);
 		m->Propagate();
 		std::stringstream ss;
 		ss<<i;

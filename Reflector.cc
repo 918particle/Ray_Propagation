@@ -78,3 +78,8 @@ float Reflector::RandomGauss(float stddev)
         return n2*stddev;
     }
 }
+
+void Reflector::SetReflectorRange(float r)
+{
+	_reflectorRange = r;
+}

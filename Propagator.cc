@@ -5,7 +5,6 @@
 void Propagator::InitializePropagator(float y,float z,float angle)
 {
 	this->_path.clear();
-	this->CreateIce();
 	this->InitializeEmitter(y,z,angle);
 	_isInitialized = true;
 }
@@ -58,4 +57,10 @@ void Propagator::Propagate()
 		this->_path.push_back(_currentPosition);
 		CheckForAReflection(_currentAngle,_currentPosition.second,this->_polarization);
 	}
+}
+
+void Propagator::SetGlobalTimeAndStep(float a,float b)
+{
+	_globalTime = a;
+	_timeStep = b;
 }
