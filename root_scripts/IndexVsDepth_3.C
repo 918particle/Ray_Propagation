@@ -226,6 +226,6 @@ void IndexVsDepth_3()
 	legend->Draw("same");
 	
 	char fileOut[100];
-	sprintf(fileOut,"April21_plot2.pdf");
+	sprintf(fileOut,"June15_plot1.pdf");
 	c->Print(fileOut);
 }
