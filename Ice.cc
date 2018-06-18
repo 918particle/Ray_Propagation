@@ -50,7 +50,8 @@ void Ice::CreateIce()
 
 float Ice::GetIndex(float z)
 {
-	return _A-_B*exp(_C*z);
+	if(z>0) return 1.0;
+	else return _A-_B*exp(_C*z);
 }
 
 float Ice::GetAttenuationLength(float z)

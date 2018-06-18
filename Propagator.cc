@@ -1,5 +1,6 @@
 #include "Propagator.h"
 #include <fstream>
+#include <iostream>
 
 //Initialize base classes with data, choose models
 void Propagator::InitializePropagator(float y,float z,float angle)
@@ -41,7 +42,7 @@ void Propagator::Propagate()
 		theTime+=_timeStep;
 		dy=cos(this->_currentAngle)*_timeStep*c0/n;
 		dz=sin(this->_currentAngle)*_timeStep*c0/n;
-		if(std::abs(this->_currentPosition.second)<this->_reflectorRange)
+		if(std::abs(this->_currentPosition.second)<this->_reflectorRange && this->_data.size()!=0)
 		{
 			if(this->_currentAngle<(pi/2.0-asin(1.0/n))/this->_iceBoundaryIndex)
 			{

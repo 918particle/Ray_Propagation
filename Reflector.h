@@ -21,7 +21,6 @@ class Reflector
 	};
 	float _reflectorRange; //If the ray is within _range meters of the depth of some reflector, introduce a reflection
 	void SetReflectorRange(float); //Reset the default minimum distance between ray and reflector to trigger CheckForAReflection
-	void Nothing(); //Nothing doing.
 };
 
 #endif
