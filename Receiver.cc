@@ -27,6 +27,17 @@ bool Receiver::ReceiveRFRay(Propagator *p)
 			flag=true;
 			break;
 		}
+		_numReceivedRFRays = _observedRFRays.size();
 	}
 	return flag;
+}
+
+int Receiver::GetReceivedRFRays()
+{
+	return _numReceivedRFRays;
+}
+
+float Receiver::GetReceivedDotProduct(int i)
+{
+	return _receiverDotProducts[i];
 }

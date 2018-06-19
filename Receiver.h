@@ -17,9 +17,12 @@ class Receiver : public Polarization
 	void InitializeReceiver(float,float,float); //set emitter y, z, initial angle
 	bool ReceiveRFRay(Propagator*); //True if the RFRay is near the receiver, controlled by _receiverRange.
 	float _receiverRange;
-	std::vector<Propagator> _observedRFRays;
+	std::vector<Propagator> _observedRFRays;  //container of propagators that landed in the receiver.
 	void SetReceiverRange(float); //Set function for _receiverRange
 	std::vector<float> _receiverDotProducts; //Results of the dot products of received rays with Receiver polarization.
+	int _numReceivedRFRays; //Number of rays received.  Equal to the length of _observedRFRays.
+	int GetReceivedRFRays(); //Retrieve _numReceivedRFRays
+	float GetReceivedDotProduct(int); //Retrieve dot product of an individual RFRay
 };
 
 #endif
