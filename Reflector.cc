@@ -1,6 +1,6 @@
 #include "Reflector.h"
 
-void Reflector::CreateReflector(std::pair<float,float> x,std::pair<int,float> y)
+void Reflector::CreateReflector(std::pair<float,float> x,std::pair<bool,float> y)
 {
 	_data.push_back(x);
 	_reflectorTypes.push_back(y);
@@ -9,7 +9,7 @@ void Reflector::CreateReflector(std::pair<float,float> x,std::pair<int,float> y)
 void Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
 {
 	std::vector<std::pair<float,float> >::iterator i = _data.begin();
-	std::vector<std::pair<int,float> >::iterator j = _reflectorTypes.begin();
+	std::vector<std::pair<bool,float> >::iterator j = _reflectorTypes.begin();
 	while(i!=_data.end())
 	{
 		if(std::abs((*i).first-z)<_reflectorRange) //Within range of reflector
@@ -20,11 +20,11 @@ void Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
 			//s-polarized component
 			float a = s*cos(beta);
 			float b = sqrt(1.0-(s*s*sin(beta)*sin(beta)));
-			float rs = (a-b)/(a+b)*(a-b)/(a+b)*p[0]*p[0];
+			float rs = std::abs((a-b)/(a+b))*std::sqrt(p[0]*p[0]);
 			//p-polarized component
 			float c = s*sqrt(1.0-(s*s*sin(beta)*sin(beta)));
 			float d = cos(beta);
-			float rp = (c-d)/(c+d)*(c-d)/(c+d)*(p[1]*p[1]+p[2]*p[2]);
+			float rp = std::abs((c-d)/(c+d))*std::sqrt(p[1]*p[1]+p[2]*p[2]);
 			if(rs>1.0) //Deals with these weird cases where rs>1
 			{
 				rs=1.0;
@@ -33,13 +33,13 @@ void Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
 			{
 				rp=1.0;
 			}
-			if(float(rand())/float(RAND_MAX)<(rs+rp)) //Account for reflection coefficient
+			if(float(rand())/float(RAND_MAX)<=0.5*(rs+rp)) //Account for reflection coefficient
 			{
-				if((*j).first == 1) //Specular case
+				if((*j).first == false) //Specular case
 				{
 					alpha = -alpha;
 				}
-				if((*j).first == 2) //Diffuse Lambertian case
+				if((*j).first == true) //Diffuse Lambertian case
 				{
 					alpha = -alpha+RandomGauss((*j).second);
 				}
