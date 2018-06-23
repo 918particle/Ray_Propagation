@@ -14,7 +14,7 @@ class Reflector
 	void CreateReflector(std::pair<float,float>,std::pair<bool,float>); //Add a reflection surface
 	void CheckForAReflection(float&,float,std::vector<float>); //angle (radians), depth (meters), polarization vector (unit-less)
 	float RandomGauss(float); //For random numbers drawn from Gaussian distribution with Box-Muller method (0-radian mean, float stddev)
-	Reflector() : _reflectorRange(0.1)
+	Reflector() : _reflectorRange(0.15)
 	{
 		_data.clear();
 		_reflectorTypes.clear();

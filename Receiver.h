@@ -7,7 +7,7 @@
 class Receiver : public Polarization
 {
 	public:
-	Receiver() : _receiverInitialAngle(0.0), _receiverRange(1.0)
+	Receiver() : _receiverInitialAngle(0.0), _receiverRange(1.0), _numReceivedRFRays(0)
 	{
 		_receiverPosition.first = 0.0;
 		_receiverPosition.second = 0.0;

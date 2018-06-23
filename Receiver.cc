@@ -18,8 +18,8 @@ bool Receiver::ReceiveRFRay(Propagator *p)
 	std::vector<std::pair<float,float> >::iterator i;
 	for(i=p->_path.begin();i!=p->_path.end();++i)
 	{
-		if(std::abs((*i).first - _receiverPosition.first)<_receiverRange 
-			&& std::abs((*i).second - _receiverPosition.second)<_receiverRange)
+		if(std::abs((*i).first - _receiverPosition.first)<_receiverRange //check y-coordinates
+			&& std::abs((*i).second - _receiverPosition.second)<_receiverRange) //check z-coordinates
 		{
 			_observedRFRays.push_back(*p);
 			_receiverDotProducts.push_back(std::inner_product(_polarization.begin(),_polarization.end(),

@@ -25,14 +25,6 @@ void Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
 			float c = s*sqrt(1.0-(s*s*sin(beta)*sin(beta)));
 			float d = cos(beta);
 			float rp = std::abs((c-d)/(c+d))*std::sqrt(p[1]*p[1]+p[2]*p[2]);
-			if(rs>1.0) //Deals with these weird cases where rs>1
-			{
-				rs=1.0;
-			}
-			if(rp>1.0) //Deals with these weird cases where rp>1
-			{
-				rp=1.0;
-			}
 			if(float(rand())/float(RAND_MAX)<=0.5*(rs+rp)) //Account for reflection coefficient
 			{
 				if((*j).first == false) //Specular case
@@ -59,8 +51,8 @@ float Reflector::RandomGauss(float stddev)
         float x, y, r;
         do
         {
-            x = 2.0*rand()/RAND_MAX - 1;
-            y = 2.0*rand()/RAND_MAX - 1;
+            x = 2.0*float(rand())/float(RAND_MAX) - 1;
+            y = 2.0*float(rand())/float(RAND_MAX) - 1;
             r = x*x + y*y;
         }
         while (r == 0.0 || r > 1.0);
