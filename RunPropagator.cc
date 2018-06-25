@@ -11,8 +11,8 @@ int main(int argc, char *argv[])
 	srand(time(NULL));
 	float angle_i = 0.0;
 	float angle_f = 90.0;
-	float delta_angle = 2;
-	int nrays = 100;
+	float delta_angle = 1;
+	int nrays = 400;
 	std::vector<float> pr;
 	pr.push_back(0.0);
 	pr.push_back(0.0);
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 	float receiver_range = 1.0;
 	bool diffuse_reflection = false;
 	float delta_angle_reflection = 0.01;
-	float reflector_range = timeStep*0.3/1.78*1.5;
+	float reflector_range = timeStep*0.3/1.78*1.1;
 
 	std::pair<float,float> refl1(layer_depth,reflection_coefficient);
 	std::pair<bool,float> refl2(diffuse_reflection,delta_angle_reflection);

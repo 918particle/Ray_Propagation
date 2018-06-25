@@ -3,6 +3,7 @@
 #include <utility>
 #include <cmath>
 #include <fstream>
+#include <map>
 
 #ifndef ICE_H_
 #define ICE_H_
@@ -15,9 +16,11 @@ class Ice
 		_A(1.78),
 		_B(0.427),
 		_C(0.014),
-		_iceModelName("SPICE")
+		_iceModelName("SPICE"),
+		_perturbed(false)
 		{
 			_iceBoundaryIndex = this->GetIndex(0.0);
+			_perturbations.clear();
 		};
 	std::pair<float,float> _dimensions; //dimensions in meters, (r,z)
 	float _A; //Index parameter A, no units because it's the ice index
@@ -31,6 +34,9 @@ class Ice
 	void SetIceDimensions(float,float); //Sets the cylindrical radius and depth of the ice.
 	void SetIceModelName(std::string); //Resets physical constants of the ice, given the name of the model.
 	float _iceBoundaryIndex;
+	void AddGaussianPerturbation(float,float,float); //Perturbs the index of refraction profile with a Gaussian.
+	bool _perturbed;  //True if there are perturbations
+	std::map<int,std::vector<float> > _perturbations; //A map containing perturbations to the n(z) profile.
 };
 
 #endif

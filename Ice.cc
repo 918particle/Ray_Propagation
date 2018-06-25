@@ -51,7 +51,23 @@ void Ice::CreateIce()
 float Ice::GetIndex(float z)
 {
 	if(z>0) return 1.0;
-	else return _A-_B*exp(_C*z);
+	else
+	{
+		if(_perturbed)
+		{
+			float result = _A-_B*exp(_C*z);
+			std::map<int,std::vector<float> >::iterator i;
+			for(i=_perturbations.begin();i!=_perturbations.end();++i)
+			{
+				result += (*i).second[1]*exp(-0.5*((z-(*i).second[0])/(*i).second[2])*((z-(*i).second[0])/(*i).second[2]));
+			}
+			return result;
+		}
+		else
+		{
+			return _A-_B*exp(_C*z);
+		}
+	}
 }
 
 float Ice::GetAttenuationLength(float z)
@@ -76,4 +92,15 @@ void Ice::SetIceModelName(std::string name)
 {
 	_iceModelName = name;
 	this->CreateIce(); //resets constants.
+}
+
+void Ice::AddGaussianPerturbation(float z,float a,float sigma)
+{
+	_perturbed=true;
+	int n = _perturbations.size();
+	std::vector<float> p;
+	p.push_back(z); //Depth of perturbation
+	p.push_back(a); //Size of perturbation
+	p.push_back(sigma); //Width of perturbation
+	_perturbations[n+1] = p;
 }
