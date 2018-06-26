@@ -9,8 +9,8 @@ int main(int argc, char *argv[])
 {
 	//Seed rand()
 	srand(time(NULL));
-	float angle_i = 0.0;
-	float angle_f = 180.0;
+	float angle_i = -30.0;
+	float angle_f = 30.0;
 	float delta_angle = 1;
 	std::vector<float> pm;
 	pm.push_back(0.0);
@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 	pm.push_back(1.0);
 	float globalTime = 200.0;
 	float timeStep = 0.1;
-	float propagator_z = -10.0;
+	float propagator_z = -2.0;
 	float propagator_y = 2000.0;
 
 	for(float angle=angle_i;angle<=angle_f;angle+=delta_angle)
