@@ -45,6 +45,12 @@ void Ice::CreateIce()
 		_B = 0.435;
 		_C = 0.016;
 	}
+	else if(_iceModelName=="Flat")
+	{
+		_A = 1.30;
+		_B = 0.0;
+		_C = 0.0;
+	}
 	_iceBoundaryIndex = this->GetIndex(0.0);
 }
 

@@ -14,4 +14,5 @@ void RFRay::Update(float dy,float dz,float a)
 	_distanceTravelled += sqrt((_currentPosition.first-_priorPosition.first)*(_currentPosition.first-_priorPosition.first)
 		+(_currentPosition.second-_priorPosition.second)*(_currentPosition.second-_priorPosition.second));
 	_rfLoss = exp(-_distanceTravelled/this->GetAttenuationLength(_currentPosition.second));
+	this->_path.push_back(_currentPosition);
 }

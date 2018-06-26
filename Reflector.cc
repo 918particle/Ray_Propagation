@@ -6,10 +6,11 @@ void Reflector::CreateReflector(std::pair<float,float> x,std::pair<bool,float> y
 	_reflectorTypes.push_back(y);
 }
 
-void Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
+bool Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
 {
 	std::vector<std::pair<float,float> >::iterator i = _data.begin();
 	std::vector<std::pair<bool,float> >::iterator j = _reflectorTypes.begin();
+	bool flag = false;
 	while(i!=_data.end())
 	{
 		if(std::abs((*i).first-z)<_reflectorRange) //Within range of reflector
@@ -35,11 +36,13 @@ void Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
 				{
 					alpha = -alpha+RandomGauss((*j).second);
 				}
+				flag=true;
 			}
 		}
 		++i;
 		++j;
 	}
+	return flag;
 }
 
 float Reflector::RandomGauss(float stddev)

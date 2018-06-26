@@ -38,23 +38,45 @@ void Propagator::Propagate()
 	this->_currentAngle = _emitterInitialAngle;
 	while(theTime<_globalTime)
 	{
+		if(_surfaceTIR)
+		{
+			if(_currentAngle==0.0)
+			{
+				this->Update(_timeStep*c0/this->_iceBoundaryIndex,0,0);
+			}
+			else if(_currentAngle==pi)
+			{
+				this->Update(-1.0*_timeStep*c0/this->_iceBoundaryIndex,0,0);
+			}
+			theTime+=_timeStep;
+			continue;
+		}
 		float n = GetIndex(_currentPosition.second);
 		theTime+=_timeStep;
-		dy=cos(this->_currentAngle)*_timeStep*c0/n;
-		dz=sin(this->_currentAngle)*_timeStep*c0/n;
-		if(std::abs(this->_currentPosition.second)<this->_reflectorRange && this->_data.size()!=0)
+		//Check if near the surface.  If so, Snell's law or TIR.  Otherwise, proceed as normal.
+		if(std::abs(_currentPosition.second)<this->_reflectorRange &&
+			((pi/2-_currentAngle)>=pi*atan(1.0/_iceBoundaryIndex))&&_currentAngle<=pi/2)
 		{
-			if(this->_currentAngle<(pi/2.0-asin(1.0/n))/this->_iceBoundaryIndex)
-			{
-				_surfaceTIR = true;
-				_currentAngle = 0.0; //JCH: June 20th, 2017.
-			}
+			_surfaceTIR = true;
+			_currentAngle = 0.0;
+			this->Update(_timeStep*c0/this->_iceBoundaryIndex,0,0);
 		}
-		dndz = (GetIndex(this->_currentPosition.second+dz)-GetIndex(this->_currentPosition.second))/dz;
-		dTheta = _timeStep*cos(_currentAngle)*dndz*c0/(n*n);
-		this->Update(dy,dz,dTheta);
-		this->_path.push_back(_currentPosition);
-		CheckForAReflection(_currentAngle,_currentPosition.second,this->_polarization);
+		else if(std::abs(_currentPosition.second)<this->_reflectorRange && 
+			((pi/2-(pi-_currentAngle))>=pi*atan(1.0/_iceBoundaryIndex))&&_currentAngle>pi/2) //TIR, decreasing y-coordinate
+		{
+			_surfaceTIR = true;
+			_currentAngle = pi;
+			this->Update(-1.0*_timeStep*c0/this->_iceBoundaryIndex,0,0);
+		}
+		else
+		{
+			dy=cos(this->_currentAngle)*_timeStep*c0/n;
+			dz=sin(this->_currentAngle)*_timeStep*c0/n;
+			dndz = (GetIndex(this->_currentPosition.second+dz)-GetIndex(this->_currentPosition.second))/dz;
+			dTheta = _timeStep*cos(_currentAngle)*dndz*c0/(n*n);
+			this->Update(dy,dz,dTheta);
+			CheckForAReflection(_currentAngle,_currentPosition.second,this->_polarization);
+		}
 	}
 }
 
