@@ -1,6 +1,6 @@
 make clean
-make RunPropagatorOMP
+make RunPropagatorPerturbationsOMP
 rm data/*propagation_path*.dat
-./RunPropagator
+./RunPropagatorPerturbations
 gnuplot -c plot_propagation_loop.plt $1 $2 $3
-evince June13_plot1.eps
+evince June25_plot$4.eps

@@ -1,8 +1,17 @@
-RunPropagatorOMP: RunPropagator.cc Emitter.cc Propagator.cc Reflector.cc Ice.cc RFRay.cc Receiver.cc
-	g++ -g -Wall -o RunPropagator -fopenmp RunPropagator.cc Emitter.cc Propagator.cc Reflector.cc Ice.cc RFRay.cc Receiver.cc -I.
+RunPropagatorFresnelOMP: RunPropagatorFresnel.cc Emitter.cc Propagator.cc Reflector.cc Ice.cc RFRay.cc Receiver.cc
+	g++ -g -Wall -o RunPropagatorFresnel -fopenmp RunPropagatorFresnel.cc Emitter.cc Propagator.cc Reflector.cc Ice.cc RFRay.cc Receiver.cc -I.
 
-RunPropagator: RunPropagator.cc Emitter.cc Propagator.cc Reflector.cc Ice.cc RFRay.cc Receiver.cc
-	g++ -g -Wall -o RunPropagator RunPropagator.cc Emitter.cc Propagator.cc Reflector.cc Ice.cc RFRay.cc Receiver.cc -I.
+RunPropagatorFresnel: RunPropagatorFresnel.cc Emitter.cc Propagator.cc Reflector.cc Ice.cc RFRay.cc Receiver.cc
+	g++ -g -Wall -o RunPropagatorFresnel RunPropagatorFresnel.cc Emitter.cc Propagator.cc Reflector.cc Ice.cc RFRay.cc Receiver.cc -I.
+
+RunPropagatorPerturbationsOMP: RunPropagatorPerturbations.cc Emitter.cc Propagator.cc Reflector.cc Ice.cc RFRay.cc Receiver.cc
+	g++ -g -Wall -o RunPropagatorPerturbations -fopenmp RunPropagatorPerturbations.cc Emitter.cc Propagator.cc Reflector.cc Ice.cc RFRay.cc Receiver.cc -I.
+
+RunPropagatorPerturbations: RunPropagatorPerturbations.cc Emitter.cc Propagator.cc Reflector.cc Ice.cc RFRay.cc Receiver.cc
+	g++ -g -Wall -o RunPropagatorPerturbations RunPropagatorPerturbations.cc Emitter.cc Propagator.cc Reflector.cc Ice.cc RFRay.cc Receiver.cc -I.
 
 clean:
-	rm RunPropagator
+	rm RunPropagatorFresnel
+	rm RunPropagatorFresnelOMP
+	rm RunPropagatorPerturbations
+	rm RunPropagatorPerturbationsOMP
