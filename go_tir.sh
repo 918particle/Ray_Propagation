@@ -1,4 +1,4 @@
-make clean
+rm RunPropagatorTIR
 make RunPropagatorTIR
 rm data/*propagation_path*.dat
 ./RunPropagatorTIR
