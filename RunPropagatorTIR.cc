@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
 	//Seed rand()
 	srand(time(NULL));
-	float angle_i = 26.0;
+	float angle_i = 0.0;
 	float angle_f = 26.0;
 	float delta_angle = 1;
 	std::vector<float> pm;

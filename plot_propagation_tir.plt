@@ -1,5 +1,5 @@
 set grid
-set yrange [-60.0:100.0]
+set yrange [-200.0:200.0]
 set xrange [1900.0:2100.0]
 unset key
 set tics font "Courier,22"
