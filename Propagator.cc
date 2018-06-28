@@ -9,9 +9,10 @@ void Propagator::InitializePropagator(float y,float z,float angle)
 	this->InitializeEmitter(y,z,angle);
 	_isInitialized = true;
 	float surface_coefficient = std::abs((_iceBoundaryIndex-1.0)/(_iceBoundaryIndex+1.0));
-	this->CreateReflector(std::pair<float,float>(0.0,surface_coefficient),std::pair<bool,float>(false,0.02));
-	this->SetReflectorRange(_timeStep*0.299792458/_iceBoundaryIndex*1.1);
+	this->CreateReflector(std::pair<float,float>(0.0,surface_coefficient),std::pair<bool,float>(true,0.01));
+	this->SetReflectorRange(_timeStep*0.299792458/_iceBoundaryIndex*2.0);
 }
+
 void Propagator::AddReflector(std::pair<float,float> x,std::pair<bool,float> y)
 {
 	this->CreateReflector(x,y);
@@ -48,13 +49,10 @@ void Propagator::Propagate()
 		dTheta = _timeStep*cos(_currentAngle)*dndz*c0/(n*n);
 		Update(dy,dz,dTheta);
 		theTime+=_timeStep;
-		if(!_exitingLayer && isInReflector())
+		if(CanReflect())
 		{
-			if(CheckForAReflection(_currentAngle,_currentPosition.second,_polarization)) ++_numReflect;
-			_exitingLayer = true; //Exiting layer regardless of whether the ray reflected.
-			continue;
+			CheckForAReflection(_currentAngle,_currentPosition.second,_polarization);
 		}
-		_exitingLayer = isInReflector();
 	}
 }
 
@@ -64,15 +62,20 @@ void Propagator::SetGlobalTimeAndStep(float a,float b)
 	_timeStep = b;
 }
 
-bool Propagator::isInReflector()
+bool Propagator::CanReflect()
 {
-	std::vector<std::pair<float,float> >::iterator i;
-	for(i=_data.begin();i!=_data.end();++i)
+	if(_currentPosition.second>0) return false;
+	else
 	{
-		if(std::abs(_currentPosition.second - (*i).second)<_reflectorRange)
+		std::vector<std::pair<float,float> >::iterator i;
+		for(i=_data.begin();i!=_data.end();++i)
 		{
-			return true;
+			if(std::abs(_currentPosition.second - (*i).first)<=_reflectorRange && 
+				std::abs(_priorPosition.second - (*i).first)>_reflectorRange)
+			{
+				return true;
+			}
 		}
+		return false;
 	}
-	return false;
 }
