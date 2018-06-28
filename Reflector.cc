@@ -10,7 +10,7 @@ bool Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
 {
 	std::vector<std::pair<float,float> >::iterator i = _data.begin();
 	std::vector<std::pair<bool,float> >::iterator j = _reflectorTypes.begin();
-	bool flag = false;
+	int flag = false;
 	while(i!=_data.end())
 	{
 		if(std::abs((*i).first-z)<_reflectorRange) //Within range of reflector
@@ -36,7 +36,8 @@ bool Reflector::CheckForAReflection(float &alpha,float z,std::vector<float> p)
 				{
 					alpha = -alpha+RandomGauss((*j).second);
 				}
-				flag=true;
+				flag = true;
+				break;
 			}
 		}
 		++i;

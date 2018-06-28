@@ -14,7 +14,7 @@ class Receiver : public Polarization
 	};
 	float _receiverInitialAngle; //initial angle with respect to horizontal, entered as degrees
 	std::pair<float,float> _receiverPosition; //(y,z) position
-	void InitializeReceiver(float,float,float); //set emitter y, z, initial angle
+	void InitializeReceiver(float,float,float,float); //set emitter y, z, initial angle, and timestep.
 	bool ReceiveRFRay(Propagator*); //True if the RFRay is near the receiver, controlled by _receiverRange.
 	float _receiverRange;
 	std::vector<Propagator> _observedRFRays;  //container of propagators that landed in the receiver.

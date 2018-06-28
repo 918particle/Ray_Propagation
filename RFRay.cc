@@ -16,3 +16,8 @@ void RFRay::Update(float dy,float dz,float a)
 	_rfLoss = exp(-_distanceTravelled/this->GetAttenuationLength(_currentPosition.second));
 	this->_path.push_back(_currentPosition);
 }
+
+int RFRay::Reflections()
+{
+	return _numReflect;
+}

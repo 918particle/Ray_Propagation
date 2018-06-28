@@ -1,10 +1,11 @@
 #include "Receiver.h"
 
-void Receiver::InitializeReceiver(float y,float z,float angle)
+void Receiver::InitializeReceiver(float y,float z,float angle,float t)
 {
 	_receiverInitialAngle = angle*3.14159/180.0;
 	_receiverPosition.first = y;
 	_receiverPosition.second = z;
+	this->SetReceiverRange(t*0.299792458/1.3*1.1);
 }
 
 void Receiver::SetReceiverRange(float r)

@@ -7,7 +7,12 @@
 class RFRay : public Emitter, public Ice
 {
 	public:
-	RFRay() : _distanceTravelled(0.0), _rfLoss(0.0), _freq(0.0){};
+	RFRay() :
+		_distanceTravelled(0.0),
+		_rfLoss(0.0),
+		_freq(0.0),
+		_exitingLayer(false),
+		_numReflect(0){};
 	void SetFreq(float);
 	void Update(float,float,float); //Updates _distanceTravelled and _rfLoss, after changing the position
 	//Variables
@@ -19,6 +24,9 @@ class RFRay : public Emitter, public Ice
 	float _freq; //Frequency of the ray
 	//The path traveled in (y,z) coordinates by the ray, and each pair goes with one time-step.
 	std::vector<std::pair<float,float> > _path;
+	bool _exitingLayer; //Has this ray already had a change to reflect?
+	int _numReflect; //The number of reflections this ray has experienced.
+	int Reflections(); //Report number of reflections
 };
 
 #endif

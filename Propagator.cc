@@ -8,8 +8,11 @@ void Propagator::InitializePropagator(float y,float z,float angle)
 	this->_path.clear();
 	this->InitializeEmitter(y,z,angle);
 	_isInitialized = true;
+	float surface_coefficient = std::abs((_iceBoundaryIndex-1.0)/(_iceBoundaryIndex+1.0));
+	this->CreateReflector(std::pair<float,float>(0.0,surface_coefficient),std::pair<bool,float>(false,0.02));
+	this->SetReflectorRange(_timeStep*0.299792458/_iceBoundaryIndex*1.1);
 }
-void Propagator::AddReflector(std::pair<float,float> x,std::pair<int,float> y)
+void Propagator::AddReflector(std::pair<float,float> x,std::pair<bool,float> y)
 {
 	this->CreateReflector(x,y);
 }
@@ -37,14 +40,21 @@ void Propagator::Propagate()
 	this->_currentAngle = _emitterInitialAngle;
 	while(theTime<_globalTime)
 	{
-		float n = this->GetIndex(_currentPosition.second);
+		float n = GetIndex(_currentPosition.second);
 		dy=cos(_currentAngle)*_timeStep*c0/n;
 		dz=sin(_currentAngle)*_timeStep*c0/n;
-		dndz = (GetIndex(_currentPosition.second+dz)-GetIndex(_currentPosition.second))/dz;
+		if(_currentPosition.second>0) dndz = 0.0;
+		else dndz = (GetIndex(_currentPosition.second+dz)-GetIndex(_currentPosition.second))/dz;
 		dTheta = _timeStep*cos(_currentAngle)*dndz*c0/(n*n);
-		this->Update(dy,dz,dTheta);
-		CheckForAReflection(_currentAngle,_currentPosition.second,_polarization);
+		Update(dy,dz,dTheta);
 		theTime+=_timeStep;
+		if(!_exitingLayer && isInReflector())
+		{
+			if(CheckForAReflection(_currentAngle,_currentPosition.second,_polarization)) ++_numReflect;
+			_exitingLayer = true; //Exiting layer regardless of whether the ray reflected.
+			continue;
+		}
+		_exitingLayer = isInReflector();
 	}
 }
 
@@ -52,4 +62,17 @@ void Propagator::SetGlobalTimeAndStep(float a,float b)
 {
 	_globalTime = a;
 	_timeStep = b;
+}
+
+bool Propagator::isInReflector()
+{
+	std::vector<std::pair<float,float> >::iterator i;
+	for(i=_data.begin();i!=_data.end();++i)
+	{
+		if(std::abs(_currentPosition.second - (*i).second)<_reflectorRange)
+		{
+			return true;
+		}
+	}
+	return false;
 }
