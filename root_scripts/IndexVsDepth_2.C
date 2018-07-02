@@ -6,14 +6,14 @@ void IndexVsDepth_2()
 	const Double_t MinIndex = 1.0;
 	const Double_t MinResidualIndex = -0.1;
 	const Double_t MaxResidualIndex = 0.1;
-	Float_t scalefactor = 3.0;
+	Float_t scalefactor = 2.0;
 	Float_t globalMarkerSize = 1.75;
 	Float_t globalLineWidth = 2.5;
 
 	gStyle->SetOptStat(0);
 	TCanvas *c = new TCanvas("c","c",1000,1000);
-	TPad *p = new TPad("p","p",0,0,1,0.7);
-	TPad *p2 = new TPad("p2","p2",0,0.7,1,1);
+	TPad *p = new TPad("p","p",0,0,1,0.67);
+	TPad *p2 = new TPad("p2","p2",0,0.67,1,1);
 	p->SetLeftMargin(0.15);
 	p2->SetLeftMargin(0.15);
 	p->SetRightMargin(0.15);
@@ -41,7 +41,7 @@ void IndexVsDepth_2()
 	gPad->SetFixedAspectRatio();
 	p2->cd();
 	TH2F *h3 = new TH2F("h3","",10,-MaxDepth,MinDepth,10,MinResidualIndex,MaxResidualIndex);
-	h3->GetXaxis()->SetTitle("Depth (m)");
+	// h3->GetXaxis()->SetTitle("Depth (m)");
 	h3->GetXaxis()->SetTitleSize(0.04);
 	h3->GetXaxis()->SetTitleOffset(1.3*scalefactor);
 	h3->GetXaxis()->SetLabelSize(0.04*scalefactor);
