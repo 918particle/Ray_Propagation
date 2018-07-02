@@ -12,8 +12,8 @@ void IndexVsDepth_2()
 
 	gStyle->SetOptStat(0);
 	TCanvas *c = new TCanvas("c","c",1000,1000);
-	TPad *p = new TPad("p","p",0,0,1,0.75);
-	TPad *p2 = new TPad("p2","p2",0,0.75,1,1);
+	TPad *p = new TPad("p","p",0,0,1,0.7);
+	TPad *p2 = new TPad("p2","p2",0,0.7,1,1);
 	p->SetLeftMargin(0.15);
 	p2->SetLeftMargin(0.15);
 	p->SetRightMargin(0.15);
