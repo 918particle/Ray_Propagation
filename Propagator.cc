@@ -10,7 +10,7 @@ void Propagator::InitializePropagator(float y,float z,float angle)
 	_isInitialized = true;
 	float surface_coefficient = std::abs((_iceBoundaryIndex-1.0)/(_iceBoundaryIndex+1.0));
 	this->CreateReflector(std::pair<float,float>(0.0,surface_coefficient),std::pair<bool,float>(true,0.01));
-	this->SetReflectorRange(_timeStep*0.299792458/_iceBoundaryIndex*2.0);
+	this->SetReflectorRange(_timeStep*0.299792458/1.78*1.1);
 }
 
 void Propagator::AddReflector(std::pair<float,float> x,std::pair<bool,float> y)

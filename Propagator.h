@@ -17,7 +17,7 @@ class Propagator : public Reflector, public RFRay
 		Propagator() : 
 			_isInitialized(false),
 			_globalTime(10000.0),
-			_timeStep(1.0){};
+			_timeStep(0.2){};
 		void InitializePropagator(float,float,float); //See source file.
 		void AddReflector(std::pair<float,float>,std::pair<bool,float>); //See source file.
 		void Propagate(); //Propagate ray through medium
