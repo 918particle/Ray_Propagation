@@ -14,13 +14,14 @@ class Reflector
 	void CreateReflector(std::pair<float,float>,std::pair<bool,float>); //Add a reflection surface
 	bool CheckForAReflection(float&,float,std::vector<float>); //angle (radians), depth (meters), polarization vector (unit-less)
 	float RandomGauss(float); //For random numbers drawn from Gaussian distribution with Box-Muller method (0-radian mean, float stddev)
-	Reflector() : _reflectorRange(0.15)
+	Reflector() : _reflectorRange(0.15), _tirAngle(0.877636419)
 	{
 		_data.clear();
 		_reflectorTypes.clear();
 	};
 	float _reflectorRange; //If the ray is within _range meters of the depth of some reflector, introduce a reflection
 	void SetReflectorRange(float); //Reset the default minimum distance between ray and reflector to trigger CheckForAReflection
+	float _tirAngle; //Total internal reflection for snow surface,
 };
 
 #endif
