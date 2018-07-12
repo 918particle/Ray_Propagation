@@ -1,6 +1,6 @@
 set grid
-set yrange [-820:-780]
-set xrange [1990.0:2010.0]
+set yrange [-100:100]
+set xrange [0:700]
 unset key
 set tics font "Courier,22"
 set xlabel "Horizontal Distance (m)" offset 0,-2 font "Courier,26"

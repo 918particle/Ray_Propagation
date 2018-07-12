@@ -23,6 +23,7 @@ class Propagator : public Reflector, public RFRay
 		void Propagate(); //Propagate ray through medium
 		void SetGlobalTimeAndStep(float,float); //Set _globalTime and _timeStep
 		bool CanReflect(); //True if ray is entering a reflector.
+		std::pair<float,float> GetGlobalTimeAndStep();
 };
 
 #endif

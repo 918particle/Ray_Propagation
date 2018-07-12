@@ -26,17 +26,17 @@ int main(int argc, char *argv[])
 	pm_s.push_back(0.0);
 	pm_s.push_back(0.0);
 	float layer_depth = 0.0;
-	// float reflection_coefficient = 0.13;
+	float reflection_coefficient = 0.13;
 	float globalTime = 5000.0;
 	float timeStep = 0.2;
 	float z_0 = 10.0;
 	float propagator_z = layer_depth-z_0;
 	float middle_y = 2000.0;
-	// bool diffuse_reflection = false;
-	// float delta_angle_reflection = 0.01;
+	bool diffuse_reflection = false;
+	float delta_angle_reflection = 0.01;
 
-	// std::pair<float,float> refl1(layer_depth,reflection_coefficient);
-	// std::pair<bool,float> refl2(diffuse_reflection,delta_angle_reflection);
+	std::pair<float,float> refl1(layer_depth,reflection_coefficient);
+	std::pair<bool,float> refl2(diffuse_reflection,delta_angle_reflection);
 
 	for(float angle=angle_i;angle<=angle_f;angle+=delta_angle)
 	{
@@ -54,8 +54,7 @@ int main(int argc, char *argv[])
 			m_s->SetGlobalTimeAndStep(globalTime,timeStep);
 			m_s->InitializePropagator(propagator_y,propagator_z,angle);
 			m_s->SetPolarization(pm_s);
-			m_s->SetIceModelName("Flat");
-			// m_s->AddReflector(refl1,refl2);
+			m_s->AddReflector(refl1,refl2);
 			m_s->Propagate();
 			r_s->ReceiveRFRay(m_s);
 			delete m_s;
@@ -63,8 +62,7 @@ int main(int argc, char *argv[])
 			m_p->SetGlobalTimeAndStep(globalTime,timeStep);
 			m_p->InitializePropagator(propagator_y,propagator_z,angle);
 			m_p->SetPolarization(pm_p);
-			m_p->SetIceModelName("Flat");
-			// m_p->AddReflector(refl1,refl2);
+			m_p->AddReflector(refl1,refl2);
 			m_p->Propagate();
 			r_p->ReceiveRFRay(m_p);
 			delete m_p;

@@ -9,7 +9,7 @@ void Propagator::InitializePropagator(float y,float z,float angle)
 	this->InitializeEmitter(y,z,angle);
 	_isInitialized = true;
 	float surface_coefficient = std::abs((_iceBoundaryIndex-1.0)/(_iceBoundaryIndex+1.0));
-	this->CreateReflector(std::pair<float,float>(0.0,surface_coefficient),std::pair<bool,float>(false,0.01));
+	this->CreateReflector(std::pair<float,float>(0.0,surface_coefficient),std::pair<bool,float>(true,0.01));
 	this->SetReflectorRange(0.15);
 }
 
@@ -49,7 +49,14 @@ void Propagator::Propagate()
 		dTheta = _timeStep*cos(_currentAngle)*dndz*c0/(n*n);
 		Update(dy,dz,dTheta);
 		theTime+=_timeStep;
-		CheckForAReflection(_currentAngle,_currentPosition.second,_polarization);
+		if(std::abs(_currentPosition.second)<_reflectorRange)
+		{
+			if(CanReflect()) CheckForAReflection(_currentAngle,_currentPosition.second,_polarization);
+		}
+		else
+		{
+			CheckForAReflection(_currentAngle,_currentPosition.second,_polarization);
+		}
 	}
 }
 
@@ -57,6 +64,11 @@ void Propagator::SetGlobalTimeAndStep(float a,float b)
 {
 	_globalTime = a;
 	_timeStep = b;
+}
+
+std::pair<float,float> Propagator::GetGlobalTimeAndStep()
+{
+	return std::pair<float,float>(_globalTime,_timeStep);
 }
 
 bool Propagator::CanReflect()

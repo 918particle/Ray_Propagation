@@ -15,3 +15,9 @@ RunPropagatorFresnelSurfaceOMP: RunPropagatorFresnelSurface.cc Emitter.cc Propag
 
 RunPropagatorFresnelSurface: RunPropagatorFresnelSurface.cc Emitter.cc Propagator.cc Reflector.cc Ice.cc RFRay.cc Receiver.cc
 	g++ -g -Wall -o RunPropagatorFresnelSurface RunPropagatorFresnelSurface.cc Emitter.cc Propagator.cc Reflector.cc Ice.cc RFRay.cc Receiver.cc -I.
+
+RunOMP: Run.cc Emitter.cc Propagator.cc Reflector.cc Ice.cc RFRay.cc Receiver.cc
+	g++ -g -Wall -o RunOMP -fopenmp Run.cc Emitter.cc Propagator.cc Reflector.cc Ice.cc RFRay.cc Receiver.cc -I.
+
+Run: Run.cc Emitter.cc Propagator.cc Reflector.cc Ice.cc RFRay.cc Receiver.cc
+	g++ -g -Wall -o Run Run.cc Emitter.cc Propagator.cc Reflector.cc Ice.cc RFRay.cc Receiver.cc -I.

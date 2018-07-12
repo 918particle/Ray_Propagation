@@ -14,7 +14,9 @@ void Receiver::SetReceiverRange(float r)
 
 bool Receiver::ReceiveRFRay(Propagator *p)
 {
+	std::pair<float,float> times = p->GetGlobalTimeAndStep();
 	bool flag = false;
+	int count = 0;
 	std::vector<std::pair<float,float> >::iterator i;
 	for(i=p->_path.begin();i!=p->_path.end();++i)
 	{
@@ -24,10 +26,12 @@ bool Receiver::ReceiveRFRay(Propagator *p)
 			_observedRFRays.push_back(*p);
 			_receiverDotProducts.push_back(std::inner_product(_polarization.begin(),_polarization.end(),
 				p->_polarization.begin(),0.0));
+			_receivedTimes.push_back(count*times.second);
 			flag=true;
 			break;
 		}
 		_numReceivedRFRays = _observedRFRays.size();
+		++count;
 	}
 	return flag;
 }
@@ -40,4 +44,14 @@ int Receiver::GetReceivedRFRays()
 float Receiver::GetReceivedDotProduct(int i)
 {
 	return _receiverDotProducts[i];
+}
+
+float Receiver::GetDepth()
+{
+	return _receiverPosition.second;
+}
+
+std::vector<float> Receiver::GetReceivedTimes()
+{
+	return _receivedTimes;
 }
