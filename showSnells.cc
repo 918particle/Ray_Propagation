@@ -4,6 +4,8 @@
 using namespace std;
 
 bool F(float*,float,float,float);
+float gamma(float,float,float,float);
+float n_z(float,float,float,float);
 
 int main(int argc, char **argv)
 {
@@ -11,9 +13,9 @@ int main(int argc, char **argv)
 	float theta_i = -90.0*3.14159/180.0;
 	float delta_theta = 1.0*3.14159/180.0;
 	float theta_f = 90.0*3.14159/180.0;
-	float z_i = -1000.0;
+	float z_i = -500.0;
 	float delta_z = 5;
-	float z_f = 0.0;
+	float z_f = 50.0;
 	float C_1 = 0.0;
 	//Ice properties
 	float n_ice = 1.78;
@@ -43,7 +45,6 @@ int main(int argc, char **argv)
 				y_prior = z_0 / tan(theta) * log(*out_prior)+C_1*z_0;
 				delta_y = y-y_prior;
 				theta_m = atan(delta_z/delta_y);
-				cout<<z<<" "<<theta*180.0/3.14159<<" "<<theta_m*180.0/3.14159<<" "<<(theta_m-theta)*180.0/3.14159<<endl;
 			}
 			z+=delta_z;
 		}
@@ -61,4 +62,13 @@ bool F(float *out,float gamma,float n_ice, float theta_i)
 		return true;
 	}
 	else return false;
+}
+
+float gamma(float z,float n_ice,float n_snow,float z_0)
+{
+	return (n_ice-n_snow)*exp(z/z_0);
+}
+float n_z(float z,float n_ice,float n_snow,float z_0)
+{
+	return n_ice - gamma(z,n_ice,n_snow,z_0);
 }
